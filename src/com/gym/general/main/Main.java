@@ -21,6 +21,7 @@ import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.WindowConstants;
 import net.miginfocom.swing.MigLayout;
 import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTarget;
@@ -36,7 +37,7 @@ public class Main extends javax.swing.JFrame{
     private Header header;
     private MainForm main;
     private Animator animator;
-    private static Main main_obj;
+    public static Main main_obj;
     
     public Main() throws SQLException {
         initComponents();
@@ -68,7 +69,7 @@ public class Main extends javax.swing.JFrame{
                 }
                 if (menuIndex==13) {
                     if (subMenuIndex==-1) {
-                        main_obj.dispose();;
+                         dispose();
                     }
                     
                 }
@@ -81,6 +82,18 @@ public class Main extends javax.swing.JFrame{
                             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
                         }
                        aa.setVisible(true);
+                    }
+                }
+                
+                if (menuIndex==1) {
+                    if (subMenuIndex==0) {
+                        Add_Member add=null;
+                        try {
+                            add=new Add_Member();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        add.setVisible(true);
                     }
                 }
                

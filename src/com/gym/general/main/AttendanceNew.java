@@ -49,6 +49,7 @@ public class AttendanceNew extends javax.swing.JFrame {
     public AttendanceNew() throws SQLException {
         initComponents();
         init();
+        
     }
     
     
@@ -129,6 +130,18 @@ public class AttendanceNew extends javax.swing.JFrame {
                         aa.setVisible(true);
                     }
                 }
+                 
+                 if (menuIndex==3) {
+                    if (subMenuIndex==-1) {
+                         Attendance_Advanced_Search_Main aa = null;
+                        try {
+                           aa=new Attendance_Advanced_Search_Main();
+                        } catch (SQLException ex) {
+                            Logger.getLogger(AttendanceNew.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        aa.setVisible(true);
+                    }
+                } 
                 
                 if (menuIndex==4) {
                     if (subMenuIndex==-1) {

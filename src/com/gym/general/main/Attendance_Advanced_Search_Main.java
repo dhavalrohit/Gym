@@ -64,15 +64,11 @@ public class Attendance_Advanced_Search_Main extends javax.swing.JFrame{
                 System.out.println("Advance Attendance Menu Index : " + menuIndex + " SubMenu Index " + subMenuIndex);
                 if (menuIndex == 0) {
                     if (subMenuIndex == 0) {
-                        try {
-                            main1.showForm(new attendanceAdvancedRecord());
-                            
-                            //form=new AttendanceForm();
-                            //form.initTableData();
-                           
-                        } catch (SQLException ex) {
-                            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-                        }
+                        main1.showForm(new attendanceAdvancedRecord());
+                        
+                        //form=new AttendanceForm();
+                        //form.initTableData();
+                        
                     } else if (subMenuIndex == 1) {
                         main1.showForm(new Form1());
                     }
@@ -229,6 +225,7 @@ public class Attendance_Advanced_Search_Main extends javax.swing.JFrame{
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
+        
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {

@@ -73,7 +73,7 @@ public class attendanceweekmenu extends javax.swing.JPanel{
     public void initMenuItem(){
          //addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/gym/general/icon/1.png")), "View Records"));
         
-         addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/gym/general/icon/1.png")), "Exit"));
+         addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/gym/general/icon/back.png")), "Back"));
         
         
     }

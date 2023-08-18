@@ -76,7 +76,7 @@ public class attendanceMenu extends javax.swing.JPanel{
          addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/gym/general/icon/1.png")), "View Last Month Records"));
          addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/gym/general/icon/1.png")), "View  Last 3 Month Records"));
          addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/gym/general/icon/1.png")), "Advanced Search"));
-         addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/gym/general/icon/1.png")), "Exit"));
+         addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/gym/general/icon/back.png")), "Exit"));
         
         
     }

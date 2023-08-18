@@ -27,7 +27,8 @@ public class Biometric_Attendance extends JFrame{
         
         
 		try {
-            UIManager.setLookAndFeel("com.jtattoo.plaf.mcwin.McWinLookAndFeel");
+                  
+                    UIManager.setLookAndFeel("com.jtattoo.plaf.mcwin.McWinLookAndFeel");
  
         } catch (ClassNotFoundException ex) {
             java.util.logging.Logger.getLogger(Biometric_Attendance.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
