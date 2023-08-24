@@ -286,6 +286,7 @@ String gen;
     }                                        
     public void calculateFatForMan()
     {
+        
         kg=Float.parseFloat(jTextField2.getText());
         pound=kg*2.2046f;
         float waist=Float.parseFloat(jTextField6.getText());
@@ -295,6 +296,8 @@ String gen;
         float val3=pound-lbm;
         float bmass=val3/pound*100;
         jTextField7.setText(String.valueOf(bmass));
+        
+        
     }
     public void calculateFatForWoman()
     {

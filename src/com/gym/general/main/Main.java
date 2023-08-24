@@ -7,6 +7,9 @@ import com.gym.general.component.Header;
 import com.gym.general.component.Menu;
 import com.gym.general.event.EventMenuSelected;
 import com.gym.general.event.EventShowPopupMenu;
+import com.gym.general.fees.Add_Payment;
+import com.gym.general.fees.Exisiting_Member;
+import com.gym.general.fees.payment_history;
 import com.gym.general.form.Form1;
 import com.gym.general.form.Form_Home;
 import com.gym.general.form.MainForm;
@@ -26,7 +29,7 @@ import net.miginfocom.swing.MigLayout;
 import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTarget;
 import org.jdesktop.animation.timing.TimingTargetAdapter;
-
+import com.gym.general.members.Add_Member;
 /**
  *
  * @author DELL
@@ -67,14 +70,14 @@ public class Main extends javax.swing.JFrame{
                         main.showForm(new Form1());
                     }
                 }
-                if (menuIndex==13) {
+                if (menuIndex==12) {
                     if (subMenuIndex==-1) {
                          dispose();
                     }
                     
                 }
                 if (menuIndex==0) {
-                    if (subMenuIndex==3) {
+                    if (subMenuIndex==2) {
                        AttendanceNew aa = null;
                         try {
                             aa = new AttendanceNew();
@@ -95,6 +98,48 @@ public class Main extends javax.swing.JFrame{
                         }
                         add.setVisible(true);
                     }
+                }
+                
+                if (menuIndex==3) {
+                    if (subMenuIndex==0) {
+                        Add_Payment add=null;
+                        try {
+                             add=new Add_Payment();
+                             add.setVisible(true);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                       
+                    }
+                    
+                }
+                
+                if (menuIndex==3) {
+                    if (subMenuIndex==1) {
+                        Exisiting_Member add=null;
+                        try {
+                             add=new Exisiting_Member();
+                             add.setVisible(true);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                       
+                    }
+                    
+                }
+                
+                if (menuIndex==3) {
+                    if (subMenuIndex==2) {
+                        payment_history add=null;
+                        try {
+                             add=new payment_history();
+                             add.setVisible(true);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                       
+                    }
+                    
                 }
                
                 
