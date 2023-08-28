@@ -32,10 +32,21 @@ import java.text.SimpleDateFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import net.proteanit.sql.DbUtils;
 import javax.swing.JOptionPane;
 
+
+/*changes made on 26-08-2023
+1.created method to fetch memeber id and autoincrement member id
+2.To get biometric id value and autoincrement it and set it to textfield
+3.Add functionality to add member without photo
+*/
+
+/*
+Task remaning-
+*/
 
 public class Add_Member extends javax.swing.JFrame {
 
@@ -53,6 +64,8 @@ public class Add_Member extends javax.swing.JFrame {
       PreparedStatement pst=null;
       
       ImageIcon profileimg;
+      int memberid=0;
+      String biometricid="";
     
     public Add_Member() {
         FlatIntelliJLaf.registerCustomDefaultsSource("Flatlab.propeties");
@@ -74,6 +87,8 @@ public class Add_Member extends javax.swing.JFrame {
         initComponents();
         
         add_new_member_Button.setVisible(false);
+        get_biometric_id();
+        get_member_id();
     }
     
     public void total_member_count(){
@@ -99,28 +114,52 @@ public class Add_Member extends javax.swing.JFrame {
         }
         System.out.println("total count:"+total_members_count);
         
+    }
+    
+    
+    public  void get_biometric_id() {
         
+        String query="SELECT TOP 1 cardno FROM dbo.Mst_Employee ORDER BY empid DESC";
+        String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
+        String username = "sa";
+        String password = "Dhaval@7869";
+           
+          try {
+            con=DriverManager.getConnection(url, username, password);
+            st=con.createStatement();
+            rs=st.executeQuery(query);
+            if (rs.next()) {
+                biometricid=rs.getString(1);
+                System.out.println("Last Biometric ID:"+biometricid);
+                
+                char lastChar = biometricid.charAt(biometricid.length() - 1);
+                int lastDigit = Character.getNumericValue(lastChar);
+                lastDigit = (lastDigit + 1) % 10;
+                biometricid= biometricid.substring(0, biometricid.length() - 1) + lastDigit;
+        
+                
+                System.out.println("Current Biometric ID:"+biometricid);
+                
+                biometric_id_TextField.setText(String.valueOf(biometricid));
+                biometric_id_TextField.setEditable(false);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(new JFrame(), "SQL ERROR");
+        }
         
         
         
     }
-    
     
     public void view_selected_member() throws SQLException{
         
          String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
         String username = "sa";
         String password = "Dhaval@7869";
-      
-        
-        
-            int selectedrow= jTable1.getSelectedRow();
-            String name= (String) jTable1.getModel().getValueAt(selectedrow, 1);
-            System.out.println(selectedrow+" "+name);
-        
-         
-        
-        
+        int selectedrow= jTable1.getSelectedRow();
+        String name= (String) jTable1.getModel().getValueAt(selectedrow, 1);
+        System.out.println(selectedrow+" "+name);
         String query="select * from dbo.Mst_Employee where EmpName='"+name+"'";
         
         
@@ -135,13 +174,13 @@ public class Add_Member extends javax.swing.JFrame {
                 String email_rs=rs.getString("EmailAddress");
                 String dateofbirth_rs=rs.getDate("DateofBirth").toString();
                 String fathername_rs=rs.getString("FatherName");
-                String membership_id_rs=rs.getString("EmpCode");
+                String membership_id_rs=rs.getString("Empid");
                 String biometric_id_rs=rs.getString("CardNo");
                 
                 String dateofjoin_rs=rs.getDate("DateofJoin").toString();
                 String timing_rs=rs.getString("ShiftCode");
                 String membership_start_date_rs=rs.getDate("ShiftStartDate").toString();
-                String membership_end_date_rs=rs.getString("ReginDate");
+                String membership_end_date_rs=rs.getString("validityend");
                 
                  try {
                      Blob blobdata=rs.getBlob("profilepic");
@@ -238,10 +277,53 @@ public class Add_Member extends javax.swing.JFrame {
         
     }
     
+      public  void get_member_id(){
+            String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
+           String username = "sa";
+           String password = "Dhaval@7869";
+           String query="select IDENT_CURRENT('Mst_Employee')";
+
+        try {
+            con=DriverManager.getConnection(url, username, password);
+            st=con.createStatement();
+            rs=st.executeQuery(query);
+            if (rs.next()) {
+                memberid=rs.getInt(1);
+                System.out.println("Last Inquiry ID:"+memberid);
+                memberid=memberid+1;
+                System.out.println("Current Inquiry ID"+memberid);
+                
+                membership_id_TextField.setText(String.valueOf(memberid));
+                membership_id_TextField.setEditable(false);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(new JFrame(), "SQL ERROR");
+        }
+    
+    }
+      
+     
+    public void reset(){
+        
+        name_TextField.setText("");
+        membership_id_TextField.setText("");
+        biometric_id_TextField.setText("");
+        membership_start_TextField.setText("");
+        membership_end_TextField.setText("");
+        dateofjoin_TextField.setText("");
+        dateofbirth_TextField.setText("");
+        mobileno_TextField.setText("");
+        email_TextField.setText("");
+        fathername_TextField.setText("");
+        id_TextField.setText("");
+        
+        
+    }
     
     
     
-    
+  
     public void add_member_db() throws SQLException {
     
         String name=name_TextField.getText();
@@ -264,15 +346,99 @@ public class Add_Member extends javax.swing.JFrame {
         System.out.println(membership_end_date);
         System.out.println(dateofjoin);
         
+        if (profile_pic_path==null) {
+            
+             String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
+             String username = "sa";
+             String password = "Dhaval@7869";
+      
+            
+        String query="INSERT INTO [dbo].[Mst_Employee]\n" +
+"           ([EmpName],\n" +
+"		   [FatherName]\n" +
+"		   ,[CompanyId]\n" +
+"		   ,[DeptId],\n" +
+"		   [DesigId]\n" +
+"		   ,[BranchId]\n" +
+"		   ,[OTimePoliceId]\n" +
+"		   ,[ReginDate]\n" +
+"		   ,[CorpPolicyid]\n" +
+"            ,[EmpCode]\n" +
+"           ,[CardNo]\n" +
+"           ,[DateofJoin]\n" +
+"           ,[ShiftType]\n" +
+"           ,[EmailAddress]\n" +
+"           ,[PhoneNo]\n" +
+"           ,[DateofBirth],[ShiftStartDate],[Validityend],[ShiftCode])" +
+  
+"	 VALUES \n" +
+"            \n" +
+"			(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         
         
-         FileInputStream fis=null;
-           try {
-               fis = new FileInputStream(profile_pic_path);
+            try {
+                con=DriverManager.getConnection(url, username, password);
+            pst=con.prepareStatement(query);
+            pst.setString(1, name);
+            pst.setString(2, fathername);
+            pst.setInt(3, 1);
+            pst.setInt(4,1);
+            pst.setInt(5,1);
+            pst.setInt(6, 1);
+            pst.setInt(7, 1);
+            pst.setString(8, regindate);
+            pst.setInt(9, 1);
+            pst.setString(10, membership_id);
+            pst.setString(11, biometric_id);
+            pst.setString(12, dateofjoin);
+            pst.setString(13, timing);
+            pst.setString(14, email);
+            pst.setString(15, mobileno);
+            pst.setString(16, dateofbirth);
+            pst.setString(17, membership_start_date);
+            pst.setString(18, membership_end_date);
+            pst.setString(19, timing);
+           
+            
+            
+            
+            //pst.execute();
+            
+            int count=pst.executeUpdate();
+            if (count>0) {
+                JOptionPane.showMessageDialog(new Frame(), "Member Added Succesfully");
+                System.out.println("Member Inserted Succesfully");
+                JOptionPane.showMessageDialog(new Frame(), "Profile Pic Insertion Pending");
+                showall_members();
+                total_member_count();
+                
+            }else{
+                System.out.println("Member Insertion failed");
+                
+            }
+            
+            } catch (Exception e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(new Frame(), "SQL Exception");  
+            }finally{
+                con.close();
+            total_member_count();
+            showall_members();
+            
+        
+                
+            }
+        }
+        else{
+        
+        
+            FileInputStream fis=null;
+            try {
+               
+                fis = new FileInputStream(profile_pic_path);
            } catch (FileNotFoundException ex) {
                Logger.getLogger(Add_Member.class.getName()).log(Level.SEVERE, null, ex);
            }
-        
         
         
         String query="INSERT INTO [dbo].[Mst_Employee]\n" +
@@ -302,9 +468,6 @@ public class Add_Member extends javax.swing.JFrame {
         String username = "sa";
         String password = "Dhaval@7869";
       
-        
-        
-        
         try {
             con=DriverManager.getConnection(url, username, password);
             pst=con.prepareStatement(query);
@@ -327,12 +490,9 @@ public class Add_Member extends javax.swing.JFrame {
             pst.setString(17, membership_start_date);
             pst.setString(18, membership_end_date);
             pst.setString(19, timing);
-            pst.setString(20,profile_pic_path.toString() );
+            pst.setString(20,profile_pic_path.toString());
             pst.setBinaryStream(21, fis);
            
-            
-            
-            
             //pst.execute();
             
             int count=pst.executeUpdate();
@@ -356,7 +516,7 @@ public class Add_Member extends javax.swing.JFrame {
         total_member_count();
         profilepic.setText("");
             
-        
+        }
         }
         
         /*System.out.println(name);
@@ -856,7 +1016,7 @@ INSERT INTO [dbo].[Mst_Employee]
         // TODO add your handling code here:
         
         name_TextField.setText("");
-        membership_id.setText("");
+        membership_id_TextField.setText("");
         biometric_id_TextField.setText("");
         membership_start_TextField.setText("");
         membership_end_TextField.setText("");

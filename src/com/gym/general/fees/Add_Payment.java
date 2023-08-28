@@ -27,6 +27,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
@@ -38,6 +39,7 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -53,10 +55,7 @@ import javax.swing.table.TableRowSorter;
 
 import net.proteanit.sql.DbUtils;
 
-/**
- *
- * @author DELL
- */
+
 public class Add_Payment extends javax.swing.JFrame {
 
      Connection con=null;
@@ -72,16 +71,20 @@ public class Add_Payment extends javax.swing.JFrame {
      TextPrompt membername_prompt;
      TextPrompt mobileno_prompt;
      
-    private JPopupMenu popupmenu;
+     private JPopupMenu popupmenu;
     private JPanel panelsearch;
      private JTable Jtable1;
+     String datenow;
+     int paymentid=0;
      
+    
      
     public Add_Payment() {
         FlatIntelliJLaf.registerCustomDefaultsSource("Flatlab.propeties");
         FlatIntelliJLaf.setup();
         //total_member_count();
         this.setResizable(false);
+        this.setTitle("Add Payment");
         initComponents();
         duration_TextField.addKeyListener(new KeyAdapter() {
             @Override
@@ -91,6 +94,7 @@ public class Add_Payment extends javax.swing.JFrame {
             }
             
         });
+        
         
         memberid_prompt=new TextPrompt("Enter Member ID to Start Searching ", member_id_TextField);
         memberid_prompt.setForeground(Color.GRAY);
@@ -126,10 +130,41 @@ public class Add_Payment extends javax.swing.JFrame {
         idSearchComboBox.setVisible(false);
         mobilenoSearchComboBox.setVisible(false);
         
-        
+          DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/YYYY ");  
+            LocalDateTime now = LocalDateTime.now();  
+             datenow=dtf.format(now);
+            System.out.println(dtf.format(now)); 
+            paymentdate_TextField.setText(datenow);
+            paymentdate_TextField.setEditable(false);
+          
+            get_payment_id();
         
     }
 
+      public  void get_payment_id(){
+            String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
+           String username = "sa";
+           String password = "Dhaval@7869";
+           String query="select IDENT_CURRENT('payments')";
+
+        try {
+            con=DriverManager.getConnection(url, username, password);
+            st=con.createStatement();
+            rs=st.executeQuery(query);
+            if (rs.next()) {
+                paymentid=rs.getInt(1);
+                System.out.println("Last Payment ID:"+paymentid);
+                paymentid=paymentid+1;
+                System.out.println("Current Payment ID"+paymentid);
+                
+            
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(new JFrame(), "SQL ERROR");
+        }
+    
+    }
     
     public void show_members_details_by_name() throws SQLException{
     
@@ -562,10 +597,83 @@ public class Add_Payment extends javax.swing.JFrame {
            System.out.println(duration_TextField.getText().toString());
             
     }
+       
+       public void reset(){
+             membername_TextField.setEditable(true);
+        membername_TextField.setText("");
+        mem_start_date_TextField.setEditable(true);
+        mem_start_date_TextField.setText("");
+        mem_end_date_TextField.setEditable(true);
+        mem_end_date_TextField.setText("");
+        member_id_TextField.setEditable(true);
+        member_id_TextField.setText("");
+        dateofjoin_TextField.setEditable(true);
+        dateofjoin_TextField.setText("");
+        duration_TextField.setEditable(true);
+        duration_TextField.setText("");
+        totalfee_TextField.setEditable(true);
+        totalfee_TextField.setText("");
+        discount_ComboBox.setSelectedIndex(0);
+        finalamount_TextField.setEditable(true);
+        finalamount_TextField.setText("");
+        current_payment_TextField.setEditable(true);
+        current_payment_TextField.setText("");
+        pendingamount_TextField.setEditable(true);
+        pendingamount_TextField.setText("");
+        mobileno_TextField.setEditable(true);
+        mobileno_TextField.setText("");
+      
+       
+       }
       
       public void add_payment(){
       
+          
+          
           int extradiscount=0;
+            
+          
+          JButton yes_button=new JButton("Yes");
+          JButton no_button=new JButton("no");
+          Object[] options={yes_button,no_button};
+          
+           yes_button.addActionListener(new ActionListener() {
+              @Override
+              public void actionPerformed(ActionEvent e) {
+                  print_payment_reciept pr=new print_payment_reciept();
+                  
+                  pr.paymentidLabel.setText(String.valueOf(paymentid));
+                  pr.memberidLabel.setText(member_id_TextField.getText());
+                  
+                  pr.nameLabel.setText(membername_TextField.getText());
+                  pr.datetLabel.setText(datenow);
+                  pr.dateofJoinLabel.setText(dateofjoin_TextField.getText());
+                  pr.mem_startLabel.setText(mem_start_date_TextField.getText());
+                  pr.mem_endLabel.setText(mem_end_date_TextField.getText());
+                  pr.durationtLabel.setText(duration_TextField.getText());
+                  pr.totalfeeLabel.setText(totalfee_TextField.getText());
+                  pr.discountLabel.setText(discount_ComboBox.getSelectedItem().toString());
+                  pr.finalamountLabel.setText(finalamount_TextField.getText());
+                  pr.currentpymentLabel.setText(current_payment_TextField.getText());
+                  pr.balanceLabel.setText(pendingamount_TextField.getText());
+                  pr.setVisible(rootPaneCheckingEnabled);
+                  
+                  JOptionPane.getRootFrame().dispose();
+                  
+              }
+          });
+          
+          no_button.addActionListener(new ActionListener() {
+              @Override
+              public void actionPerformed(ActionEvent e) {
+             
+                  JOptionPane.getRootFrame().dispose();
+                  reset();
+                 
+              }
+          });
+          
+          
           
           int memberid=Integer.parseInt(member_id_TextField.getText());
           int duration=Integer.parseInt(duration_TextField.getText());
@@ -582,7 +690,7 @@ public class Add_Payment extends javax.swing.JFrame {
           String password = "Dhaval@7869";
        
          String query="INSERT INTO [dbo].[payments]\n" +
-"           ([member_id]\n" +
+"          ([payment_date],[member_id]\n" +
 "           ,[fee_id]\n" +
 "           ,[duration]\n" +
 "           ,[total_fees]\n" +
@@ -592,7 +700,7 @@ public class Add_Payment extends javax.swing.JFrame {
 "           ,[additional_discount]\n" +
 "           ,[final_amount])\n" +
 "     VALUES\n" +
-"           (?,?,?,?,?,?,?,?,?)";
+"           (?,?,?,?,?,?,?,?,?,?)";
          
          
 
@@ -610,21 +718,26 @@ public class Add_Payment extends javax.swing.JFrame {
           try {
             con=DriverManager.getConnection(url, username, password);
               pst=con.prepareStatement(query);
-              pst.setInt(1, memberid);
-              pst.setInt(2, duration);
+              pst.setString(1, datenow);
+              pst.setInt(2, memberid);
               pst.setInt(3, duration);
-              pst.setInt(4, totalfee);
-              pst.setInt(5, pendingfees);
-              pst.setInt(6, current_payment);
-              pst.setInt(7, discount);
-              pst.setInt(8, extradiscount);
-              pst.setInt(9, final_amount);
+              pst.setInt(4, duration);
+              pst.setInt(5, totalfee);
+              pst.setInt(6, pendingfees);
+              pst.setInt(7, current_payment);
+              pst.setInt(8, discount);
+              pst.setInt(9, extradiscount);
+              pst.setInt(10, final_amount);
               
               int count=pst.executeUpdate();
               
               if (count>0) {
                   System.out.println("success");
                   JOptionPane.showMessageDialog(new JFrame(), "Payment Added Successfully");
+                  JOptionPane.showOptionDialog(new JFrame(), "Print Reciept", "Print", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null
+                          , options,options[0] );
+                  
+                  
               } else {
                   System.out.println("failure");
                   JOptionPane.showMessageDialog(new JFrame(), "ERROR!:OPERATION FAILED");
@@ -633,21 +746,19 @@ public class Add_Payment extends javax.swing.JFrame {
           } catch (Exception e) {
               e.printStackTrace();
               JOptionPane.showMessageDialog(new JFrame(), "ERROR!:OPERATION FAILED");
+          
           }
           finally{
-               membername_TextField.setEditable(true);
-        membername_TextField.setText("");
-        mem_start_date_TextField.setEditable(true);
-        mem_start_date_TextField.setText("");
-        mem_end_date_TextField.setEditable(true);
-        mem_end_date_TextField.setText("");
-        member_id_TextField.setEditable(true);
-        member_id_TextField.setText("");
-        dateofjoin_TextField.setEditable(true);
-        dateofjoin_TextField.setText("");
+        reset();
         
           }
-                 
+          
+          
+         
+           
+          
+          
+          
       }
           
   /*  public void total_member_count(){
@@ -718,6 +829,8 @@ public class Add_Payment extends javax.swing.JFrame {
         idSearchComboBox = new javax.swing.JComboBox<>();
         mobilenoSearchComboBox = new javax.swing.JComboBox<>();
         namesearchComboBox = new javax.swing.JComboBox<>();
+        jLabel16 = new javax.swing.JLabel();
+        paymentdate_TextField = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -952,6 +1065,20 @@ public class Add_Payment extends javax.swing.JFrame {
             }
         });
 
+        jLabel16.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
+        jLabel16.setText("DATE");
+
+        paymentdate_TextField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                paymentdate_TextFieldFocusLost(evt);
+            }
+        });
+        paymentdate_TextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                paymentdate_TextFieldActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -1012,9 +1139,13 @@ public class Add_Payment extends javax.swing.JFrame {
                             .addComponent(jLabel8))
                         .addGap(48, 48, 48)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(duration_TextField)
                             .addComponent(totalfee_TextField, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(discount_ComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(discount_ComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(paymentdate_TextField)
+                            .addComponent(duration_TextField)))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel16)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -1054,6 +1185,10 @@ public class Add_Payment extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel16)
+                    .addComponent(paymentdate_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(duration_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel8))
@@ -1202,17 +1337,7 @@ public class Add_Payment extends javax.swing.JFrame {
 
     private void reset_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reset_ButtonActionPerformed
         // TODO add your handling code here:
-        membername_TextField.setEditable(true);
-        membername_TextField.setText("");
-        mem_start_date_TextField.setEditable(true);
-        mem_start_date_TextField.setText("");
-        mem_end_date_TextField.setEditable(true);
-        mem_end_date_TextField.setText("");
-        member_id_TextField.setEditable(true);
-        member_id_TextField.setText("");
-        dateofjoin_TextField.setEditable(true);
-        dateofjoin_TextField.setText("");
-        
+        reset();
     }//GEN-LAST:event_reset_ButtonActionPerformed
 
     private void current_payment_TextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_current_payment_TextFieldKeyReleased
@@ -1382,6 +1507,14 @@ public class Add_Payment extends javax.swing.JFrame {
         new Exisiting_Member().setVisible(true);
     }//GEN-LAST:event_renew_ButtonActionPerformed
 
+    private void paymentdate_TextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_paymentdate_TextFieldFocusLost
+        // TODO add your handling code here:
+    }//GEN-LAST:event_paymentdate_TextFieldFocusLost
+
+    private void paymentdate_TextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_paymentdate_TextFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_paymentdate_TextFieldActionPerformed
+
     
     
     public static void main(String args[]) {
@@ -1427,6 +1560,7 @@ public class Add_Payment extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -1443,6 +1577,7 @@ public class Add_Payment extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> mobilenoSearchComboBox;
     private javax.swing.JTextField mobileno_TextField;
     private javax.swing.JComboBox<String> namesearchComboBox;
+    private javax.swing.JTextField paymentdate_TextField;
     private javax.swing.JTextField pendingamount_TextField;
     private javax.swing.JButton renew_Button;
     private javax.swing.JButton reset_Button;

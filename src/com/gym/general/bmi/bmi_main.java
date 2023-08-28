@@ -591,18 +591,18 @@ public class bmi_main extends javax.swing.JFrame {
                     category="Obese";
                 }
             }
-            PrintBMIReport pbm=new PrintBMIReport();
-            pbm.jLabel12.setText(name);
-            pbm.jLabel13.setText(gender);
-            pbm.jLabel14.setText(weight);
-            pbm.jLabel15.setText(height);
-            pbm.jLabel16.setText(bmi);
-            pbm.jLabel17.setText(waist);
-            pbm.jLabel18.setText(wrist);
-            pbm.jLabel19.setText(forearm);
-            pbm.jLabel20.setText(hips);
-            pbm.jLabel21.setText(fat);
-            pbm.jLabel22.setText(category);
+            Bmi_Print pbm=new Bmi_Print();
+            pbm.nameLabel.setText(name);
+            pbm.genderLabel.setText(gender);
+            pbm.wieghttLabel.setText(weight);
+            pbm.hieghtLabel.setText(height);
+            pbm.bmiLabel.setText(bmi);
+            pbm.waistLabel.setText(waist);
+            pbm.wristLabel.setText(wrist);
+            pbm.forearmLabel.setText(forearm);
+            pbm.hipsLabel.setText(hips);
+            pbm.fat_perLabel.setText(fat);
+            pbm.category_perLabel.setText(category);
             pbm.setVisible(rootPaneCheckingEnabled);
                     
         }catch(Exception e){

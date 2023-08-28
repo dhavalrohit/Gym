@@ -208,6 +208,7 @@ public class View_Member extends javax.swing.JFrame {
                  
                  membership_end_TextField.setText(membership_end_date_rs);
                  membership_end_TextField.setEditable(false);
+                 
 
             }
              else{

@@ -5,10 +5,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import javax.swing.JOptionPane;
 
-/**
- *
- * @author DELL
- */
+
 public class Connect {
     Connection con=null;
         Connection conaccess=null;

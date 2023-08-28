@@ -445,6 +445,7 @@ public class Message1 extends JFrame{
 		    		   pst.close();
 		    		   rs.close();
 		    		   con.close();
+                                   
 		    	   }
 		        	catch(Exception e2){
 		        		

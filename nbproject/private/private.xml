@@ -5,10 +5,14 @@
         <group>
             <file>file:/C:/Users/DELL/Documents/NetBeansProjects/Gym/src/com/gym/database/SignUp.java</file>
             <file>file:/C:/Users/DELL/Documents/NetBeansProjects/Gym/src/com/gym/ui/User_Frame.java</file>
+            <file>file:/C:/Users/DELL/Documents/NetBeansProjects/Gym/src/com/gym/general/fees/print_payment_reciept.java</file>
             <file>file:/C:/Users/DELL/Documents/NetBeansProjects/Gym/src/com/gym/general/main/Main.java</file>
             <file>file:/C:/Users/DELL/Documents/NetBeansProjects/Gym/src/com/gym/buiseness/PrintBMIReport.java</file>
             <file>file:/C:/Users/DELL/Documents/NetBeansProjects/Gym/src/com/gym/general/attendance/attendanceAdvancedRecord.java</file>
             <file>file:/C:/Users/DELL/Documents/NetBeansProjects/Gym/src/com/gym/general/fees/add_new_fees.java</file>
+            <file>file:/C:/Users/DELL/Documents/NetBeansProjects/Gym/src/com/gym/general/diet/enterdiet.java</file>
+            <file>file:/C:/Users/DELL/Documents/NetBeansProjects/Gym/src/com/gym/database/Message1.java</file>
+            <file>file:/C:/Users/DELL/Documents/NetBeansProjects/Gym/src/com/gym/general/workout/Workout_Creator.java</file>
             <file>file:/C:/Users/DELL/Documents/NetBeansProjects/Gym/src/com/gym/general/fees/Fee_Detail.java</file>
             <file>file:/C:/Users/DELL/Documents/NetBeansProjects/Gym/src/com/gym/general/fees/Add_Payment.java</file>
             <file>file:/C:/Users/DELL/Documents/NetBeansProjects/Gym/src/com/gym/general/attendance/AttendanceForm1.java</file>
@@ -19,16 +23,21 @@
             <file>file:/C:/Users/DELL/Documents/NetBeansProjects/Gym/src/com/gym/general/fees/update_fees.java</file>
             <file>file:/C:/Users/DELL/Documents/NetBeansProjects/Gym/src/com/gym/general/main/Attendance_threeMonths_Main.java</file>
             <file>file:/C:/Users/DELL/Documents/NetBeansProjects/Gym/src/com/gym/controller/AddMember_fees.java</file>
+            <file>file:/C:/Users/DELL/Documents/NetBeansProjects/Gym/src/com/gym/general/inquiry/inquiry_form.java</file>
             <file>file:/C:/Users/DELL/Documents/NetBeansProjects/Gym/src/com/gym/general/bmi/Bmi_Print.java</file>
             <file>file:/C:/Users/DELL/Documents/NetBeansProjects/Gym/src/com/gym/database/Update_Fee_Value.java</file>
+            <file>file:/C:/Users/DELL/Documents/NetBeansProjects/Gym/src/com/gym/database/Connect.java</file>
             <file>file:/C:/Users/DELL/Documents/NetBeansProjects/Gym/src/com/gym/general/members/Add_Member.java</file>
             <file>file:/C:/Users/DELL/Documents/NetBeansProjects/Gym/src/com/gym/general/members/View_Member.java</file>
+            <file>file:/C:/Users/DELL/Documents/NetBeansProjects/Gym/src/com/gym/general/sms/Sms_Main.java</file>
             <file>file:/C:/Users/DELL/Documents/NetBeansProjects/Gym/src/com/gym/general/attendance/AttendanceForm.java</file>
             <file>file:/C:/Users/DELL/Documents/NetBeansProjects/Gym/src/com/gym/general/form/Form_Home.java</file>
             <file>file:/C:/Users/DELL/Documents/NetBeansProjects/Gym/src/com/gym/general/form/Form1.java</file>
+            <file>file:/C:/Users/DELL/Documents/NetBeansProjects/Gym/src/com/gym/general/diet/diet_main.java</file>
+            <file>file:/C:/Users/DELL/Documents/NetBeansProjects/Gym/src/com/gym/general/inquiry/inquiry_history.java</file>
+            <file>file:/C:/Users/DELL/Documents/NetBeansProjects/Gym/src/com/gym/general/attendance/AttendanceMainForm.java</file>
             <file>file:/C:/Users/DELL/Documents/NetBeansProjects/Gym/src/com/gym/general/main/AttendanceNew.java</file>
             <file>file:/C:/Users/DELL/Documents/NetBeansProjects/Gym/src/com/gym/general/component/Menu.java</file>
-            <file>file:/C:/Users/DELL/Documents/NetBeansProjects/Gym/src/com/gym/buiseness/Adjusting_Fee.java</file>
             <file>file:/C:/Users/DELL/Documents/NetBeansProjects/Gym/src/com/gym/general/main/Attendance_Advanced_Search_Main.java</file>
             <file>file:/C:/Users/DELL/Documents/NetBeansProjects/Gym/src/com/gym/controller/Add_Fees.java</file>
             <file>file:/C:/Users/DELL/Documents/NetBeansProjects/Gym/src/com/gym/general/fees/payment_history.java</file>
