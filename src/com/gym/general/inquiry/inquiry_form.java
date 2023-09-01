@@ -88,7 +88,8 @@ public class inquiry_form extends javax.swing.JFrame {
         
     }
     
-
+    
+    
     public  void get_inquiry_id(){
             String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
            String username = "sa";

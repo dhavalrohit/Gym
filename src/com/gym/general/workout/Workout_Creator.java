@@ -4,26 +4,15 @@
  */
 package com.gym.general.workout;
 
-import com.formdev.flatlaf.FlatIntelliJLaf;
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
-import com.gym.general.fees.Add_Payment;
-import java.awt.Frame;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.JTableHeader;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.DefaultComboBoxModel;
 
 
 public class Workout_Creator extends javax.swing.JFrame {
@@ -44,8 +33,6 @@ public class Workout_Creator extends javax.swing.JFrame {
         jPanel2.setVisible(false);
         pack();
         setLocationRelativeTo(null);
-        
-        
      
     }
 

@@ -5,9 +5,10 @@
         <group>
             <file>file:/C:/Users/DELL/Documents/NetBeansProjects/Gym/src/com/gym/database/SignUp.java</file>
             <file>file:/C:/Users/DELL/Documents/NetBeansProjects/Gym/src/com/gym/ui/User_Frame.java</file>
-            <file>file:/C:/Users/DELL/Documents/NetBeansProjects/Gym/src/com/gym/general/fees/print_payment_reciept.java</file>
             <file>file:/C:/Users/DELL/Documents/NetBeansProjects/Gym/src/com/gym/general/main/Main.java</file>
             <file>file:/C:/Users/DELL/Documents/NetBeansProjects/Gym/src/com/gym/buiseness/PrintBMIReport.java</file>
+            <file>file:/C:/Users/DELL/Documents/NetBeansProjects/Gym/src/com/gym/general/diet/diet_print.java</file>
+            <file>file:/C:/Users/DELL/Documents/NetBeansProjects/Gym/src/com/gym/general/workout/added_workouts.java</file>
             <file>file:/C:/Users/DELL/Documents/NetBeansProjects/Gym/src/com/gym/general/attendance/attendanceAdvancedRecord.java</file>
             <file>file:/C:/Users/DELL/Documents/NetBeansProjects/Gym/src/com/gym/general/fees/add_new_fees.java</file>
             <file>file:/C:/Users/DELL/Documents/NetBeansProjects/Gym/src/com/gym/general/diet/enterdiet.java</file>

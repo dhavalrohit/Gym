@@ -355,30 +355,30 @@ public class diet_main extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(monday_Label, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 51, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2)
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane4)
                     .addComponent(jScrollPane29))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(tuesday_Label, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 51, Short.MAX_VALUE)
+                    .addComponent(jScrollPane5)
                     .addComponent(jScrollPane6)
                     .addComponent(jScrollPane7, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jScrollPane8, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(wednesday_Label, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane9, javax.swing.GroupLayout.DEFAULT_SIZE, 51, Short.MAX_VALUE)
+                    .addComponent(jScrollPane9)
                     .addComponent(jScrollPane13, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jScrollPane18, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jScrollPane19))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(thursday_Label, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jScrollPane10, javax.swing.GroupLayout.DEFAULT_SIZE, 51, Short.MAX_VALUE)
+                            .addComponent(jScrollPane10)
                             .addComponent(jScrollPane20)
                             .addComponent(jScrollPane21))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
@@ -393,7 +393,7 @@ public class diet_main extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(saturday_Label, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jScrollPane12, javax.swing.GroupLayout.DEFAULT_SIZE, 51, Short.MAX_VALUE)))
+                            .addComponent(jScrollPane12)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jScrollPane16)
@@ -407,7 +407,7 @@ public class diet_main extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(sunday_Label, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane14, javax.swing.GroupLayout.DEFAULT_SIZE, 51, Short.MAX_VALUE)
+                    .addComponent(jScrollPane14)
                     .addComponent(jScrollPane26)
                     .addComponent(jScrollPane27, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jScrollPane28))
@@ -415,6 +415,11 @@ public class diet_main extends javax.swing.JFrame {
         );
 
         printButton.setText("Print");
+        printButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                printButtonActionPerformed(evt);
+            }
+        });
 
         pdfButton.setText("Save PDF");
 
@@ -536,6 +541,34 @@ public class diet_main extends javax.swing.JFrame {
          labe1.setText("Sunday Diet Plan");
         
     }//GEN-LAST:event_sunday_LabelMouseClicked
+  
+    private void printButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_printButtonActionPerformed
+      
+        
+        diet_print printpage=new diet_print();
+        
+        printpage.mon_break_label.setText(mon_break_TextPane.getText());
+        
+        
+      /*  printpage.mon_break_printTextPane.setText(mon_break_TextPane.getText());
+        printpage.mon_break_printTextPane.setFocusable(false);
+        printpage.mon_break_printTextPane.setEditable(false);
+        
+        printpage.mon_lunch_printTextPane.setText(mon_lunch_TextPane.getText());
+        printpage.mon_lunch_printTextPane.setFocusable(false);
+        printpage.mon_lunch_printTextPane.setEditable(false);
+        
+        printpage.mon_dinner_printTextPane.setText(mon_dinner_TextPane.getText());
+        printpage.mon_dinner_printTextPane.setFocusable(false);
+        printpage.mon_dinner_printTextPane.setEditable(false);
+       
+        printpage.mon_snacks_printTextPane.setText(mon_snacks_TextPane.getText());
+        printpage.mon_snacks_printTextPane.setFocusable(false);
+        printpage.mon_snacks_printTextPane.setEditable(false);
+       */
+      
+        printpage.setVisible(rootPaneCheckingEnabled);
+    }//GEN-LAST:event_printButtonActionPerformed
     
     
     

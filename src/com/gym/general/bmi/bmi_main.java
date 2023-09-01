@@ -6,15 +6,15 @@ package com.gym.general.bmi;
 
 import com.formdev.flatlaf.FlatIntelliJLaf;
 import com.gym.buiseness.PrintBMIReport;
+import java.text.DecimalFormat;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import org.bouncycastle.asn1.cms.CMSAttributes;
 
-/**
- *
- * @author DELL
- */
+
 public class bmi_main extends javax.swing.JFrame {
 
-    String gender;
+    String gender="";
     float bmiindex;
     
     public bmi_main() {
@@ -33,55 +33,60 @@ public class bmi_main extends javax.swing.JFrame {
     
     public void calculateBMI()
     {
-        float hieght_feet=Float.parseFloat(feet_TextField.getText());
-        float hieght_in=Float.parseFloat(inches_TextField.getText());
-      // float hieght_cm=Float.parseFloat(hieght_cm_TextField.getText());
-      
-      
-      
-        float wieght=Float.parseFloat(wieght_TextField.getText());
         
-        float hieght_meters=(float) (hieght_feet*0.3048+hieght_in*0.0254);
+        double hieght_feet=Double.parseDouble(feet_TextField.getText());
+        double hieght_in=Double.parseDouble(inches_TextField.getText());
+//      float hieght_cm=Float.parseFloat(hieght_cm_TextField.getText());
+      
+        Double wieght=Double.parseDouble(wieght_TextField.getText());
         
-         float square_root=(float)Math.pow(hieght_meters, 2);
-         float bmi=wieght/square_root;
+        double hieght_meters=(double) ((hieght_feet*12+hieght_in)*0.0254);
+        System.out.println(hieght_meters);
+        
+         double hieght_square=hieght_meters*hieght_meters;
+         
+         double bmi=(wieght/(hieght_square));
+         
+         DecimalFormat dformat=new DecimalFormat("0.00");
+         
+         System.out.println(dformat.format(bmi));
         
         if(bmi>=18.5 && bmi<=24.9)
         {
-            System.out.println(bmi);
+            //System.out.println(bmi);
             bmi_result_TextField.setEnabled(true);
-            bmi_result_TextField.setText(String.valueOf(bmi));
+            bmi_result_TextField.setText(dformat.format(bmi));
             
-            bmiindex=bmi;
             JOptionPane.showMessageDialog(rootPane, "you are under Normal weight","BMI Chart Message",JOptionPane.INFORMATION_MESSAGE);
         }
         else if(bmi>24.9)
         {
             if(bmi>29.9)
             {
-             System.out.println(bmi);
+            // System.out.println(bmi);
            bmi_result_TextField.setEnabled(true);
-            bmi_result_TextField.setText(String.valueOf(bmi));
-             bmiindex=bmi;
+            bmi_result_TextField.setText(dformat.format(bmi));
+            
             JOptionPane.showMessageDialog(rootPane, "Obese","BMI Chart Message",JOptionPane.ERROR_MESSAGE);
             }
             else
             {
-                System.out.println(bmi);
+               // System.out.println(bmi);
            bmi_result_TextField.setEnabled(true);
-            bmi_result_TextField.setText(String.valueOf(bmi));
-             bmiindex=bmi;
-                System.out.println(bmi);
+            bmi_result_TextField.setText(dformat.format(bmi));
+            
+                //System.out.println(bmi);
                 JOptionPane.showMessageDialog(rootPane, "Overweight","BMI Chart Message",JOptionPane.ERROR_MESSAGE);
             }
         }
+        
         else if(bmi < 18.5)
         {
-            System.out.println(bmi);
+            //System.out.println(bmi);
             bmi_result_TextField.setEnabled(true);
-            bmi_result_TextField.setText(String.valueOf(bmi));
-            bmiindex=bmi;
-            System.out.println(bmi);
+            bmi_result_TextField.setText(dformat.format(bmi));
+            
+            //System.out.println(bmi);
             JOptionPane.showMessageDialog(rootPane, "Underweight", "BMI Chart Message",JOptionPane.ERROR_MESSAGE);
         }
         
@@ -89,6 +94,207 @@ public class bmi_main extends javax.swing.JFrame {
              
      }
     
+    public boolean check_name_field(String text){
+         boolean result=true;
+         if (text.isEmpty()) {
+            JOptionPane.showMessageDialog(new JFrame(), "Name Field is Empty", "Name Field Error",JOptionPane.ERROR_MESSAGE);
+            result=false;
+            
+      
+        }
+        else{
+            
+            int len=text.length();
+            for (int i = 0; i < len; i++) {
+                if(Character.toString(text.charAt(i)).matches("^[a-zA-Z]+$")){
+                   result=true;
+                    continue;
+                        
+                        
+                    
+            }else{
+                    
+                    JOptionPane.showMessageDialog(new JFrame(), "Name Field Contains Number","Name Field Error",JOptionPane.ERROR_MESSAGE);
+                     System.out.println("Contains number");
+                    result= false;
+                    break;
+                    
+                }
+            }
+        }
+        
+            return result;
+    }
+    
+    
+    public boolean check_hieght_textfield(String text){
+    
+        boolean result=true;
+        
+               if (text.isEmpty()) {
+            JOptionPane.showMessageDialog(new JFrame(), "Hieght Field Can't be Empty");
+            result=false;
+        }
+        else{
+            int len=text.length();
+            for (int i = 0; i < len; i++) {
+                if(Character.toString(text.charAt(i)).matches("^[0-9]+$")){
+                    result=true;
+                    continue;
+                        
+                    
+            }else{
+                    JOptionPane.showMessageDialog(new JFrame(), "Only Digits Allowed","Hieght Field Error",JOptionPane.ERROR_MESSAGE);
+                     System.out.println("Contains number");
+                     result=false;
+                     break;
+                }}
+        }
+ return result;
+}
+
+    
+    
+public boolean check_waist_textfield(String text){
+
+      boolean result=true;
+        
+               if (text.isEmpty()) {
+            JOptionPane.showMessageDialog(new JFrame(), "Waist Field Can't be Empty","Waist Field Error",JOptionPane.ERROR_MESSAGE);
+            result=false;
+        }
+        else{
+            int len=text.length();
+            for (int i = 0; i < len; i++) {
+                if(Character.toString(text.charAt(i)).matches("^[0-9]+$")){
+                    result=true;
+                    continue;
+                        
+                    
+            }else{
+                    JOptionPane.showMessageDialog(new JFrame(), "Only Digits Allowed","Waist Field Error",JOptionPane.ERROR_MESSAGE);
+                     System.out.println("Contains number");
+                     result=false;
+                     break;
+                }}
+        }
+ return result;
+
+}
+
+
+public boolean check_wrist_textfield(String text){
+
+      boolean result=true;
+        
+               if (text.isEmpty()) {
+            JOptionPane.showMessageDialog(new JFrame(), "Wrist Field Can't be Empty","Wrist Field Error0",JOptionPane.ERROR_MESSAGE);
+            result=false;
+        }
+        else{
+            int len=text.length();
+            for (int i = 0; i < len; i++) {
+                if(Character.toString(text.charAt(i)).matches("^[0-9]+$")){
+                    result=true;
+                    continue;
+                    
+            }else{
+                    JOptionPane.showMessageDialog(new JFrame(), "Only Digits Allowed","Wrist Field Error0",JOptionPane.ERROR_MESSAGE);
+                     System.out.println("Contains number");
+                     result=false;
+                     break;
+                }}
+        }
+ return result;
+
+}
+
+public boolean check_forearm_textfield(String text){
+
+      boolean result=true;
+        
+               if (text.isEmpty()) {
+            JOptionPane.showMessageDialog(new JFrame(), "Forearm Field Can't be Empty");
+            result=false;
+            
+        }
+        else{
+            int len=text.length();
+            for (int i = 0; i < len; i++) {
+                if(Character.toString(text.charAt(i)).matches("^[0-9]+$")){
+                    result=true;
+                    continue;
+                        
+                    
+            }else{
+                    JOptionPane.showMessageDialog(new JFrame(), "Only Digits Allowed","Forearm Field Error",JOptionPane.ERROR_MESSAGE);
+                     System.out.println("Contains number");
+                     result=false;
+                     break;
+                }}
+        }
+ return result;
+
+}    
+
+public boolean check_hips_textfield(String text){
+
+      boolean result=true;
+        
+               if (text.isEmpty()) {
+            JOptionPane.showMessageDialog(new JFrame(), "Hips Field Can't be Empty");
+            result=false;
+        }
+        else{
+            int len=text.length();
+            for (int i = 0; i < len; i++) {
+                if(Character.toString(text.charAt(i)).matches("^[0-9]+$")){
+                    result=true;
+                        continue;
+                    
+            }else{
+                    JOptionPane.showMessageDialog(new JFrame(), "Only Digits Allowed","Hips Field Error",JOptionPane.ERROR_MESSAGE);
+                     System.out.println("Contains number");
+                     result=false;
+                     break;
+                }}
+        }
+ return result;
+
+}    
+
+
+
+
+public boolean check_wieght_textfield(String text){
+    
+        boolean result=true;
+        
+               if (text.isEmpty()) {
+            JOptionPane.showMessageDialog(new JFrame(), "Wieght Field Can't be Empty","Wieght Field Error",JOptionPane.ERROR_MESSAGE);
+            result=false;
+        }
+        else{
+            int len=text.length();
+            for (int i = 0; i < len; i++) {
+                if(Character.toString(text.charAt(i)).matches("^[0-9]+$")){
+                    result=true;
+                    continue;
+                        
+                    
+            }else{
+                    JOptionPane.showMessageDialog(new JFrame(), "Only Digits Allowed","Wieght Field Error",JOptionPane.ERROR_MESSAGE);
+                     System.out.println("Contains number");
+                     result=false;
+                     break;
+                }}
+        }
+ return result;
+}    
+    
+
+
+
      public void calculateFatForMan()
     {
         
@@ -101,8 +307,15 @@ public class bmi_main extends javax.swing.JFrame {
         float lbm=val1-val2;
         float val3=pound-lbm;
         float bmass=val3/pound*100;
+        
+        DecimalFormat dformat=new DecimalFormat("0.00");
+         
+         System.out.println(dformat.format(bmass));
+        
+        
         fat_result_TextField.setEnabled(true);
-        fat_result_TextField.setText(String.valueOf(bmass));
+        
+        fat_result_TextField.setText(dformat.format(bmass));
         
     }
        public void calculateFatForWoman()
@@ -127,13 +340,27 @@ public class bmi_main extends javax.swing.JFrame {
         float lbm=value6+value9;
         value10=pound-lbm;
         float fat=value10/pound*100;
+       
+        DecimalFormat dformat=new DecimalFormat("0.00");
+         
+         System.out.println(dformat.format(fat));
+        
+        
         fat_result_TextField.setEnabled(true);
-        fat_result_TextField.setText(String.valueOf(fat));
+        fat_result_TextField.setText(dformat.format(fat));
         
     }
     
     
-    
+            public boolean checkAllFields(boolean[] fields) {
+    for (boolean field : fields) {
+        if (!field) {
+            return false; // If any field is false, return false
+        }
+    }
+    return true; // If all fields are true, return true
+}
+            
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -182,6 +409,11 @@ public class bmi_main extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         jLabel2.setText("NAME");
 
+        nameTextField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                nameTextFieldFocusLost(evt);
+            }
+        });
         nameTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 nameTextFieldActionPerformed(evt);
@@ -190,6 +422,12 @@ public class bmi_main extends javax.swing.JFrame {
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         jLabel3.setText("ENTER HIEGHT");
+
+        feet_TextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                feet_TextFieldActionPerformed(evt);
+            }
+        });
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         jLabel4.setText("feet");
@@ -482,7 +720,38 @@ public class bmi_main extends javax.swing.JFrame {
 
     private void BMI_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BMI_ButtonActionPerformed
         // TODO add your handling code here:
-        calculateBMI();
+        String name=nameTextField.getText();
+        String wieght=wieght_TextField.getText();
+        String hieght_feet=feet_TextField.getText();
+        String hieght_inches=inches_TextField.getText();
+        String hips=hips_TextField.getText();
+        String waist=waist_TextField.getText();
+        String forearm=forearm_TextField.getText();
+        String wrist=wrist_TextField.getText();
+        
+
+        
+       boolean name_check = check_name_field(name);
+       boolean wieght_check=check_wieght_textfield(wieght);
+       boolean hieght_check_feet=check_hieght_textfield(hieght_feet);
+       boolean hieght_check_inches=check_hieght_textfield(hieght_inches);
+      // boolean hips_check=check_hips_textfield(hips);
+       //boolean wrist_check=check_wrist_textfield(wrist);
+       //boolean forearm_check=check_forearm_textfield(forearm);
+       //boolean waist_check=check_waist_textfield(waist);
+       
+       boolean[] checkallfields_for_bmi={name_check,wieght_check,hieght_check_feet,hieght_check_inches};
+       
+       boolean check_constraints=checkAllFields(checkallfields_for_bmi);
+       
+        if (check_constraints==true) {
+            System.out.println("all fields are within constraints");
+            calculateBMI();
+        }else{
+            System.out.println("Invalid Fields");
+        }
+       
+        
     }//GEN-LAST:event_BMI_ButtonActionPerformed
 
     private void maleRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maleRadioButtonActionPerformed
@@ -494,15 +763,72 @@ public class bmi_main extends javax.swing.JFrame {
         
     }//GEN-LAST:event_maleRadioButtonActionPerformed
 
+    
     private void calculate_fat_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_calculate_fat_ButtonActionPerformed
         // TODO add your handling code here:
+      
+        if (gender.isBlank()) {
+            JOptionPane.showMessageDialog(new JFrame(), "Please Select Gender", "Gender Field", JOptionPane.ERROR_MESSAGE);
+            reset_ButtonActionPerformed(evt);
+        }
+       
         if (gender.equalsIgnoreCase("male")) {
-            calculateFatForMan();
-        }else{
-            calculateFatForWoman();
+              String name=nameTextField.getText();
+             String wieght=wieght_TextField.getText();
+                String hieght_feet=feet_TextField.getText();
+        String hieght_inches=inches_TextField.getText();
+        String waist=waist_TextField.getText();
+        
+        boolean name_check = check_name_field(name);
+       boolean wieght_check=check_wieght_textfield(wieght);
+       boolean hieght_check_feet=check_hieght_textfield(hieght_feet);
+       boolean hieght_check_inches=check_hieght_textfield(hieght_inches);
+       boolean waist_check=check_waist_textfield(waist);
+       
+       boolean[] checkallfields_for_fat_man={name_check,wieght_check,hieght_check_feet,hieght_check_inches,waist_check};
+       
+       boolean check_constraints=checkAllFields(checkallfields_for_fat_man);
+                if (check_constraints==true) {
+                      System.out.println("all fields are within constraints");
+                        calculateFatForMan();
+            }else{
+            System.out.println("Invalid Fields");
+         }
+                
+            }
+       
+        if (gender.equalsIgnoreCase("female")) {
+                    String name=nameTextField.getText();
+        String wieght=wieght_TextField.getText();
+        String hieght_feet=feet_TextField.getText();
+        String hieght_inches=inches_TextField.getText();
+        String hips=hips_TextField.getText();
+        String waist=waist_TextField.getText();
+        String forearm=forearm_TextField.getText();
+        String wrist=wrist_TextField.getText();
+        
+        boolean name_check = check_name_field(name);
+       boolean wieght_check=check_wieght_textfield(wieght);
+       boolean hieght_check_feet=check_hieght_textfield(hieght_feet);
+       boolean hieght_check_inches=check_hieght_textfield(hieght_inches);
+       boolean hips_check=check_hips_textfield(hips);
+       boolean wrist_check=check_wrist_textfield(wrist);
+       boolean forearm_check=check_forearm_textfield(forearm);
+       boolean waist_check=check_waist_textfield(waist);
+       
+       boolean[] checkallfields_for_bmi={name_check,wieght_check,hieght_check_feet,hieght_check_inches,waist_check,wrist_check,hips_check,forearm_check};
+       
+       boolean check_constraints=checkAllFields(checkallfields_for_bmi);
+                     if (check_constraints==true) {
+                      System.out.println("all fields are within constraints");
+                        calculateFatForWoman();
+            }else{
+            System.out.println("Invalid Fields");
+         }
+            
         }
         
-        
+    
     }//GEN-LAST:event_calculate_fat_ButtonActionPerformed
 
     private void femaleRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_femaleRadioButtonActionPerformed
@@ -610,6 +936,17 @@ public class bmi_main extends javax.swing.JFrame {
         }
         
     }//GEN-LAST:event_print_report_ButtonActionPerformed
+
+    private void nameTextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_nameTextFieldFocusLost
+        // TODO add your handling code here:
+      
+        
+    }//GEN-LAST:event_nameTextFieldFocusLost
+
+    private void feet_TextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_feet_TextFieldActionPerformed
+       
+        // TODO add your handling code here:
+    }//GEN-LAST:event_feet_TextFieldActionPerformed
 
     /**
      * @param args the command line arguments

@@ -84,6 +84,45 @@ public class Sms_Main extends javax.swing.JFrame {
     
     }
     
+    
+    public boolean check_number_textfield(String text){
+
+      boolean result=true;
+        
+               if (text.isEmpty()) {
+            JOptionPane.showMessageDialog(new JFrame(), "Mobile No Field is Empty","Mobile No Field Error",JOptionPane.ERROR_MESSAGE);
+            result=false;
+        }
+        else{
+            int len=text.length();
+            for (int i = 0; i < len; i++) {
+                if(Character.toString(text.charAt(i)).matches("^[0-9]+$")){
+                    result=true;
+                    continue;
+                        
+                    
+            }else{
+                    JOptionPane.showMessageDialog(new JFrame(), "Only Digits Allowed","Mobile No Field Error",JOptionPane.ERROR_MESSAGE);
+                     System.out.println("Contains Alphabets");
+                     result=false;
+                     break;
+                }}
+        }
+ return result;
+
+}
+
+ public boolean checkAllFields(boolean[] fields) {
+    for (boolean field : fields) {
+        if (!field) {
+            return false; 
+        }
+    }
+    return true; 
+}
+   
+    
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -406,11 +445,25 @@ public class Sms_Main extends javax.swing.JFrame {
         total_mem_count_Label.setText(null);
 	message_TextArea.setText(null);
 	phone_no_TextField.setText(null);
+        char_count_Label.setText(null);
+        balance_count_Label.setText(null);
     }//GEN-LAST:event_reset_ButtonActionPerformed
 
     private void add_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_add_ButtonActionPerformed
         // TODO add your handling code here:
-          DefaultTableModel table1 = (DefaultTableModel)jTable1.getModel();
+      
+           String mobile_no=phone_no_TextField.getText();
+        
+
+        
+       boolean mob_no_check = check_number_textfield(mobile_no);
+       
+       boolean[] checkallfields_for_mob_no={mob_no_check};
+       
+       boolean check_constraints=checkAllFields(checkallfields_for_mob_no);
+       
+        
+        DefaultTableModel table1 = (DefaultTableModel)jTable1.getModel();
 				  
 				try {	 
 					String phoneno=phone_no_TextField.getText();
@@ -422,8 +475,8 @@ public class Sms_Main extends javax.swing.JFrame {
 					else if(msg.equals("")) {
 						JOptionPane.showMessageDialog(null, "Empty Message");
 					}
-				  
-					else {
+                                        
+                                        else if(check_constraints==true) {
 					Long num=Long.parseLong(phoneno);
 			        table1.addRow(new Object[]{num,msg});
 			        total_noo=total_noo+1;
@@ -431,6 +484,10 @@ public class Sms_Main extends javax.swing.JFrame {
 			        
 			        total_mem_count_Label.setText(ss);
 					}
+                                        else{
+                         System.out.println("Invalid Fields");
+                               }
+                                        
 				}
 				catch(Exception ee)
 				{

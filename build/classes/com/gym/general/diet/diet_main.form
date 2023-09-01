@@ -167,7 +167,7 @@
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="1" attributes="0">
                       <Component id="monday_Label" alignment="0" min="-2" pref="50" max="-2" attributes="0"/>
-                      <Component id="jScrollPane2" alignment="1" pref="51" max="32767" attributes="0"/>
+                      <Component id="jScrollPane2" alignment="1" max="32767" attributes="0"/>
                       <Component id="jScrollPane3" alignment="0" max="32767" attributes="0"/>
                       <Component id="jScrollPane4" alignment="1" max="32767" attributes="0"/>
                       <Component id="jScrollPane29" alignment="1" max="32767" attributes="0"/>
@@ -175,7 +175,7 @@
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="tuesday_Label" alignment="0" min="-2" pref="50" max="-2" attributes="0"/>
-                      <Component id="jScrollPane5" alignment="0" pref="51" max="32767" attributes="0"/>
+                      <Component id="jScrollPane5" alignment="0" max="32767" attributes="0"/>
                       <Component id="jScrollPane6" alignment="0" max="32767" attributes="0"/>
                       <Component id="jScrollPane7" alignment="1" max="32767" attributes="0"/>
                       <Component id="jScrollPane8" alignment="1" max="32767" attributes="0"/>
@@ -183,17 +183,17 @@
                   <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="wednesday_Label" alignment="0" min="-2" pref="50" max="-2" attributes="0"/>
-                      <Component id="jScrollPane9" alignment="0" pref="51" max="32767" attributes="0"/>
+                      <Component id="jScrollPane9" alignment="0" max="32767" attributes="0"/>
                       <Component id="jScrollPane13" alignment="1" max="32767" attributes="0"/>
                       <Component id="jScrollPane18" alignment="1" max="32767" attributes="0"/>
                       <Component id="jScrollPane19" alignment="0" max="32767" attributes="0"/>
                   </Group>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="thursday_Label" alignment="0" min="-2" pref="50" max="-2" attributes="0"/>
-                              <Component id="jScrollPane10" alignment="0" pref="51" max="32767" attributes="0"/>
+                              <Component id="jScrollPane10" alignment="0" max="32767" attributes="0"/>
                               <Component id="jScrollPane20" alignment="0" max="32767" attributes="0"/>
                               <Component id="jScrollPane21" alignment="0" max="32767" attributes="0"/>
                           </Group>
@@ -213,7 +213,7 @@
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="saturday_Label" alignment="0" min="-2" pref="50" max="-2" attributes="0"/>
-                              <Component id="jScrollPane12" alignment="0" pref="51" max="32767" attributes="0"/>
+                              <Component id="jScrollPane12" alignment="0" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
@@ -233,7 +233,7 @@
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="sunday_Label" alignment="0" min="-2" pref="50" max="-2" attributes="0"/>
-                      <Component id="jScrollPane14" alignment="0" pref="51" max="32767" attributes="0"/>
+                      <Component id="jScrollPane14" alignment="0" max="32767" attributes="0"/>
                       <Component id="jScrollPane26" alignment="0" max="32767" attributes="0"/>
                       <Component id="jScrollPane27" alignment="1" max="32767" attributes="0"/>
                       <Component id="jScrollPane28" max="32767" attributes="0"/>
@@ -740,6 +740,9 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Print"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="printButtonActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="pdfButton">
       <Properties>

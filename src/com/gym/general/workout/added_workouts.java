@@ -35,6 +35,8 @@ public class added_workouts extends javax.swing.JFrame {
         initComponents();
         show_all_workouts();
         
+       
+        
     }
 
      public void show_all_workouts(){
