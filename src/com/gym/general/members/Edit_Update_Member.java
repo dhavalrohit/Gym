@@ -25,6 +25,7 @@ import javax.swing.JOptionPane;
 import net.proteanit.sql.DbUtils;
 import java.util.logging.Level;
 import javax.imageio.ImageIO;
+import javax.swing.JFrame;
 
 
 /**
@@ -484,8 +485,20 @@ public class Edit_Update_Member extends javax.swing.JFrame {
         name.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         name.setText("Name");
 
+        name_TextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                name_TextFieldKeyReleased(evt);
+            }
+        });
+
         mobileno.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         mobileno.setText("Mobile No");
+
+        mobileno_TextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                mobileno_TextFieldKeyReleased(evt);
+            }
+        });
 
         address.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         address.setText("Email");
@@ -793,9 +806,51 @@ public class Edit_Update_Member extends javax.swing.JFrame {
 
     }//GEN-LAST:event_view_ButtonActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
+    private void name_TextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_name_TextFieldKeyReleased
+        // TODO add your handling code here:
+        String text=name_TextField.getText();
+          int len=text.length();
+            for (int i = 0; i < len; i++) {
+                if(Character.toString(text.charAt(i)).matches("^[a-zA-Z]+$")){
+                    continue;
+            }
+            
+            else{
+                 
+                    JOptionPane.showMessageDialog(new JFrame(), "Name Field Contains Number","Name Field Error",JOptionPane.ERROR_MESSAGE);
+                     System.out.println("Contains number");
+                     name_TextField.setText(null);
+                }
+            }
+            
+    }//GEN-LAST:event_name_TextFieldKeyReleased
+
+    private void mobileno_TextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_mobileno_TextFieldKeyReleased
+       
+       
+        
+       String text=mobileno_TextField.getText();
+       for(int i=0;i<text.length();i++){
+         int len=0;
+         
+        if (mobileno_TextField.getText().length()>0 && Character.toString(text.charAt(i)).matches("^[0-9]+$")) {
+            len=text.length();
+            
+        }else{
+             JOptionPane.showMessageDialog(new JFrame(), "Only Digits Allowed","Hieght Field Error",JOptionPane.ERROR_MESSAGE);
+                     System.out.println("Contains Alphabet");
+        }
+ 
+        
+    }
+       
+    }//GEN-LAST:event_mobileno_TextFieldKeyReleased
+    
+
+    
+    
+    
+    
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">

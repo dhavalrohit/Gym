@@ -386,6 +386,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="name_TextField">
+          <Events>
+            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="name_TextFieldKeyReleased"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="mobileno">
           <Properties>
@@ -396,6 +399,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="mobileno_TextField">
+          <Events>
+            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="mobileno_TextFieldKeyReleased"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="address">
           <Properties>

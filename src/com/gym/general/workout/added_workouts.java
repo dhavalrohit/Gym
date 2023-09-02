@@ -14,10 +14,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import net.proteanit.sql.DbUtils;
 
-/**
- *
- * @author DELL
- */
+
 public class added_workouts extends javax.swing.JFrame {
 
     Connection con=null;

@@ -167,11 +167,29 @@ public class Workout_Creator extends javax.swing.JFrame {
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel6.setText("SETS");
 
+        sets_TextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                sets_TextFieldKeyReleased(evt);
+            }
+        });
+
         jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel7.setText("REPS");
 
+        reps_TextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                reps_TextFieldKeyReleased(evt);
+            }
+        });
+
         jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel8.setText("REST");
+
+        rest_TextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                rest_TextFieldKeyReleased(evt);
+            }
+        });
 
         addButton.setText("ADD ");
         addButton.addActionListener(new java.awt.event.ActionListener() {
@@ -374,6 +392,58 @@ public class Workout_Creator extends javax.swing.JFrame {
         reset();
         
     }//GEN-LAST:event_resetjButtonActionPerformed
+
+    private void sets_TextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_sets_TextFieldKeyReleased
+        // TODO add your handling code here:
+                               String text=sets_TextField.getText();
+      for(int i=0;i<text.length();i++){
+         
+        if (sets_TextField.getText().length()>0 && Character.toString(text.charAt(i)).matches("^[0-9]+$")) {
+            
+        }else{
+             JOptionPane.showMessageDialog(new JFrame(), "Only Digits Allowed","Hieght Field Error",JOptionPane.ERROR_MESSAGE);
+                     System.out.println("Contains Alphabet");
+                   sets_TextField.setText(null);
+        }
+ 
+        
+    }
+     
+    }//GEN-LAST:event_sets_TextFieldKeyReleased
+
+    private void reps_TextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_reps_TextFieldKeyReleased
+        // TODO add your handling code here:
+                                   String text=reps_TextField.getText();
+      for(int i=0;i<text.length();i++){
+         
+        if (reps_TextField.getText().length()>0 && Character.toString(text.charAt(i)).matches("^[0-9]+$")) {
+            
+        }else{
+             JOptionPane.showMessageDialog(new JFrame(), "Only Digits Allowed","Hieght Field Error",JOptionPane.ERROR_MESSAGE);
+                     System.out.println("Contains Alphabet");
+                   reps_TextField.setText(null);
+        }
+ 
+        
+    }
+    }//GEN-LAST:event_reps_TextFieldKeyReleased
+
+    private void rest_TextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_rest_TextFieldKeyReleased
+        // TODO add your handling code here:
+      String text=rest_TextField.getText();
+      for(int i=0;i<text.length();i++){
+         
+        if (rest_TextField.getText().length()>0 && Character.toString(text.charAt(i)).matches("^[0-9]+$")) {
+            
+        }else{
+             JOptionPane.showMessageDialog(new JFrame(), "Only Digits Allowed","Hieght Field Error",JOptionPane.ERROR_MESSAGE);
+                     System.out.println("Contains Alphabet");
+                   rest_TextField.setText(null);
+        }
+ 
+        
+    }
+    }//GEN-LAST:event_rest_TextFieldKeyReleased
 
     /**
      * @param args the command line arguments

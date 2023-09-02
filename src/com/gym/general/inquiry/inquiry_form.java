@@ -151,6 +151,12 @@ public class inquiry_form extends javax.swing.JFrame {
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         jLabel3.setText("Name");
 
+        nameTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                nameTextFieldKeyReleased(evt);
+            }
+        });
+
         date_dc.setTextField(dateTextField);
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
@@ -161,6 +167,12 @@ public class inquiry_form extends javax.swing.JFrame {
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         jLabel6.setText("Contact No");
+
+        mobilenoTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                mobilenoTextFieldKeyReleased(evt);
+            }
+        });
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         jLabel7.setText("Inquiry For");
@@ -288,6 +300,45 @@ public class inquiry_form extends javax.swing.JFrame {
         // TODO add your handling code here:
         add_inquiry();
     }//GEN-LAST:event_saveButtonActionPerformed
+
+    private void nameTextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nameTextFieldKeyReleased
+        // TODO add your handling code here:
+        String text=nameTextField.getText();
+          int len=text.length();
+            for (int i = 0; i < len; i++) {
+                if(Character.toString(text.charAt(i)).matches("^[a-zA-Z]+$")){
+                    continue;
+                        
+                        
+                    
+            }else{
+                    
+                    JOptionPane.showMessageDialog(new JFrame(), "Name Field Contains Number","Name Field Error",JOptionPane.ERROR_MESSAGE);
+                     System.out.println("Contains number");
+                     nameTextField.setText(null);
+                     break;
+                    
+                }
+            }
+    }//GEN-LAST:event_nameTextFieldKeyReleased
+
+    private void mobilenoTextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_mobilenoTextFieldKeyReleased
+        // TODO add your handling code here:
+                        String text=mobilenoTextField.getText();
+      for(int i=0;i<text.length();i++){
+         
+        if (mobilenoTextField.getText().length()>0 && Character.toString(text.charAt(i)).matches("^[0-9]+$")) {
+            
+        }else{
+             JOptionPane.showMessageDialog(new JFrame(), "Only Digits Allowed","Hieght Field Error",JOptionPane.ERROR_MESSAGE);
+                     System.out.println("Contains Alphabet");
+                   mobilenoTextField.setText(null);
+        }
+ 
+        
+    }
+      
+    }//GEN-LAST:event_mobilenoTextFieldKeyReleased
 
     /**
      * @param args the command line arguments

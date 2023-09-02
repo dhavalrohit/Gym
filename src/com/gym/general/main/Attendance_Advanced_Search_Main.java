@@ -29,10 +29,12 @@ import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTarget;
 import org.jdesktop.animation.timing.TimingTargetAdapter;
 
-/**
- *
- * @author DELL
- */
+
+
+
+
+
+
 public class Attendance_Advanced_Search_Main extends javax.swing.JFrame{
     private MigLayout layout;
     private attendanceadvancedmenu menu;
@@ -50,6 +52,7 @@ public class Attendance_Advanced_Search_Main extends javax.swing.JFrame{
     
     
   
+    
     
     private void init() throws SQLException {
         layout = new MigLayout("fill", "0[]0[100%, fill]0", "0[fill, top]0");

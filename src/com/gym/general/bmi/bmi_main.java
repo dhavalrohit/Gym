@@ -145,7 +145,7 @@ public class bmi_main extends javax.swing.JFrame {
                     
             }else{
                     JOptionPane.showMessageDialog(new JFrame(), "Only Digits Allowed","Hieght Field Error",JOptionPane.ERROR_MESSAGE);
-                     System.out.println("Contains number");
+                     System.out.println("Contains Alphabet");
                      result=false;
                      break;
                 }}
@@ -355,10 +355,10 @@ public boolean check_wieght_textfield(String text){
             public boolean checkAllFields(boolean[] fields) {
     for (boolean field : fields) {
         if (!field) {
-            return false; // If any field is false, return false
+            return false; 
         }
     }
-    return true; // If all fields are true, return true
+    return true; 
 }
             
     @SuppressWarnings("unchecked")

@@ -112,7 +112,7 @@ public class Sms_Main extends javax.swing.JFrame {
 
 }
 
- public boolean checkAllFields(boolean[] fields) {
+ public boolean check_all_fields(boolean[] fields) {
     for (boolean field : fields) {
         if (!field) {
             return false; 
@@ -460,7 +460,7 @@ public class Sms_Main extends javax.swing.JFrame {
        
        boolean[] checkallfields_for_mob_no={mob_no_check};
        
-       boolean check_constraints=checkAllFields(checkallfields_for_mob_no);
+       boolean check_constraints=check_all_fields(checkallfields_for_mob_no);
        
         
         DefaultTableModel table1 = (DefaultTableModel)jTable1.getModel();

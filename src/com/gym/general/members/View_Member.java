@@ -403,6 +403,12 @@ public class View_Member extends javax.swing.JFrame {
         mobileno.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         mobileno.setText("Mobile No");
 
+        mobileno_TextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                mobileno_TextFieldKeyReleased(evt);
+            }
+        });
+
         address.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         address.setText("Email");
 
@@ -426,6 +432,12 @@ public class View_Member extends javax.swing.JFrame {
 
         id_aadhar.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         id_aadhar.setText("ID Card/Aadhar");
+
+        id_TextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                id_TextFieldKeyReleased(evt);
+            }
+        });
 
         fathername.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         fathername.setText("Father/Guardian Name");
@@ -705,6 +717,17 @@ public class View_Member extends javax.swing.JFrame {
         // TODO add your handling code here:
         dispose();
     }//GEN-LAST:event_back_ButtonActionPerformed
+
+    private void id_TextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_id_TextFieldKeyReleased
+        // TODO add your handling code here:
+        
+        
+    }//GEN-LAST:event_id_TextFieldKeyReleased
+
+    private void mobileno_TextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_mobileno_TextFieldKeyReleased
+        // TODO add your handling code here:
+       
+    }//GEN-LAST:event_mobileno_TextFieldKeyReleased
 
     /**
      * @param args the command line arguments

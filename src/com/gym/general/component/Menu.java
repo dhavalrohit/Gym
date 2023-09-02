@@ -88,6 +88,7 @@ public class Menu extends javax.swing.JPanel{
         addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/gym/general/icon/12.png")), "Help", "About","Update Software", "How To?"));
         addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/gym/general/icon/13.png")), "Account","Log Out","Update Accounts"));
         addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/gym/general/icon/close.png")), "Close"));
+   
     }
 
     private void addMenu(ModelMenu menu) {

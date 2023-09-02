@@ -1,7 +1,5 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
+
+
 package com.gym.general.members;
 import com.gym.general.main.*;
 import com.formdev.flatlaf.FlatIntelliJLaf;
@@ -723,8 +721,20 @@ INSERT INTO [dbo].[Mst_Employee]
         name.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         name.setText("Name");
 
+        name_TextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                name_TextFieldKeyReleased(evt);
+            }
+        });
+
         mobileno.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         mobileno.setText("Mobile No");
+
+        mobileno_TextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                mobileno_TextFieldKeyReleased(evt);
+            }
+        });
 
         address.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         address.setText("Email");
@@ -752,6 +762,12 @@ INSERT INTO [dbo].[Mst_Employee]
 
         fathername.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         fathername.setText("Father/Guardian Name");
+
+        fathername_TextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                fathername_TextFieldKeyReleased(evt);
+            }
+        });
 
         add_Button.setBackground(new java.awt.Color(32, 161, 93));
         add_Button.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
@@ -1121,11 +1137,68 @@ INSERT INTO [dbo].[Mst_Employee]
                  
     }//GEN-LAST:event_add_new_member_ButtonActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
+    private void name_TextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_name_TextFieldKeyReleased
+        // TODO add your handling code here:
+        String text=name_TextField.getText();
+          int len=text.length();
+            for (int i = 0; i < len; i++) {
+                if(Character.toString(text.charAt(i)).matches("^[a-zA-Z]+$")){
+                    continue;
+                    
+            }else{
+                    
+                    JOptionPane.showMessageDialog(new JFrame(), "Name Field Contains Number","Name Field Error",JOptionPane.ERROR_MESSAGE);
+                     System.out.println("Contains number");
+                     name_TextField.setText(null);
+                     break;
+                    
+                }
+            }
+    }//GEN-LAST:event_name_TextFieldKeyReleased
+
+    private void mobileno_TextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_mobileno_TextFieldKeyReleased
+        // TODO add your handling code here:
+                           String text=mobileno_TextField.getText();
+      for(int i=0;i<text.length();i++){
+         
+        if (mobileno_TextField.getText().length()>0 && Character.toString(text.charAt(i)).matches("^[0-9]+$")) {
+            
+        }else{
+             JOptionPane.showMessageDialog(new JFrame(), "Only Digits Allowed","Hieght Field Error",JOptionPane.ERROR_MESSAGE);
+                     System.out.println("Contains Alphabet");
+                   mobileno_TextField.setText(null);
+        }
+ 
+        
+    }
+     
+    }//GEN-LAST:event_mobileno_TextFieldKeyReleased
+
+    private void fathername_TextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_fathername_TextFieldKeyReleased
+        // TODO add your handling code here:
+         String text=fathername_TextField.getText();
+          int len=text.length();
+            for (int i = 0; i < len; i++) {
+                if(Character.toString(text.charAt(i)).matches("^[a-zA-Z]+$")){
+                    continue;
+                        
+                        
+                    
+            }else{
+                    
+                    JOptionPane.showMessageDialog(new JFrame(), "Name Field Contains Number","Name Field Error",JOptionPane.ERROR_MESSAGE);
+                     System.out.println("Contains number");
+                     fathername_TextField.setText(null);
+                     break;
+                    
+                }
+            }
+    }//GEN-LAST:event_fathername_TextFieldKeyReleased
+
+    
     
     public void selectFile() {
+        
         JFileChooser chooser = new JFileChooser();
         // optionally set chooser options ...
         if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {

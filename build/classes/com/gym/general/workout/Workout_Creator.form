@@ -265,6 +265,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="sets_TextField">
+          <Events>
+            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="sets_TextFieldKeyReleased"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel7">
           <Properties>
@@ -275,6 +278,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="reps_TextField">
+          <Events>
+            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="reps_TextFieldKeyReleased"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel8">
           <Properties>
@@ -285,6 +291,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="rest_TextField">
+          <Events>
+            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="rest_TextFieldKeyReleased"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="addButton">
           <Properties>

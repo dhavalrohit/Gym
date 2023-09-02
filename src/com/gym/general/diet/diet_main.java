@@ -10,9 +10,11 @@ import javax.swing.JLabel;
 import javax.swing.JTextPane;
 
 
+
 public class diet_main extends javax.swing.JFrame {
 
     private static enterdiet dietentrypage;
+    
     
     public diet_main() {
         initComponents();

@@ -77,7 +77,8 @@ public class attendanceWeekRecord extends javax.swing.JPanel{
      }
     
      public void getweekRecord() throws SQLException{
-          
+      
+      
         //table1.addRow(new ModelMember(new ImageIcon(getClass().getResource("/com/gym/general/icon/profile.jpg")), "Jonh", "Male", "Java", 300).toRowTable(eventAction));
        //Get_Data();
          System.out.println("Get week record method");

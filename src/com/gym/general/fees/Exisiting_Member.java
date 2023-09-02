@@ -117,7 +117,36 @@ public class Exisiting_Member extends javax.swing.JFrame {
     }
 
     
+        
+    public boolean check_numeric_textfields(String text){
     
+        boolean result=true;
+        
+        /*if (text.isEmpty()) {
+            JOptionPane.showMessageDialog(new JFrame(), "Hieght Field Can't be Empty");
+            result=false;
+        }*/
+        
+            int len=text.length();
+            for (int i = 0; i < len; i++) {
+                if(Character.toString(text.charAt(i)).matches("^[0-9]+$")){
+                    result=true;
+                    continue;
+                        
+                    
+            }else{
+                    JOptionPane.showMessageDialog(new JFrame(), "Only Digits Allowed","Hieght Field Error",JOptionPane.ERROR_MESSAGE);
+                     System.out.println("Contains Alphabet");
+                     result=false;
+                     
+                     break;
+                }
+            }
+        
+ return result;
+}
+
+
   
     public void show_members_details_by_name() throws SQLException{
     
@@ -488,9 +517,10 @@ public class Exisiting_Member extends javax.swing.JFrame {
     
    
       
-      public void calculate_fees(){
-      
-          if(duration_TextField.getText().length()>0){
+    public void calculate_fees(){
+      String text=duration_TextField.getText();
+      for(int i=0;i<text.length();i++){
+          if(duration_TextField.getText().length()>0 && Character.toString(text.charAt(i)).matches("^[0-9]+$")){
           System.out.println("calculate fee method");
           
           int dur=Integer.parseInt(duration_TextField.getText());
@@ -515,14 +545,15 @@ public class Exisiting_Member extends javax.swing.JFrame {
 
           }
         else{
-            
+            duration_TextField.setText("");
         }
         
         
-        
+      }
         
       }
       
+        
       
        public void set_renew_mem_end_date(){
            if (mem_renewed_start_date_TextField.getText().length()>0) {
@@ -855,6 +886,11 @@ public class Exisiting_Member extends javax.swing.JFrame {
                 duration_TextFieldActionPerformed(evt);
             }
         });
+        duration_TextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                duration_TextFieldKeyReleased(evt);
+            }
+        });
 
         discount_ComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "0", "5", "10", "15", "20", " " }));
         discount_ComboBox.addActionListener(new java.awt.event.ActionListener() {
@@ -1055,9 +1091,7 @@ public class Exisiting_Member extends javax.swing.JFrame {
                                 .addGap(5, 5, 5)
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(membername_TextField, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addComponent(idSearchComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(0, 0, 0))))
+                                    .addComponent(idSearchComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1067,11 +1101,8 @@ public class Exisiting_Member extends javax.swing.JFrame {
                                     .addComponent(mobileno_TextField, javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(mem_end_date_TextField, javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(mem_renewed_end_date_TextField, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(namesearchComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(mobilenoSearchComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGap(0, 0, 0))))))
+                                    .addComponent(namesearchComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(mobilenoSearchComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, 111, Short.MAX_VALUE)
@@ -1293,17 +1324,30 @@ public class Exisiting_Member extends javax.swing.JFrame {
 
     }//GEN-LAST:event_reset_ButtonActionPerformed
 
+    
+    
     private void current_payment_TextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_current_payment_TextFieldKeyReleased
         // TODO add your handling code here:
-        if (current_payment_TextField.getText().length()>0) {
+    
+                    String text=String.valueOf(current_payment_TextField.getText());
+      for(int i=0;i<text.length();i++){
+         
+        if (current_payment_TextField.getText().length()>0 && Character.toString(text.charAt(i)).matches("^[0-9]+$")) {
             currentpayment=Integer.parseInt(current_payment_TextField.getText());
-
-            int pendingamount=totalamount;
-            pendingamount=totalamount-currentpayment;
-            pendingamount_TextField.setText(String.valueOf(pendingamount));
-
+         
+          int pendingamount=totalamount;
+          pendingamount=totalamount-currentpayment;
+         pendingamount_TextField.setText(String.valueOf(pendingamount));
+        
+        }else{
+             JOptionPane.showMessageDialog(new JFrame(), "Only Digits Allowed","Hieght Field Error",JOptionPane.ERROR_MESSAGE);
+                     System.out.println("Contains Alphabet");
+                   current_payment_TextField.setText(null);
+                   pendingamount_TextField.setText(null);
         }
-
+ 
+        
+    }
     }//GEN-LAST:event_current_payment_TextFieldKeyReleased
 
     private void membername_TextFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_membername_TextFieldFocusGained
@@ -1448,6 +1492,17 @@ public class Exisiting_Member extends javax.swing.JFrame {
     private void mem_renewed_start_date_TextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mem_renewed_start_date_TextFieldActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_mem_renewed_start_date_TextFieldActionPerformed
+
+    private void duration_TextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_duration_TextFieldKeyReleased
+        // TODO add your handling code here:
+        boolean check=check_numeric_textfields(duration_TextField.getText());
+            
+            if (check=false) {
+            duration_TextField.setText("");
+        }else{
+            calculate_fees();
+            }
+    }//GEN-LAST:event_duration_TextFieldKeyReleased
 
     /**
      * @param args the command line arguments

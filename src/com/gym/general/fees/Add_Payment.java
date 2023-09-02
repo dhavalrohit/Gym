@@ -86,14 +86,7 @@ public class Add_Payment extends javax.swing.JFrame {
         this.setResizable(false);
         this.setTitle("Add Payment");
         initComponents();
-        duration_TextField.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyReleased(KeyEvent e) {
-                super.keyReleased(e); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
-                calculate_fees();
-            }
-            
-        });
+        
         
         
         memberid_prompt=new TextPrompt("Enter Member ID to Start Searching ", member_id_TextField);
@@ -141,6 +134,37 @@ public class Add_Payment extends javax.swing.JFrame {
         
     }
 
+        
+    public boolean check_numeric_textfields(String text){
+    
+        boolean result=true;
+        
+        /*if (text.isEmpty()) {
+            JOptionPane.showMessageDialog(new JFrame(), "Hieght Field Can't be Empty");
+            result=false;
+        }*/
+        
+            int len=text.length();
+            for (int i = 0; i < len; i++) {
+                if(Character.toString(text.charAt(i)).matches("^[0-9]+$")){
+                    result=true;
+                    continue;
+                        
+                    
+            }else{
+                    JOptionPane.showMessageDialog(new JFrame(), "Only Digits Allowed","Hieght Field Error",JOptionPane.ERROR_MESSAGE);
+                     System.out.println("Contains Alphabet");
+                     result=false;
+                     
+                     break;
+                }
+            }
+        
+ return result;
+}
+
+
+    
       public  void get_payment_id(){
             String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
            String username = "sa";
@@ -536,8 +560,9 @@ public class Add_Payment extends javax.swing.JFrame {
    
       
       public void calculate_fees(){
-      
-          if(duration_TextField.getText().length()>0){
+      String text=duration_TextField.getText();
+      for(int i=0;i<text.length();i++){
+          if(duration_TextField.getText().length()>0 && Character.toString(text.charAt(i)).matches("^[0-9]+$")){
           System.out.println("calculate fee method");
           
           int dur=Integer.parseInt(duration_TextField.getText());
@@ -562,11 +587,11 @@ public class Add_Payment extends javax.swing.JFrame {
 
           }
         else{
-            
+            duration_TextField.setText("");
         }
         
         
-        
+      }
         
       }
       
@@ -785,8 +810,8 @@ public class Add_Payment extends javax.swing.JFrame {
         System.out.println("total count:"+total_members_count);
         
     }*/
-      
-    
+
+ 
     
     
       
@@ -922,6 +947,11 @@ public class Add_Payment extends javax.swing.JFrame {
         duration_TextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 duration_TextFieldActionPerformed(evt);
+            }
+        });
+        duration_TextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                duration_TextFieldKeyReleased(evt);
             }
         });
 
@@ -1342,18 +1372,26 @@ public class Add_Payment extends javax.swing.JFrame {
 
     private void current_payment_TextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_current_payment_TextFieldKeyReleased
         // TODO add your handling code here:
-        if (current_payment_TextField.getText().length()>0) {
+         
+                    String text=String.valueOf(current_payment_TextField.getText());
+      for(int i=0;i<text.length();i++){
+         
+        if (current_payment_TextField.getText().length()>0 && Character.toString(text.charAt(i)).matches("^[0-9]+$")) {
             currentpayment=Integer.parseInt(current_payment_TextField.getText());
          
           int pendingamount=totalamount;
           pendingamount=totalamount-currentpayment;
          pendingamount_TextField.setText(String.valueOf(pendingamount));
         
+        }else{
+             JOptionPane.showMessageDialog(new JFrame(), "Only Digits Allowed","Hieght Field Error",JOptionPane.ERROR_MESSAGE);
+                     System.out.println("Contains Alphabet");
+                   current_payment_TextField.setText(null);
         }
  
         
     }//GEN-LAST:event_current_payment_TextFieldKeyReleased
-
+    }
     private void membername_TextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_membername_TextFieldFocusLost
         // TODO add your handling code here:
         
@@ -1514,6 +1552,18 @@ public class Add_Payment extends javax.swing.JFrame {
     private void paymentdate_TextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_paymentdate_TextFieldActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_paymentdate_TextFieldActionPerformed
+
+    private void duration_TextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_duration_TextFieldKeyReleased
+        // TODO add your handling code here:
+            boolean check=check_numeric_textfields(duration_TextField.getText());
+            
+            if (check=false) {
+            duration_TextField.setText("");
+        }else{
+            calculate_fees();
+            }
+                    
+    }//GEN-LAST:event_duration_TextFieldKeyReleased
 
     
     

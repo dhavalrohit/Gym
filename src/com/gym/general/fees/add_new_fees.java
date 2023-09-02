@@ -150,6 +150,12 @@ public class add_new_fees extends javax.swing.JFrame {
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         jLabel4.setText("AMOUNT");
 
+        amount_TextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                amount_TextFieldKeyReleased(evt);
+            }
+        });
+
         fee_id_TextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 fee_id_TextFieldActionPerformed(evt);
@@ -159,6 +165,11 @@ public class add_new_fees extends javax.swing.JFrame {
         duration_TextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 duration_TextFieldActionPerformed(evt);
+            }
+        });
+        duration_TextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                duration_TextFieldKeyReleased(evt);
             }
         });
 
@@ -259,6 +270,47 @@ public class add_new_fees extends javax.swing.JFrame {
         // TODO add your handling code here:
         add_fee();
     }//GEN-LAST:event_jButton1ActionPerformed
+
+   
+    
+    private void duration_TextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_duration_TextFieldKeyReleased
+        // TODO add your handling code here:
+           
+                    String text=String.valueOf(duration_TextField.getText());
+      for(int i=0;i<text.length();i++){
+         
+        if (duration_TextField.getText().length()>0 && Character.toString(text.charAt(i)).matches("^[0-9]+$")) {
+            
+        }else{
+             JOptionPane.showMessageDialog(new JFrame(), "Only Digits Allowed","Hieght Field Error",JOptionPane.ERROR_MESSAGE);
+                     System.out.println("Contains Alphabet");
+                   amount_TextField.setText(null);
+        }
+ 
+        
+    }
+      
+    }//GEN-LAST:event_duration_TextFieldKeyReleased
+
+    private void amount_TextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_amount_TextFieldKeyReleased
+        
+              
+                    String text=String.valueOf(amount_TextField.getText());
+      for(int i=0;i<text.length();i++){
+        
+          
+        if (amount_TextField.getText().length()>0 && Character.toString(text.charAt(i)).matches("^[0-9]+$")) {
+            
+        }
+        else{
+             JOptionPane.showMessageDialog(new JFrame(), "Only Digits Allowed","Hieght Field Error",JOptionPane.ERROR_MESSAGE);
+                     System.out.println("Contains Alphabet");
+                   amount_TextField.setText(null);
+        }
+ 
+        
+    } 
+    }//GEN-LAST:event_amount_TextFieldKeyReleased
 
     /**
      * @param args the command line arguments
