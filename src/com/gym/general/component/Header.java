@@ -1,18 +1,9 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.gym.general.component;
 
 import java.awt.event.ActionListener;
 
-/**
- *
- * @author DELL
- */
-public class Header extends javax.swing.JPanel{
- 
-    
+public class Header extends javax.swing.JPanel {
+
     public Header() {
         initComponents();
     }
@@ -20,18 +11,25 @@ public class Header extends javax.swing.JPanel{
     public void addMenuEvent(ActionListener event) {
         cmdMenu.addActionListener(event);
     }
-
+    
+    public void setrole_text(String text){
+        lbRole.setText(text);
+    }
+    
+    public void setusername_text(String text){
+            lbUserName.setText(text);
+    }
     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         cmdMenu = new com.gym.general.swing.Button();
-        pic = new com.gym.general.swing.imageAvatar();
+        pic = new com.gym.general.swing.ImageAvatar();
         lbUserName = new javax.swing.JLabel();
         lbRole = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
-        buttonBadges1 = new com.gym.general.swing.ButtonBadge();
-        buttonBadges2 = new com.gym.general.swing.ButtonBadge();
+        buttonBadges1 = new com.gym.general.swing.ButtonBadges();
+        buttonBadges2 = new com.gym.general.swing.ButtonBadges();
 
         setBackground(new java.awt.Color(255, 255, 255));
 
@@ -93,17 +91,15 @@ public class Header extends javax.swing.JPanel{
                     .addComponent(buttonBadges2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
-    }// </editor-fold>                        
+    }// </editor-fold>//GEN-END:initComponents
 
-    // Variables declaration - do not modify                     
-    private com.gym.general.swing.ButtonBadge buttonBadges1;
-    private com.gym.general.swing.ButtonBadge buttonBadges2;
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private com.gym.general.swing.ButtonBadges buttonBadges1;
+    private com.gym.general.swing.ButtonBadges buttonBadges2;
     private com.gym.general.swing.Button cmdMenu;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JLabel lbRole;
     private javax.swing.JLabel lbUserName;
-    private com.gym.general.swing.imageAvatar pic;
-    // End of variables declaration                   
+    private com.gym.general.swing.ImageAvatar pic;
+    // End of variables declaration//GEN-END:variables
 }
-
-

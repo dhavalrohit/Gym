@@ -1,5 +1,7 @@
 
 
+
+//constraints added on 07/09/2023
 package com.gym.general.members;
 import com.gym.general.main.*;
 import com.formdev.flatlaf.FlatIntelliJLaf;
@@ -81,12 +83,14 @@ public class Add_Member extends javax.swing.JFrame {
          membership_end_date=new DateChooser();
          membership_end_date.setDateFormat(new SimpleDateFormat("YYYY-MM-dd"));
          this.setResizable(false);
+         this.setTitle("Add Member Window");
          
         initComponents();
         
         add_new_member_Button.setVisible(false);
         get_biometric_id();
         get_member_id();
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }
     
     public void total_member_count(){
@@ -149,6 +153,76 @@ public class Add_Member extends javax.swing.JFrame {
         
         
     }
+    
+    
+     public boolean check_numericfields(String text,String fieldname){
+        text=text.replaceAll("\\s", "");
+        text=text.replace("-", "");
+          boolean res=true;
+        if (text.isEmpty()) {
+            JOptionPane.showMessageDialog(new JFrame(), fieldname+" Field is Empty", fieldname+" Field Error",JOptionPane.ERROR_MESSAGE);
+            res=false;
+        }
+        else if(text.length()>0)
+            for(int i=0;i<text.length();i++){
+                if (Character.toString(text.charAt(i)).matches("^[0-9]+$")) {
+                    
+                }
+                else{
+                     JOptionPane.showMessageDialog(new JFrame(), fieldname+" Field contains Alphabetic value", fieldname+" Field Error",JOptionPane.ERROR_MESSAGE);
+                    res=false;
+                    break;
+                }
+            }
+        
+        return res;
+    }
+   
+     public boolean checkallfields(boolean [] fields){
+        boolean res=true;
+        
+        for(int i=0;i<fields.length;i++){
+                System.out.println(fields[i]);
+            if (fields[i]==false) {
+                res=false;
+                break;
+            }
+            else{
+                res=true;
+                
+            }
+        }
+        return res;
+    
+    }
+      
+
+      public boolean check_alphabetic_fields(String text,String fieldname){
+         text=text.replaceAll("\\s", "");
+          boolean result=true;
+         if (text.isEmpty()) {
+            JOptionPane.showMessageDialog(new JFrame(), fieldname+" Field is Empty", fieldname+" Field Error",JOptionPane.ERROR_MESSAGE);
+            result=false;
+        }
+              
+        if(text.length()>0)
+            for(int i=0;i<text.length();i++){
+                if (Character.toString(text.charAt(i)).matches("^[a-zA-Z]+$")) {
+                    
+                }
+                else{
+                    result=false;
+                    JOptionPane.showMessageDialog(new JFrame(), fieldname+" Field contains Numeric value", fieldname+" Field Error",JOptionPane.ERROR_MESSAGE);
+                    break;
+                }
+            }
+        
+        return result;
+    }
+    
+    
+    
+    
     
     public void view_selected_member() throws SQLException{
         
@@ -367,11 +441,11 @@ public class Add_Member extends javax.swing.JFrame {
 "           ,[ShiftType]\n" +
 "           ,[EmailAddress]\n" +
 "           ,[PhoneNo]\n" +
-"           ,[DateofBirth],[ShiftStartDate],[Validityend],[ShiftCode])" +
+"           ,[DateofBirth],[ShiftStartDate],[Validityend],[ShiftCode],[Bank_Ifsc_Code])" +
   
 "	 VALUES \n" +
 "            \n" +
-"			(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+"			(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         
         
             try {
@@ -396,6 +470,7 @@ public class Add_Member extends javax.swing.JFrame {
             pst.setString(17, membership_start_date);
             pst.setString(18, membership_end_date);
             pst.setString(19, timing);
+            pst.setString(20, id);
            
             
             
@@ -409,10 +484,11 @@ public class Add_Member extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(new Frame(), "Profile Pic Insertion Pending");
                 showall_members();
                 total_member_count();
+                reset();
                 
             }else{
                 System.out.println("Member Insertion failed");
-                
+                JOptionPane.showMessageDialog(new Frame(), "Member Insertion failed");  
             }
             
             } catch (Exception e) {
@@ -580,14 +656,6 @@ INSERT INTO [dbo].[Mst_Employee]
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        jPanel1 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jTextField1 = new javax.swing.JTextField();
-        jButton2 = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        jLabel10 = new javax.swing.JLabel();
-        memberscount_Label = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         profilepic = new javax.swing.JLabel();
         browse = new javax.swing.JButton();
@@ -620,6 +688,15 @@ INSERT INTO [dbo].[Mst_Employee]
         timimg_ComboBox = new javax.swing.JComboBox<>();
         view_Button = new javax.swing.JButton();
         add_new_member_Button = new javax.swing.JButton();
+        jPanel4 = new javax.swing.JPanel();
+        jPanel1 = new javax.swing.JPanel();
+        jButton1 = new javax.swing.JButton();
+        jTextField1 = new javax.swing.JTextField();
+        jButton2 = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
+        jLabel10 = new javax.swing.JLabel();
+        memberscount_Label = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -629,80 +706,6 @@ INSERT INTO [dbo].[Mst_Employee]
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("Members List");
         jLabel1.setOpaque(true);
-
-        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 11)); // NOI18N
-        jButton1.setText("Show All Members");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-
-        jButton2.setIcon(new javax.swing.ImageIcon("C:\\Users\\DELL\\Downloads\\search.png")); // NOI18N
-
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "Member ID", "Name", "Mobile No"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.Object.class
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-        });
-        jScrollPane1.setViewportView(jTable1);
-
-        jLabel10.setText("Total Members:");
-
-        String countn=Integer.toString(total_members_count);
-        memberscount_Label.setText(countn);
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 431, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel10)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(memberscount_Label)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jButton1)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jButton2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel10)
-                    .addComponent(memberscount_Label))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 311, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(251, 251, 251))
-        );
 
         profilepic.setBackground(java.awt.Color.white);
         profilepic.setOpaque(true);
@@ -988,6 +991,97 @@ INSERT INTO [dbo].[Mst_Employee]
                 .addContainerGap(44, Short.MAX_VALUE))
         );
 
+        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 11)); // NOI18N
+        jButton1.setText("Show All Members");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        jButton2.setIcon(new javax.swing.ImageIcon("C:\\Users\\DELL\\Downloads\\search.png")); // NOI18N
+
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Member ID", "Name", "Mobile No"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.Object.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(jTable1);
+
+        jLabel10.setText("Total Members:");
+
+        String countn=Integer.toString(total_members_count);
+        memberscount_Label.setText(countn);
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTextField1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 431, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel10)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(memberscount_Label)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jButton1)
+                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jButton2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel10)
+                    .addComponent(memberscount_Label))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 311, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(251, 251, 251))
+        );
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 404, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -995,8 +1089,10 @@ INSERT INTO [dbo].[Mst_Employee]
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addGap(18, 18, 18)
                 .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(10, 10, 10))
@@ -1007,8 +1103,8 @@ INSERT INTO [dbo].[Mst_Employee]
                 .addContainerGap()
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 404, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(36, Short.MAX_VALUE))
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
@@ -1050,13 +1146,35 @@ INSERT INTO [dbo].[Mst_Employee]
     }//GEN-LAST:event_edit_ButtonActionPerformed
 
     private void add_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_add_ButtonActionPerformed
-        try {
+        boolean membername=check_alphabetic_fields(name_TextField.getText(),"Member Name");
+        boolean fathername=check_alphabetic_fields(fathername_TextField.getText(),"Father Name");
+        boolean checkmobile=check_numericfields(mobileno_TextField.getText(),"Mobile No");
+        boolean checkdateofbirth=check_numericfields(dateofbirth_TextField.getText(), "Date of Birth");
+        boolean dateofjoin=check_numericfields(dateofjoin_TextField.getText(), "Date of Join");
+        boolean memstart=check_numericfields(membership_start_TextField.getText(), "Membership Start Date");
+        boolean memend=check_numericfields(membership_end_TextField.getText(), "Membership End Date");
+        
+        boolean[] checkallfield_forpayments={membername,fathername,checkmobile,checkdateofbirth,dateofjoin,memstart,memend};
+         boolean check_constraints=checkallfields(checkallfield_forpayments);
+        
+         if (check_constraints==true) {
+            try {
             // TODO add your handling code here:
                 add_member_db();
         } catch (SQLException ex) {
             Logger.getLogger(Add_Member.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(new Frame(), "SQL Exception");  
         }
+        }
+        else{
+            System.out.println("Invalid Fields");
+            JOptionPane.showMessageDialog(new JFrame(), "Error:Fields are Empty or Invalid","Add Payment Error",JOptionPane.ERROR_MESSAGE);
+        }
+         
+         
+        
+
+        
     }//GEN-LAST:event_add_ButtonActionPerformed
 
     private void membership_id_TextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_membership_id_TextFieldActionPerformed
@@ -1139,7 +1257,9 @@ INSERT INTO [dbo].[Mst_Employee]
 
     private void name_TextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_name_TextFieldKeyReleased
         // TODO add your handling code here:
+        
         String text=name_TextField.getText();
+         text=text.replaceAll("\\s", "");
           int len=text.length();
             for (int i = 0; i < len; i++) {
                 if(Character.toString(text.charAt(i)).matches("^[a-zA-Z]+$")){
@@ -1158,7 +1278,8 @@ INSERT INTO [dbo].[Mst_Employee]
 
     private void mobileno_TextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_mobileno_TextFieldKeyReleased
         // TODO add your handling code here:
-                           String text=mobileno_TextField.getText();
+       String text=mobileno_TextField.getText();
+        text=text.replaceAll("\\s", "");
       for(int i=0;i<text.length();i++){
          
         if (mobileno_TextField.getText().length()>0 && Character.toString(text.charAt(i)).matches("^[0-9]+$")) {
@@ -1176,19 +1297,18 @@ INSERT INTO [dbo].[Mst_Employee]
 
     private void fathername_TextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_fathername_TextFieldKeyReleased
         // TODO add your handling code here:
-         String text=fathername_TextField.getText();
+        String text=name_TextField.getText();
+         text=text.replaceAll("\\s", "");
           int len=text.length();
             for (int i = 0; i < len; i++) {
                 if(Character.toString(text.charAt(i)).matches("^[a-zA-Z]+$")){
                     continue;
-                        
-                        
                     
             }else{
                     
-                    JOptionPane.showMessageDialog(new JFrame(), "Name Field Contains Number","Name Field Error",JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(new JFrame(), "Father Name Field Contains Number","Father Name Field Error",JOptionPane.ERROR_MESSAGE);
                      System.out.println("Contains number");
-                     fathername_TextField.setText(null);
+                     name_TextField.setText(null);
                      break;
                     
                 }
@@ -1286,6 +1406,7 @@ INSERT INTO [dbo].[Mst_Employee]
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField1;

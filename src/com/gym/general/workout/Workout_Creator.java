@@ -2,6 +2,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
+
+//constraint  addded on 07/09/2023
 package com.gym.general.workout;
 
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
@@ -30,6 +32,7 @@ public class Workout_Creator extends javax.swing.JFrame {
         
         initComponents();
         this.setResizable(false);
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         jPanel2.setVisible(false);
         pack();
         setLocationRelativeTo(null);
@@ -107,8 +110,72 @@ public class Workout_Creator extends javax.swing.JFrame {
       }
   
   }
-
+  
+     public boolean check_numericfields(String text,String fieldname){
+        text=text.replaceAll("\\s", "");
+          boolean res=true;
+        if (text.isEmpty()) {
+            JOptionPane.showMessageDialog(new JFrame(), fieldname+" Field is Empty", fieldname+" Field Error",JOptionPane.ERROR_MESSAGE);
+            res=false;
+        }
+        else if(text.length()>0)
+            for(int i=0;i<text.length();i++){
+                if (Character.toString(text.charAt(i)).matches("^[0-9]+$")) {
+                    
+                }
+                else{
+                     JOptionPane.showMessageDialog(new JFrame(), fieldname+" Field contains Alphabetic value", fieldname+" Field Error",JOptionPane.ERROR_MESSAGE);
+                    res=false;
+                    break;
+                }
+            }
+        
+        return res;
+    }
+   
+     public boolean checkallfields(boolean [] fields){
+        boolean res=true;
+        
+        for(int i=0;i<fields.length;i++){
+                System.out.println(fields[i]);
+            if (fields[i]==false) {
+                res=false;
+                break;
+            }
+            else{
+                res=true;
+                
+            }
+        }
+        return res;
     
+    }
+      
+
+      public boolean check_alphabetic_fields(String text,String fieldname){
+         text=text.replaceAll("\\s", "");
+          boolean result=true;
+         if (text.isEmpty()) {
+            JOptionPane.showMessageDialog(new JFrame(), fieldname+" Field is Empty", fieldname+" Field Error",JOptionPane.ERROR_MESSAGE);
+            result=false;
+        }
+              
+        if(text.length()>0)
+            for(int i=0;i<text.length();i++){
+                if (Character.toString(text.charAt(i)).matches("^[a-zA-Z]+$")) {
+                    
+                }
+                else{
+                    result=false;
+                    JOptionPane.showMessageDialog(new JFrame(), fieldname+" Field contains Numeric value", fieldname+" Field Error",JOptionPane.ERROR_MESSAGE);
+                    break;
+                }
+            }
+        
+        return result;
+    }
+    
+      
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -364,26 +431,45 @@ public class Workout_Creator extends javax.swing.JFrame {
 
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
         // TODO add your handling code here:
-      
-        add_workout();
-      
-        jPanel2.setVisible(true);
-        pack();
-        setLocationRelativeTo(null);
+        boolean exercisename=check_alphabetic_fields(exercise_TextField.getText(),"Exercise Name");
+       // boolean equipmentcheck=check_alphabetic_fields(equipment_TextField.getText(),"Equipment Name");
+        boolean checksets=check_numericfields(sets_TextField.getText(),"Sets");
+        boolean repscheck=check_numericfields(reps_TextField.getText(),"Reps");
+        boolean restcheck=check_numericfields(rest_TextField.getText(),"Rest");
         
-        DefaultTableModel tabel=(DefaultTableModel) jTable2.getModel();
-            String Day=(String) dayComboBox.getSelectedItem();
-            String level=(String) levelComboBox.getSelectedItem();
-            String bodypart=(String) body_part_ComboBox.getSelectedItem();
-            String equipment=equipment_TextField.getText();
-            String sets=sets_TextField.getText();
-            String exercise=exercise_TextField.getText();
-            String reps=reps_TextField.getText();
-            String rest=rest_TextField.getText();
-            
-            tabel.addRow(new Object[]{Day,level,bodypart,exercise,equipment,sets,reps,rest});
+        boolean[] checkallfield_forpayments={exercisename,checksets,repscheck,restcheck};
+         boolean check_constraints=checkallfields(checkallfield_forpayments);
+       
+        if (check_constraints==true) {
+                System.out.println("all fields are within constraints");
+                add_workout();
+      
+                jPanel2.setVisible(true);
+                pack();
+                setLocationRelativeTo(null);
+
+                DefaultTableModel tabel=(DefaultTableModel) jTable2.getModel();
+                    String Day=(String) dayComboBox.getSelectedItem();
+                    String level=(String) levelComboBox.getSelectedItem();
+                    String bodypart=(String) body_part_ComboBox.getSelectedItem();
+                    String equipment=equipment_TextField.getText();
+                    String sets=sets_TextField.getText();
+                    String exercise=exercise_TextField.getText();
+                    String reps=reps_TextField.getText();
+                    String rest=rest_TextField.getText();
+
+                    tabel.addRow(new Object[]{Day,level,bodypart,exercise,equipment,sets,reps,rest});
+
+                    reset();
+        }else{
+            System.out.println("Invalid Fields");
+            JOptionPane.showMessageDialog(new JFrame(), "Error:Fields are Empty or Invalid","Add Payment Error",JOptionPane.ERROR_MESSAGE);
+        }
         
-            reset();
+        
+        
+        
+        
      
     }//GEN-LAST:event_addButtonActionPerformed
 
@@ -411,6 +497,8 @@ public class Workout_Creator extends javax.swing.JFrame {
      
     }//GEN-LAST:event_sets_TextFieldKeyReleased
 
+    
+    
     private void reps_TextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_reps_TextFieldKeyReleased
         // TODO add your handling code here:
                                    String text=reps_TextField.getText();

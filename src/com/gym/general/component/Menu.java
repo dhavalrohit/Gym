@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.gym.general.component;
 
 import com.gym.general.event.EventMenu;
@@ -9,10 +5,8 @@ import com.gym.general.event.EventMenuSelected;
 import com.gym.general.event.EventShowPopupMenu;
 import com.gym.general.model.ModelMenu;
 import com.gym.general.swing.MenuAnimation;
-import com.gym.general.swing.Menuitem;
+import com.gym.general.swing.MenuItem;
 import com.gym.general.swing.scrollbar.ScrollBarCustom;
-import com.gym.general.component.Profile;
-import com.gym.ui.About;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.GradientPaint;
@@ -22,18 +16,13 @@ import java.awt.RenderingHints;
 import javax.swing.ImageIcon;
 import net.miginfocom.swing.MigLayout;
 
-/**
- *
- * @author DELL
- */
-public class Menu extends javax.swing.JPanel{
+public class Menu extends javax.swing.JPanel {
+
      private final MigLayout layout;
     private EventMenuSelected event;
     private EventShowPopupMenu eventShowPopup;
     private boolean enableMenu = true;
     private boolean showMenu = true;
-    
-    
     
     
     
@@ -70,21 +59,21 @@ public class Menu extends javax.swing.JPanel{
         layout = new MigLayout("wrap, fillx, insets 0", "[fill]", "[]0[]");
         panel.setLayout(layout);
         
-     
+        
+        
         
     }
 
     public void initMenuItem() {
-        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/gym/general/icon/1.png")), "Dashboard", "Home", "Biometric Auto Download", "Attendance"));
-        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/gym/general/icon/2.png")), "Members", "Add New Member", "Download Added member", "Delete Member","Update Member","Show All Members","Search Members"));
-        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/gym/general/icon/3.png")), "Fees", "Fee Info Detail", "View Add/Adjust Fess"));
+         addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/gym/general/icon/1.png")), "Dashboard", "Home",  "Attendance"));
+        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/gym/general/icon/2.png")), "Members", "Add New Member", "Delete Member","Update Member Details","Search/View Members Details"));
+        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/gym/general/icon/3.png")), "Fees", "Fees Detail", "Add Fees/Duration","Update Fees/Duration"));
         addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/gym/general/icon/4.png")), "Payments", "Add New Member Payments", "Renew Membership/Add Payments","Show Payment History"));
-        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/gym/general/icon/5.png")), "Body Measurments", "BMI Chart", "Measurment Chart", "Update Measurment Chart"));
-        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/gym/general/icon/6.png")), "Schedule", "Diet Schedule", "Workout Schedule"));
-        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/gym/general/icon/7.png")), "Products", "Show All", "Add New", "Delete","Sell","Refersh"));
-        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/gym/general/icon/8.png")), "History", "Show History", "Refersh"));
-        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/gym/general/icon/9.png")), "Reports", "View Member Reports", "View Fees Reports"));
-        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/gym/general/icon/10.png")), "Inquiry", "View General Enquiry", "Delete", "Enquiry Form"));
+        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/gym/general/icon/5.png")), "Body Measurments", "BMI/Fat Calculator","Body Measurement Form"));
+        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/gym/general/icon/6.png")), "Diet Planner"));
+        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/gym/general/icon/7.png")), "Workout", "Create Workout", "Show Added Workouts"));
+        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/gym/general/icon/8.png")), "History", "Attendance History", "Payment History","Inquiry History"));
+        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/gym/general/icon/10.png")), "Inquiry", "Add Inquiry", "Inquiry History"));
         addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/gym/general/icon/12.png")), "Help", "About","Update Software", "How To?"));
         addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/gym/general/icon/13.png")), "Account","Log Out","Update Accounts"));
         addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/gym/general/icon/close.png")), "Close"));
@@ -92,10 +81,8 @@ public class Menu extends javax.swing.JPanel{
     }
 
     private void addMenu(ModelMenu menu) {
-        panel.add(new Menuitem(menu, getEventMenu(), event, panel.getComponentCount()), "h 40!");
+        panel.add(new MenuItem(menu, getEventMenu(), event, panel.getComponentCount()), "h 40!");
     }
-    
-   
 
     private EventMenu getEventMenu() {
         return new EventMenu() {
@@ -120,7 +107,7 @@ public class Menu extends javax.swing.JPanel{
 
     public void hideallMenu() {
         for (Component com : panel.getComponents()) {
-            Menuitem item = (Menuitem) com;
+            MenuItem item = (MenuItem) com;
             if (item.isOpen()) {
                 new MenuAnimation(layout, com, 500).closeMenu();
                 item.setOpen(false);
@@ -129,7 +116,7 @@ public class Menu extends javax.swing.JPanel{
     }
 
     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         sp = new javax.swing.JScrollPane();
@@ -170,7 +157,7 @@ public class Menu extends javax.swing.JPanel{
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(sp))
         );
-    }// </editor-fold>                        
+    }// </editor-fold>//GEN-END:initComponents
 
     @Override
     protected void paintComponent(Graphics grphcs) {
@@ -182,11 +169,9 @@ public class Menu extends javax.swing.JPanel{
         super.paintComponent(grphcs);
     }
 
-    // Variables declaration - do not modify                     
+    // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel panel;
     private com.gym.general.component.Profile profile1;
     private javax.swing.JScrollPane sp;
-    // End of variables declaration                   
+    // End of variables declaration//GEN-END:variables
 }
-    
-

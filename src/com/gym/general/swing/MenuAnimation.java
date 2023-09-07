@@ -5,7 +5,7 @@
 package com.gym.general.swing;
 
 import java.awt.Component;
-import java.awt.MenuItem;
+
 import net.miginfocom.swing.MigLayout;
 import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTarget;
@@ -17,19 +17,19 @@ import org.jdesktop.animation.timing.TimingTargetAdapter;
  */
 public class MenuAnimation {
       private final MigLayout layout;
-    private final Menuitem menuItem;
+    private final MenuItem menuItem;
     private Animator animator;
     private boolean open;
 
     public MenuAnimation(MigLayout layout, Component component) {
         this.layout = layout;
-        this.menuItem = (Menuitem) component;
+        this.menuItem = (MenuItem) component;
         initAnimator(component, 200);
     }
 
     public MenuAnimation(MigLayout layout, Component component, int duration) {
         this.layout = layout;
-        this.menuItem = (Menuitem) component;
+        this.menuItem = (MenuItem) component;
         initAnimator(component, duration);
     }
 

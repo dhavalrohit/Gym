@@ -33,6 +33,7 @@ public class Fee_Detail extends javax.swing.JFrame {
         FlatIntelliJLaf.setup();
         initComponents();
         this.setResizable(false);
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
      
     }
     

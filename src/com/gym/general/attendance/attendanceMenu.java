@@ -1,41 +1,35 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.gym.general.attendance;
 
-import com.gym.general.event.EventMenu;
+import com.gym.general.attendance.advance.*;
+import com.gym.general.attendance.week.*;
+ import com.gym.general.event.EventMenu;
 import com.gym.general.event.EventMenuSelected;
 import com.gym.general.event.EventShowPopupMenu;
 import com.gym.general.model.ModelMenu;
 import com.gym.general.swing.MenuAnimation;
-import com.gym.general.swing.Menuitem;
+import com.gym.general.swing.MenuItem;
 import com.gym.general.swing.scrollbar.ScrollBarCustom;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+
 import java.awt.RenderingHints;
 import javax.swing.ImageIcon;
 import net.miginfocom.swing.MigLayout;
 
-/**
- *
- * @author DELL
- */
-public class attendanceMenu extends javax.swing.JPanel{
-       private final MigLayout layout;
+
+
+public class attendanceMenu extends javax.swing.JPanel {
+
+     private final MigLayout layout;
     private EventMenuSelected event;
     private EventShowPopupMenu eventShowPopup;
     private boolean enableMenu = true;
     private boolean showMenu = true;
     
     
-     private javax.swing.JPanel panel;
-    private com.gym.general.component.Profile profile1;
-    private javax.swing.JScrollPane sp;
- 
     
     public boolean isShowMenu() {
         return showMenu;
@@ -60,6 +54,8 @@ public class attendanceMenu extends javax.swing.JPanel{
         this.eventShowPopup = eventShowPopup;
     }
 
+   
+
     public attendanceMenu() {
         initComponents();
         setOpaque(false);
@@ -67,21 +63,25 @@ public class attendanceMenu extends javax.swing.JPanel{
         sp.setVerticalScrollBar(new ScrollBarCustom());
         layout = new MigLayout("wrap, fillx, insets 0", "[fill]", "[]0[]");
         panel.setLayout(layout);
-
+        
+        
+        
+        
     }
-    
-    public void initMenuItem(){
-         //addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/gym/general/icon/1.png")), "View Records"));
-         addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/gym/general/icon/1.png")), "View 7 Days Records"));
+
+    public void initMenuItem() {
+    addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/gym/general/icon/1.png")), "View 7 Days Records"));
          addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/gym/general/icon/1.png")), "View Last Month Records"));
          addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/gym/general/icon/1.png")), "View  Last 3 Month Records"));
          addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/gym/general/icon/1.png")), "Advanced Search"));
          addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/gym/general/icon/back.png")), "Exit"));
         
-        
     }
-    
-    
+
+    private void addMenu(ModelMenu menu) {
+         panel.add(new MenuItem(menu, getEventMenu(), event, panel.getComponentCount()), "h 40!");
+    }
+
     private EventMenu getEventMenu() {
         return new EventMenu() {
             @Override
@@ -103,14 +103,9 @@ public class attendanceMenu extends javax.swing.JPanel{
         };
     }
 
-    
-     private void addMenu(ModelMenu menu) {
-        panel.add(new Menuitem(menu, getEventMenu(), event, panel.getComponentCount()), "h 40!");
-    }
-    
-       public void hideallMenu() {
+    public void hideallMenu() {
         for (Component com : panel.getComponents()) {
-            Menuitem item = (Menuitem) com;
+             MenuItem item = (MenuItem) com;
             if (item.isOpen()) {
                 new MenuAnimation(layout, com, 500).closeMenu();
                 item.setOpen(false);
@@ -118,9 +113,8 @@ public class attendanceMenu extends javax.swing.JPanel{
         }
     }
 
-   
-     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         sp = new javax.swing.JScrollPane();
@@ -161,10 +155,10 @@ public class attendanceMenu extends javax.swing.JPanel{
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(sp))
         );
-    }// </editor-fold>               
-    
+    }// </editor-fold>//GEN-END:initComponents
+
     @Override
-     protected void paintComponent(Graphics grphcs) {
+    protected void paintComponent(Graphics grphcs) {
         Graphics2D g2 = (Graphics2D) grphcs;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         GradientPaint gra = new GradientPaint(0, 0, new Color(33, 105, 249), getWidth(), 0, new Color(93, 58, 196));
@@ -172,4 +166,10 @@ public class attendanceMenu extends javax.swing.JPanel{
         g2.fillRect(0, 0, getWidth(), getHeight());
         super.paintComponent(grphcs);
     }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel panel;
+    private com.gym.general.component.Profile profile1;
+    private javax.swing.JScrollPane sp;
+    // End of variables declaration//GEN-END:variables
 }

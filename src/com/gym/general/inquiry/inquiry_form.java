@@ -36,6 +36,8 @@ public class inquiry_form extends javax.swing.JFrame {
       
         initComponents();
         get_inquiry_id();
+        this.setResizable(false);
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         
     }
     
@@ -51,7 +53,8 @@ public class inquiry_form extends javax.swing.JFrame {
                 String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
           String username = "sa";
           String password = "Dhaval@7869";
-       
+          
+          
          String query="INSERT INTO [dbo].[inquiry]\n" +
 "           ([Date]\n" +
 "           ,[Name]\n" +
@@ -115,6 +118,7 @@ public class inquiry_form extends javax.swing.JFrame {
         }
     
     }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {

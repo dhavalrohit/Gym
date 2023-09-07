@@ -6,6 +6,7 @@ package com.gym.general.diet;
 
 import java.awt.Component;
 import java.awt.Dimension;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextPane;
 
@@ -18,6 +19,8 @@ public class diet_main extends javax.swing.JFrame {
     
     public diet_main() {
         initComponents();
+        this.setResizable(false);
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }
 
     
@@ -99,6 +102,9 @@ public class diet_main extends javax.swing.JFrame {
         pdfButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setPreferredSize(new java.awt.Dimension(1366, 768));
+
+        jPanel1.setPreferredSize(new java.awt.Dimension(1366, 768));
 
         jLabel1.setBackground(new java.awt.Color(32, 161, 93));
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
@@ -431,7 +437,7 @@ public class diet_main extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1012, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(pdfButton1)
@@ -445,7 +451,7 @@ public class diet_main extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(0, 0, 0)
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 523, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(printButton)
@@ -483,73 +489,12 @@ public class diet_main extends javax.swing.JFrame {
          labe1.setText("Monday Diet Plan");
         
     }//GEN-LAST:event_monday_LabelMouseClicked
-
-    private void tuesday_LabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tuesday_LabelMouseClicked
-        // TODO add your handling code here:
-         JLabel labe1=new JLabel();
-        dietentrypage=new enterdiet();
-        dietentrypage.setVisible(true);
-         labe1= dietentrypage.getdaylabel();
-         labe1.setText("Tuesday Diet Plan");
-        
-    }//GEN-LAST:event_tuesday_LabelMouseClicked
-
-    private void wednesday_LabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_wednesday_LabelMouseClicked
-        // TODO add your handling code here:
-         JLabel labe1=new JLabel();
-        dietentrypage=new enterdiet();
-        dietentrypage.setVisible(true);
-         labe1= dietentrypage.getdaylabel();
-         labe1.setText("Wednesday Diet Plan");
-        
-    }//GEN-LAST:event_wednesday_LabelMouseClicked
-
-    private void thursday_LabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_thursday_LabelMouseClicked
-        // TODO add your handling code here:
-         JLabel labe1=new JLabel();
-        dietentrypage=new enterdiet();
-        dietentrypage.setVisible(true);
-         labe1= dietentrypage.getdaylabel();
-         labe1.setText("Thursday Diet Plan");
-        
-    }//GEN-LAST:event_thursday_LabelMouseClicked
-
-    private void friday_LabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_friday_LabelMouseClicked
-        // TODO add your handling code here:
-         JLabel labe1=new JLabel();
-        dietentrypage=new enterdiet();
-        dietentrypage.setVisible(true);
-         labe1= dietentrypage.getdaylabel();
-         labe1.setText("Friday Diet Plan");
-        
-    }//GEN-LAST:event_friday_LabelMouseClicked
-
-    private void saturday_LabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_saturday_LabelMouseClicked
-        // TODO add your handling code here:
-         JLabel labe1=new JLabel();
-        dietentrypage=new enterdiet();
-        dietentrypage.setVisible(true);
-         labe1= dietentrypage.getdaylabel();
-         labe1.setText("Saturday Diet Plan");
-        
-    }//GEN-LAST:event_saturday_LabelMouseClicked
-
-    private void sunday_LabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sunday_LabelMouseClicked
-        // TODO add your handling code here:
-         JLabel labe1=new JLabel();
-        dietentrypage=new enterdiet();
-        dietentrypage.setVisible(true);
-         labe1= dietentrypage.getdaylabel();
-         labe1.setText("Sunday Diet Plan");
-        
-    }//GEN-LAST:event_sunday_LabelMouseClicked
   
     private void printButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_printButtonActionPerformed
       
         
         diet_print printpage=new diet_print();
         
-        printpage.mon_break_label.setText(mon_break_TextPane.getText());
         
         
       /*  printpage.mon_break_printTextPane.setText(mon_break_TextPane.getText());
@@ -571,6 +516,66 @@ public class diet_main extends javax.swing.JFrame {
       
         printpage.setVisible(rootPaneCheckingEnabled);
     }//GEN-LAST:event_printButtonActionPerformed
+
+    private void sunday_LabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sunday_LabelMouseClicked
+        // TODO add your handling code here:
+        JLabel labe1=new JLabel();
+        dietentrypage=new enterdiet();
+        dietentrypage.setVisible(true);
+        labe1= dietentrypage.getdaylabel();
+        labe1.setText("Sunday Diet Plan");
+
+    }//GEN-LAST:event_sunday_LabelMouseClicked
+
+    private void saturday_LabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_saturday_LabelMouseClicked
+        // TODO add your handling code here:
+        JLabel labe1=new JLabel();
+        dietentrypage=new enterdiet();
+        dietentrypage.setVisible(true);
+        labe1= dietentrypage.getdaylabel();
+        labe1.setText("Saturday Diet Plan");
+
+    }//GEN-LAST:event_saturday_LabelMouseClicked
+
+    private void friday_LabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_friday_LabelMouseClicked
+        // TODO add your handling code here:
+        JLabel labe1=new JLabel();
+        dietentrypage=new enterdiet();
+        dietentrypage.setVisible(true);
+        labe1= dietentrypage.getdaylabel();
+        labe1.setText("Friday Diet Plan");
+
+    }//GEN-LAST:event_friday_LabelMouseClicked
+
+    private void thursday_LabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_thursday_LabelMouseClicked
+        // TODO add your handling code here:
+        JLabel labe1=new JLabel();
+        dietentrypage=new enterdiet();
+        dietentrypage.setVisible(true);
+        labe1= dietentrypage.getdaylabel();
+        labe1.setText("Thursday Diet Plan");
+
+    }//GEN-LAST:event_thursday_LabelMouseClicked
+
+    private void wednesday_LabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_wednesday_LabelMouseClicked
+        // TODO add your handling code here:
+        JLabel labe1=new JLabel();
+        dietentrypage=new enterdiet();
+        dietentrypage.setVisible(true);
+        labe1= dietentrypage.getdaylabel();
+        labe1.setText("Wednesday Diet Plan");
+
+    }//GEN-LAST:event_wednesday_LabelMouseClicked
+
+    private void tuesday_LabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tuesday_LabelMouseClicked
+        // TODO add your handling code here:
+        JLabel labe1=new JLabel();
+        dietentrypage=new enterdiet();
+        dietentrypage.setVisible(true);
+        labe1= dietentrypage.getdaylabel();
+        labe1.setText("Tuesday Diet Plan");
+
+    }//GEN-LAST:event_tuesday_LabelMouseClicked
     
     
     

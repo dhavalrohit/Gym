@@ -2,8 +2,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package com.gym.general.fees;
 
+//Constraints set on 06-09-2023
+
+package com.gym.general.fees;
 import com.formdev.flatlaf.FlatIntelliJLaf;
 import java.awt.Color;
 import java.awt.Font;
@@ -129,39 +131,14 @@ public class Add_Payment extends javax.swing.JFrame {
             System.out.println(dtf.format(now)); 
             paymentdate_TextField.setText(datenow);
             paymentdate_TextField.setEditable(false);
+            
+            pendingamount_TextField.setEditable(false);
           
             get_payment_id();
         
     }
 
         
-    public boolean check_numeric_textfields(String text){
-    
-        boolean result=true;
-        
-        /*if (text.isEmpty()) {
-            JOptionPane.showMessageDialog(new JFrame(), "Hieght Field Can't be Empty");
-            result=false;
-        }*/
-        
-            int len=text.length();
-            for (int i = 0; i < len; i++) {
-                if(Character.toString(text.charAt(i)).matches("^[0-9]+$")){
-                    result=true;
-                    continue;
-                        
-                    
-            }else{
-                    JOptionPane.showMessageDialog(new JFrame(), "Only Digits Allowed","Hieght Field Error",JOptionPane.ERROR_MESSAGE);
-                     System.out.println("Contains Alphabet");
-                     result=false;
-                     
-                     break;
-                }
-            }
-        
- return result;
-}
 
 
     
@@ -192,7 +169,7 @@ public class Add_Payment extends javax.swing.JFrame {
     
     public void show_members_details_by_name() throws SQLException{
     
-        System.out.println("show members details by mobileNo");
+        System.out.println("show members details by name");
         
         member_id_TextField.setEditable(true);
         mem_start_date_TextField.setEditable(true);
@@ -224,7 +201,8 @@ public class Add_Payment extends javax.swing.JFrame {
                  mobile_no_rs=rs.getString("phoneno");
                 dateofjoin_rs=rs.getDate("DateofJoin").toString();
                 String membership_start_date_rs=rs.getDate("ShiftStartDate").toString();
-                String membership_end_date_rs=rs.getString("ReginDate");
+              //  String membership_end_date_rs=rs.getString("validityend");
+                
                 
                 member_id_TextField.setText(membership_id_rs);
                 member_id_TextField.setEditable(false);
@@ -241,7 +219,8 @@ public class Add_Payment extends javax.swing.JFrame {
                 
                 mem_start_date_TextField.setText(membership_start_date_rs);
                 mem_start_date_TextField.setEditable(false);
-               // mem_end_date_TextField.setText(membership_end_date_rs);
+             
+                //mem_end_date_TextField.setText(membership_end_date_rs);
                 //mem_end_date_TextField.setEditable(false);
                 
              }     
@@ -596,7 +575,7 @@ public class Add_Payment extends javax.swing.JFrame {
       }
       
       
-       public void set_mem_end_date(){
+       public void set_mem_end_date_in_textfield(){
            if (mem_start_date_TextField.getText().length()>0) {
                String startdate=mem_start_date_TextField.getText();
                System.out.println(startdate);
@@ -651,6 +630,42 @@ public class Add_Payment extends javax.swing.JFrame {
        
        }
       
+       public void update_new_mem_dates_DB() {
+        String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
+        String username = "sa";
+        String password = "Dhaval@7869";
+
+        String empid = member_id_TextField.getText();
+        String shiftstart = mem_start_date_TextField.getText();
+        String validityenddate = mem_end_date_TextField.getText();
+
+        String query = "update attendance_manager.dbo.Mst_Employee\n"
+                + "set ShiftStartDate=?,validityend=? where empid=" + empid;
+
+        try {
+            con = DriverManager.getConnection(url, username, password);
+            pst = con.prepareCall(query);
+            pst.setString(1, shiftstart);
+            pst.setString(2, validityenddate);
+            int count = pst.executeUpdate();
+            if (count > 0) {
+                System.out.println(empid);
+                JOptionPane.showMessageDialog(new JFrame(), "MemberShip Date Updated");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(new JFrame(), "DATE ERROR");
+
+        }
+
+        System.out.println(shiftstart);
+        System.out.println(validityenddate);
+        System.out.println(empid);
+
+    }
+    
+       
       public void add_payment(){
       
           
@@ -658,45 +673,7 @@ public class Add_Payment extends javax.swing.JFrame {
           int extradiscount=0;
             
           
-          JButton yes_button=new JButton("Yes");
-          JButton no_button=new JButton("no");
-          Object[] options={yes_button,no_button};
           
-           yes_button.addActionListener(new ActionListener() {
-              @Override
-              public void actionPerformed(ActionEvent e) {
-                  print_payment_reciept pr=new print_payment_reciept();
-                  
-                  pr.paymentidLabel.setText(String.valueOf(paymentid));
-                  pr.memberidLabel.setText(member_id_TextField.getText());
-                  
-                  pr.nameLabel.setText(membername_TextField.getText());
-                  pr.datetLabel.setText(datenow);
-                  pr.dateofJoinLabel.setText(dateofjoin_TextField.getText());
-                  pr.mem_startLabel.setText(mem_start_date_TextField.getText());
-                  pr.mem_endLabel.setText(mem_end_date_TextField.getText());
-                  pr.durationtLabel.setText(duration_TextField.getText());
-                  pr.totalfeeLabel.setText(totalfee_TextField.getText());
-                  pr.discountLabel.setText(discount_ComboBox.getSelectedItem().toString());
-                  pr.finalamountLabel.setText(finalamount_TextField.getText());
-                  pr.currentpymentLabel.setText(current_payment_TextField.getText());
-                  pr.balanceLabel.setText(pendingamount_TextField.getText());
-                  pr.setVisible(rootPaneCheckingEnabled);
-                  
-                  JOptionPane.getRootFrame().dispose();
-                  
-              }
-          });
-          
-          no_button.addActionListener(new ActionListener() {
-              @Override
-              public void actionPerformed(ActionEvent e) {
-             
-                  JOptionPane.getRootFrame().dispose();
-                  reset();
-                 
-              }
-          });
           
           
           
@@ -758,10 +735,51 @@ public class Add_Payment extends javax.swing.JFrame {
               
               if (count>0) {
                   System.out.println("success");
-                  JOptionPane.showMessageDialog(new JFrame(), "Payment Added Successfully");
-                  JOptionPane.showOptionDialog(new JFrame(), "Print Reciept", "Print", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null
-                          , options,options[0] );
+                  try {
+                      update_new_mem_dates_DB();
+                  } catch (Exception e) {
+                          e.printStackTrace();
+                    JOptionPane.showMessageDialog(new JFrame(), "DATE ERROR");
+                
+                  }
                   
+                  JOptionPane.showMessageDialog(new JFrame(), "Payment Added Successfully");
+                  
+                 int n= JOptionPane.showOptionDialog(new JFrame(), "Print Reciept", "Print", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null
+                          , new Object[] {"Yes", "No"}, JOptionPane.YES_OPTION );
+                          
+                     if (n == JOptionPane.YES_OPTION) {
+                     System.out.println("Yes");
+                            print_payment_reciept pr=new print_payment_reciept();
+                  
+                  pr.paymentidLabel.setText(String.valueOf(paymentid));
+                  pr.memberidLabel.setText(member_id_TextField.getText());
+                  
+                  pr.nameLabel.setText(membername_TextField.getText());
+                  pr.datetLabel.setText(datenow);
+                  pr.dateofJoinLabel.setText(dateofjoin_TextField.getText());
+                  pr.mem_startLabel.setText(mem_start_date_TextField.getText());
+                  pr.mem_endLabel.setText(mem_end_date_TextField.getText());
+                  pr.durationtLabel.setText(duration_TextField.getText());
+                  pr.totalfeeLabel.setText(totalfee_TextField.getText());
+                  pr.discountLabel.setText(discount_ComboBox.getSelectedItem().toString());
+                  pr.finalamountLabel.setText(finalamount_TextField.getText());
+                  pr.currentpymentLabel.setText(current_payment_TextField.getText());
+                  pr.balanceLabel.setText(pendingamount_TextField.getText());
+                  pr.setVisible(rootPaneCheckingEnabled);
+                  
+                  JOptionPane.getRootFrame().dispose();
+                  
+                     
+                    } else if (n == JOptionPane.NO_OPTION) {
+                     System.out.println("No");
+                      JOptionPane.getRootFrame().dispose();
+                          reset();
+                 
+                    } else if (n == JOptionPane.CLOSED_OPTION) {
+                    System.out.println("Closed by hitting the cross");
+                    }
+                 
                   
               } else {
                   System.out.println("failure");
@@ -812,8 +830,70 @@ public class Add_Payment extends javax.swing.JFrame {
     }*/
 
  
+      public boolean check_numericfields(String text,String fieldname){
+        text=text.replaceAll("\\s", "");
+          boolean res=true;
+        if (text.isEmpty()) {
+            JOptionPane.showMessageDialog(new JFrame(), fieldname+" Field is Empty", fieldname+" Field Error",JOptionPane.ERROR_MESSAGE);
+            res=false;
+        }
+        else if(text.length()>0)
+            for(int i=0;i<text.length();i++){
+                if (Character.toString(text.charAt(i)).matches("^[0-9]+$")) {
+                    
+                }
+                else{
+                     JOptionPane.showMessageDialog(new JFrame(), fieldname+" Field contains Alphabetic value", fieldname+" Field Error",JOptionPane.ERROR_MESSAGE);
+                    res=false;
+                    break;
+                }
+            }
+        
+        return res;
+    }
     
+      public boolean checkallfields(boolean [] fields){
+        boolean res=true;
+        
+        for(int i=0;i<fields.length;i++){
+                System.out.println(fields[i]);
+            if (fields[i]==false) {
+                res=false;
+                break;
+            }
+            else{
+                res=true;
+                
+            }
+        }
+        return res;
     
+    }
+      
+      public boolean check_alphabetic_fields(String text,String fieldname){
+         text=text.replaceAll("\\s", "");
+          boolean result=true;
+         if (text.isEmpty()) {
+            JOptionPane.showMessageDialog(new JFrame(), fieldname+" Field is Empty", fieldname+" Field Error",JOptionPane.ERROR_MESSAGE);
+            result=false;
+        }
+              
+        if(text.length()>0)
+            for(int i=0;i<text.length();i++){
+                if (Character.toString(text.charAt(i)).matches("^[a-zA-Z]+$")) {
+                    
+                }
+                else{
+                    result=false;
+                    JOptionPane.showMessageDialog(new JFrame(), fieldname+" Field contains Numeric value", fieldname+" Field Error",JOptionPane.ERROR_MESSAGE);
+                    break;
+                }
+            }
+        
+        return result;
+    }
+    
+  
       
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -1026,6 +1106,12 @@ public class Add_Payment extends javax.swing.JFrame {
             }
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 membername_TextFieldKeyReleased(evt);
+            }
+        });
+
+        pendingamount_TextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                pendingamount_TextFieldKeyReleased(evt);
             }
         });
 
@@ -1328,7 +1414,24 @@ public class Add_Payment extends javax.swing.JFrame {
 
     private void addpayment_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addpayment_ButtonActionPerformed
         // TODO add your handling code here:
-        add_payment();
+        boolean checkname=check_alphabetic_fields(membername_TextField.getText(),"Member Name");
+        boolean checkid=check_numericfields(member_id_TextField.getText(),"Member Id");
+        boolean durationcheck=check_numericfields(duration_TextField.getText(),"Duration");
+        boolean currentpaymentcheck=check_numericfields(current_payment_TextField.getText(),"Current Payment");
+        
+        boolean[] checkallfield_forpayments={checkname,checkid,durationcheck,currentpaymentcheck};
+         boolean check_constraints=checkallfields(checkallfield_forpayments);
+       
+        if (check_constraints==true) {
+            System.out.println("all fields are within constraints");
+            add_payment();
+        }else{
+            System.out.println("Invalid Fields");
+            JOptionPane.showMessageDialog(new JFrame(), "Error:Fields are Empty or Invalid","Add Payment Error",JOptionPane.ERROR_MESSAGE);
+        }
+      
+        
+        
     }//GEN-LAST:event_addpayment_ButtonActionPerformed
 
     private void totalfee_TextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_totalfee_TextFieldActionPerformed
@@ -1344,7 +1447,8 @@ public class Add_Payment extends javax.swing.JFrame {
     }//GEN-LAST:event_mem_start_date_TextFieldActionPerformed
 
     private void membername_TextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_membername_TextFieldKeyReleased
-    String searchstring = membername_TextField.getText();
+
+        String searchstring = membername_TextField.getText();
       namesearchComboBox.setVisible(true);
       namesearchComboBox.setEnabled(true);
       
@@ -1382,9 +1486,10 @@ public class Add_Payment extends javax.swing.JFrame {
           int pendingamount=totalamount;
           pendingamount=totalamount-currentpayment;
          pendingamount_TextField.setText(String.valueOf(pendingamount));
+         pendingamount_TextField.setEditable(false);
         
         }else{
-             JOptionPane.showMessageDialog(new JFrame(), "Only Digits Allowed","Hieght Field Error",JOptionPane.ERROR_MESSAGE);
+             JOptionPane.showMessageDialog(new JFrame(), "Error:Only Numbers Allowed");
                      System.out.println("Contains Alphabet");
                    current_payment_TextField.setText(null);
         }
@@ -1405,7 +1510,7 @@ public class Add_Payment extends javax.swing.JFrame {
     private void duration_TextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_duration_TextFieldFocusLost
         // TODO add your handling code here:
         if (duration_TextField.getText().length()>0) {
-            set_mem_end_date();
+            set_mem_end_date_in_textfield();
         }
     }//GEN-LAST:event_duration_TextFieldFocusLost
 
@@ -1416,7 +1521,7 @@ public class Add_Payment extends javax.swing.JFrame {
 
     private void view_payment_history_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_view_payment_history_ButtonActionPerformed
         // TODO add your handling code here:
-        new payment_history().setVisible(true);
+        new fees_payment_history().setVisible(true);
     }//GEN-LAST:event_view_payment_history_ButtonActionPerformed
 
     private void mobileno_TextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mobileno_TextFieldActionPerformed
@@ -1475,7 +1580,7 @@ public class Add_Payment extends javax.swing.JFrame {
         }
         
     }//GEN-LAST:event_member_id_TextFieldKeyReleased
-
+ 
     private void mobilenoSearchComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mobilenoSearchComboBoxActionPerformed
         // TODO add your handling code here:
         
@@ -1555,7 +1660,7 @@ public class Add_Payment extends javax.swing.JFrame {
 
     private void duration_TextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_duration_TextFieldKeyReleased
         // TODO add your handling code here:
-            boolean check=check_numeric_textfields(duration_TextField.getText());
+            boolean check=check_numericfields(duration_TextField.getText(),"Duration");
             
             if (check=false) {
             duration_TextField.setText("");
@@ -1564,6 +1669,10 @@ public class Add_Payment extends javax.swing.JFrame {
             }
                     
     }//GEN-LAST:event_duration_TextFieldKeyReleased
+
+    private void pendingamount_TextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_pendingamount_TextFieldKeyReleased
+        // TODO add your handling code here:
+    }//GEN-LAST:event_pendingamount_TextFieldKeyReleased
 
     
     

@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.gym.general.swing.noticeboard;
 
 import com.gym.general.swing.scrollbar.ScrollBarCustom;
@@ -13,12 +9,9 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import net.miginfocom.swing.MigLayout;
 
-/**
- *
- * @author DELL
- */
-public class NoticeBoard extends javax.swing.JPanel{
-     /*public NoticeBoard() {
+public class NoticeBoard extends javax.swing.JPanel {
+
+    public NoticeBoard() {
         initComponents();
         setBackground(Color.WHITE);
         jScrollPane1.setVerticalScrollBar(new ScrollBarCustom());
@@ -62,7 +55,7 @@ public class NoticeBoard extends javax.swing.JPanel{
     }
 
     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -96,12 +89,10 @@ public class NoticeBoard extends javax.swing.JPanel{
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jScrollPane1)
         );
-    }// </editor-fold>                        
+    }// </editor-fold>//GEN-END:initComponents
 
-    // Variables declaration - do not modify                     
+    // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPanel panel;
-    // End of variables declaration       
-}
-*/
+    // End of variables declaration//GEN-END:variables
 }

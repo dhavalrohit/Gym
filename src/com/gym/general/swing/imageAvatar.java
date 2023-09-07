@@ -22,7 +22,7 @@ import javax.swing.JComponent;
  *
  * @author DELL
  */
-public class imageAvatar extends JComponent{
+public class ImageAvatar extends JComponent{
       public Icon getIcon() {
         return icon;
     }

@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.gym.general.swing;
 
 import com.gym.general.event.EventMenuSelected;
@@ -14,11 +10,8 @@ import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTarget;
 import org.jdesktop.animation.timing.TimingTargetAdapter;
 
-/**
- *
- * @author DELL
- */
-public class PopupMenu extends javax.swing.JDialog{
+public class PopupMenu extends javax.swing.JDialog {
+
     private Animator animator;
     private boolean show = true;
 
@@ -81,7 +74,7 @@ public class PopupMenu extends javax.swing.JDialog{
     }
 
     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         panel = new com.gym.general.swing.PanelPopup();
@@ -119,13 +112,13 @@ public class PopupMenu extends javax.swing.JDialog{
         );
 
         pack();
-    }// </editor-fold>                        
+    }// </editor-fold>//GEN-END:initComponents
 
-    private void formWindowLostFocus(java.awt.event.WindowEvent evt) {                                     
+    private void formWindowLostFocus(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowLostFocus
         closeMenu();
-    }                                    
+    }//GEN-LAST:event_formWindowLostFocus
 
-    // Variables declaration - do not modify                     
+    // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.gym.general.swing.PanelPopup panel;
-    // End of variables declaration                   
+    // End of variables declaration//GEN-END:variables
 }

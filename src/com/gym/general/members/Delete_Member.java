@@ -66,6 +66,7 @@ public class Delete_Member extends javax.swing.JFrame {
         initComponents();
         showall_members();
         total_member_count();
+        this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         
     }
       

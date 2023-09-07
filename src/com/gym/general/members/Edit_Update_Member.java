@@ -68,6 +68,7 @@ public class Edit_Update_Member extends javax.swing.JFrame {
         
         initComponents();
         showall_members();
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }
     
     public void total_member_count(){

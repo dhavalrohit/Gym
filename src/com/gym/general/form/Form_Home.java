@@ -1,10 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.gym.general.form;
 
 
+import com.formdev.flatlaf.FlatIntelliJLaf;
 import com.gym.general.dialouge.Message;
 import com.gym.general.main.Main;
 import com.gym.general.model.ModelCard;
@@ -12,53 +9,109 @@ import com.gym.general.model.ModelMember;
 import com.gym.general.swing.icon.GoogleMaterialDesignIcons;
 import com.gym.general.swing.icon.IconFontSwing;
 import com.gym.general.swing.noticeboard.ModelNoticeBoard;
-import com.gym.general.swing.table.EventAction;
+import com.gym.general.table.EventAction;
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import com.gym.database.Show_All;
+import java.sql.Statement;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import com.gym.database.Connect;
+
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.util.Date;
+import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.Timer;
 import net.proteanit.sql.DbUtils;
 
+public class Form_Home extends javax.swing.JPanel {
 
-/**
- *
- * @author DELL
- */
-public class Form_Home extends javax.swing.JPanel{
-    
-    double daily_attendance_count;
+     double daily_attendance_count;
     double total_members_count;
     double percentage;
     Connection con=null;
     ResultSet rs=null;
     PreparedStatement pst=null;
     int count;
-     
+    Statement st;
     
-      public Form_Home() throws SQLException {
+    
+    
+   
+    
+    public Form_Home() throws SQLException {
+       //FlatIntelliJLaf.registerCustomDefaultsSource("Flatlab.propeties");
+        //FlatIntelliJLaf.setup();
+        
         initComponents();
         table1.fixTable(jScrollPane1);
+        table3.fix_secondTable(jScrollPane1);
+        
+        
         setOpaque(false);
         initData();
+        
+        
+        Timer timer=new Timer(1000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+               // throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+               updatedatetimeLabel();
+            }
+        });
+        timer.start();
+       
     }
 
     private void initData() throws SQLException {
-        initTableData();
         initCardData();
-//        initNoticeBoard();
+         //   initNoticeBoard();
+        initTableData();
+    }
+    
+     public void show_workouts_by_day(){
+        
+         String daychosen="monday";
+         
+         LocalDate today=LocalDate.now();
+         DayOfWeek day=today.getDayOfWeek();
+         
+         String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
+        String username = "sa";
+        String password = "Dhaval@7869";
+        String query="select day as Day,level_type as Level,Body_Part as Body_Part ,exercise as Exercise,equipment as Equipment,sets as Sets,reps as Reps,rest as Rest from dbo.workout where day='"+daychosen+"'";
+        
+        
+        try {
+            con=DriverManager.getConnection(url, username, password);
+            st=con.createStatement();
+            rs=st.executeQuery(query);
+            
+            table3.setModel(DbUtils.resultSetToTableModel(rs));
+            
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(new JFrame(),"DATA FETCH ERROR","Inquiry History",JOptionPane.ERROR_MESSAGE);
+        
+        }
         
     }
     
-    public void Get_Daily_Attendance() throws SQLException{
+    
+    
+      public void Get_Daily_Attendance() throws SQLException{
         String sql="select cardNo , punchdatetime from dbo.Tran_MachineRawPunch";
        
         /*String sql_query_join="select dbo.mst_employee.EmpName,dbo.mst_employee.Empcode, dbo.tran_machinerawpunch.cardno,\n" +
@@ -75,7 +128,7 @@ public class Form_Home extends javax.swing.JPanel{
             con=DriverManager.getConnection(url, username, password);
             pst=con.prepareStatement(sql_query_join);
             rs=pst.executeQuery();
-            table1.setModel(DbUtils.resultSetToTableModel(rs));
+           table1.setModel(DbUtils.resultSetToTableModel(rs));
         } catch (SQLException ex) {
             Logger.getLogger(Form_Home.class.getName()).log(Level.SEVERE, null, ex);
             ex.printStackTrace();
@@ -118,18 +171,32 @@ public class Form_Home extends javax.swing.JPanel{
     }*/
     
     
-    public void get_daily_attendance_count(){
-        String sql="select count(*) from rawpunchdetail";
+    public void updatedatetimeLabel() {
+        SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/yyyy  HH:mm:ss");
+        formatDate.setTimeZone(TimeZone.getTimeZone("IST")); 
+        
+        Date currentDate = new Date();
+        String formattedDate = formatDate.format(currentDate);
+        date_time_Label.setText(formattedDate);
+    
+    }    
+      
+  public void get_daily_attendance_count(){
+        String sql="select count(*) from dbo.tran_machinerawpunch where punchdatetime=getdate()";
+        String url="jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
+        String username="sa";
+        String password="Dhaval@7869";
+        
         try{
-        	con=Connect.connectDb();
+        	con=DriverManager.getConnection(url , username, password);
             pst=con.prepareStatement(sql);
             rs=pst.executeQuery();
           //  rs.next()
             while (rs.next()) {                
-                daily_attendance_count=rs.getInt("count(*)");
+                daily_attendance_count=rs.getInt(1);
             }
             System.out.println(daily_attendance_count);
-            table1.setModel(DbUtils.resultSetToTableModel(rs));
+            //table1.setModel(DbUtils.resultSetToTableModel(rs));
             
             pst.close();
  		    rs.close();
@@ -153,19 +220,23 @@ public class Form_Home extends javax.swing.JPanel{
         }
        
     }
-    
+      
     public void get_total_members_count(){
-         String sql="select count(*) from members";
-        try{
-        	con=Connect.connectDb();
+         String sql="select count(*) from dbo.mst_employee";
+      String url="jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
+        String username="sa";
+        String password="Dhaval@7869";
+        
+         try{
+        	con=DriverManager.getConnection(url, username, password);
             pst=con.prepareStatement(sql);
             rs=pst.executeQuery();
           //  rs.next()
             while (rs.next()) {                
-                total_members_count=rs.getInt("count(*)");
+                total_members_count=rs.getInt(1);
             }
             System.out.println(total_members_count);
-            table1.setModel(DbUtils.resultSetToTableModel(rs));
+          //  table1.setModel(DbUtils.resultSetToTableModel(rs));
             
             pst.close();
  		    rs.close();
@@ -229,6 +300,7 @@ public class Form_Home extends javax.swing.JPanel{
         }
     }*/
 
+
     private void initTableData() throws SQLException {
         EventAction eventAction = new EventAction() {
             @Override
@@ -249,21 +321,26 @@ public class Form_Home extends javax.swing.JPanel{
                 }
             }
         };
-        //table1.addRow(new ModelMember(new ImageIcon(getClass().getResource("/com/gym/general/icon/profile.jpg")), "Jonh", "Male", "Java", 300).toRowTable(eventAction));
-       //Get_Data();
-       get_total_members_count();
-       get_daily_attendance_count();
+            //get_total_members_count();
+       //get_daily_attendance_count();
        Get_Daily_Attendance();
-       get_attendance_percentage(total_members_count, daily_attendance_count);
-       
-        
+       show_workouts_by_day();
+      // get_attendance_percentage(total_members_count, daily_attendance_count);
        
     }
-        
-        
-    
 
     private void initCardData() {
+       get_total_members_count();
+       get_daily_attendance_count();
+        
+         try {
+             Get_Daily_Attendance();
+         } catch (SQLException ex) {
+             Logger.getLogger(Form_Home.class.getName()).log(Level.SEVERE, null, ex);
+         }
+        
+       get_attendance_percentage(total_members_count, daily_attendance_count);
+       
         Icon icon1 = IconFontSwing.buildIcon(GoogleMaterialDesignIcons.PEOPLE, 60, new Color(255, 255, 255, 100), new Color(255, 255, 255, 15));
         card1.setData(new ModelCard("Total Members", total_members_count, 20, icon1));
         Icon icon2 = IconFontSwing.buildIcon(GoogleMaterialDesignIcons.MONETIZATION_ON, 60, new Color(255, 255, 255, 100), new Color(255, 255, 255, 15));
@@ -272,19 +349,8 @@ public class Form_Home extends javax.swing.JPanel{
         card3.setData(new ModelCard("Active Members", 800, 80, icon3));
         Icon icon4 = IconFontSwing.buildIcon(GoogleMaterialDesignIcons.BUSINESS_CENTER, 60, new Color(255, 255, 255, 100), new Color(255, 255, 255, 15));
         card4.setData(new ModelCard("Other Income", 550, 95, icon4));
-    }
 
-   /* private void initNoticeBoard() {
-        //noticeBoard.addDate("04/10/2021");
-        //noticeBoard.addNoticeBoard(new ModelNoticeBoard(new Color(94, 49, 238), "Hidemode", "Now", "Sets the hide mode for the component. If the hide mode has been specified in the This hide mode can be overridden by the component constraint."));
-        //noticeBoard.addNoticeBoard(new ModelNoticeBoard(new Color(218, 49, 238), "Tag", "2h ago", "Tags the component with metadata name that can be used by the layout engine. The tag can be used to explain for the layout manager what the components is showing, such as an OK or Cancel button."));
-        //noticeBoard.addDate("03/10/2021");
-        noticeBoard.addNoticeBoard(new ModelNoticeBoard(new Color(32, 171, 43), "Further Reading", "12:30 PM", "There are more information to digest regarding MigLayout. The resources are all available at www.migcomponents.com"));
-        noticeBoard.addNoticeBoard(new ModelNoticeBoard(new Color(50, 93, 215), "Span", "10:30 AM", "Spans the current cell (merges) over a number of cells. Practically this means that this cell and the count number of cells will be treated as one cell and the component can use the space that all these cells have."));
-        noticeBoard.addNoticeBoard(new ModelNoticeBoard(new Color(27, 188, 204), "Skip ", "9:00 AM", "Skips a number of cells in the flow. This is used to jump over a number of cells before the next free cell is looked for. The skipping is done before this component is put in a cell and thus this cells is affected by it. \"count\" defaults to 1 if not specified."));
-        noticeBoard.addNoticeBoard(new ModelNoticeBoard(new Color(238, 46, 57), "Push", "7:15 AM", "Makes the row and/or column that the component is residing in grow with \"weight\". This can be used instead of having a \"grow\" keyword in the column/row constraints."));
-        noticeBoard.scrollToTop();
-    }*/
+    }
 
     private boolean showMessage(String message) {
         Message obj = new Message(Main.getFrames()[0], true);
@@ -293,29 +359,27 @@ public class Form_Home extends javax.swing.JPanel{
     }
 
     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        
         card1 = new com.gym.general.component.Card();
         jLabel1 = new javax.swing.JLabel();
         card2 = new com.gym.general.component.Card();
         card3 = new com.gym.general.component.Card();
         card4 = new com.gym.general.component.Card();
-        jPanel1 = new javax.swing.JPanel();
-        noticeBoard = new com.gym.general.swing.noticeboard.NoticeBoard();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
+        date_time_Label = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        table1 = new com.gym.general.swing.table.Table();
+        table1 = new com.gym.general.table.Table();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        table3 = new com.gym.general.table.Table();
+        jLabel7 = new javax.swing.JLabel();
 
         card1.setColorGradient(new java.awt.Color(211, 28, 215));
 
         jLabel1.setFont(new java.awt.Font("sansserif", 1, 12)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(4, 72, 210));
+        jLabel1.setForeground(new java.awt.Color(51, 51, 51));
         jLabel1.setText("Dashboard / Home");
 
         card2.setBackground(new java.awt.Color(10, 30, 214));
@@ -327,56 +391,16 @@ public class Form_Home extends javax.swing.JPanel{
         card4.setBackground(new java.awt.Color(60, 195, 0));
         card4.setColorGradient(new java.awt.Color(208, 255, 90));
 
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
-
-        jLabel2.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(76, 76, 76));
-        jLabel2.setText("Notice Board");
-        jLabel2.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 10, 1, 1));
-
-        jLabel3.setFont(new java.awt.Font("sansserif", 1, 12)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(105, 105, 105));
-        jLabel3.setText("Simple Miglayout API Doc");
-        jLabel3.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 10, 1, 1));
-
-        jLabel4.setOpaque(true);
-        
-//-======--Noticboard Implementation=======================================================================================================
-       /* javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(noticeBoard, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel3))
-                        .addGap(0, 257, Short.MAX_VALUE)))
-                .addContainerGap())
-        );*/
-        /*jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel2)
-                .addGap(15, 15, 15)
-                .addComponent(jLabel3)
-                .addGap(9, 9, 9)
-                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 1, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(1, 1, 1)
-                .addComponent(noticeBoard, javax.swing.GroupLayout.DEFAULT_SIZE, 491, Short.MAX_VALUE))
-        );*/
-   //==================NoticeBoard Implementation=================================================================================================     
+        date_time_Label.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
+        date_time_Label.setForeground(new java.awt.Color(51, 51, 51));
+        date_time_Label.setText("Dashboard / Home");
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel2.setPreferredSize(new java.awt.Dimension(476, 452));
 
         jLabel5.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(76, 76, 76));
-        jLabel5.setText("Daily Attendance");
+        jLabel5.setText("Today's Workout Plan");
         jLabel5.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 10, 1, 1));
 
         table1.setModel(new javax.swing.table.DefaultTableModel(
@@ -384,21 +408,43 @@ public class Form_Home extends javax.swing.JPanel{
 
             },
             new String [] {
-                "Name", "Gender", "Course", "Fees", "Action"
+                "empname", "empid", "Date Office", "Punch 1", "Punch2", "All Punch"
             }
         ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, true
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
         jScrollPane1.setViewportView(table1);
-        if (table1.getColumnModel().getColumnCount() > 0) {
-            table1.getColumnModel().getColumn(0).setPreferredWidth(150);
-        }
+
+        table3.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane3.setViewportView(table3);
+
+        jLabel7.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(76, 76, 76));
+        jLabel7.setText("Daily Attendance Record");
+        jLabel7.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 10, 1, 1));
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -409,17 +455,27 @@ public class Form_Home extends javax.swing.JPanel{
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel5)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jScrollPane1))
-                .addContainerGap())
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1))
+                        .addGap(12, 12, 12))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel7)
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
+                .addComponent(jLabel7)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 351, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel5)
-                .addGap(0, 0, 0)
-                .addComponent(jScrollPane1)
+                .addGap(15, 15, 15)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 397, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -431,57 +487,52 @@ public class Form_Home extends javax.swing.JPanel{
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(card1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(card1, javax.swing.GroupLayout.DEFAULT_SIZE, 256, Short.MAX_VALUE)
                         .addGap(18, 18, 18)
-                        .addComponent(card2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(card2, javax.swing.GroupLayout.DEFAULT_SIZE, 256, Short.MAX_VALUE)
                         .addGap(18, 18, 18)
-                        .addComponent(card3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(card3, javax.swing.GroupLayout.DEFAULT_SIZE, 256, Short.MAX_VALUE)
                         .addGap(18, 18, 18)
-                        .addComponent(card4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(card4, javax.swing.GroupLayout.DEFAULT_SIZE, 258, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(date_time_Label))
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 1080, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(date_time_Label))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(card1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(card2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(card3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(card4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 861, Short.MAX_VALUE)
                 .addContainerGap())
         );
-    }// </editor-fold>                        
+    }// </editor-fold>//GEN-END:initComponents
 
-    // Variables declaration - do not modify                     
+    // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.gym.general.component.Card card1;
     private com.gym.general.component.Card card2;
     private com.gym.general.component.Card card3;
     private com.gym.general.component.Card card4;
+    private javax.swing.JLabel date_time_Label;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private com.gym.general.swing.noticeboard.NoticeBoard noticeBoard;
-    private com.gym.general.swing.table.Table table1;
-    private Show_All showall;
-    
-    // End of variables declaration 
+    private javax.swing.JScrollPane jScrollPane3;
+    private com.gym.general.table.Table table1;
+    private com.gym.general.table.Table table3;
+    // End of variables declaration//GEN-END:variables
 }

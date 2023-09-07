@@ -1,4 +1,3 @@
-
 package com.gym.general.dialouge;
 
 import com.gym.general.swing.icon.GoogleMaterialDesignIcons;
@@ -8,9 +7,9 @@ import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTarget;
 import org.jdesktop.animation.timing.TimingTargetAdapter;
 
+public class Message extends javax.swing.JDialog {
 
-public class Message extends javax.swing.JDialog{
-     public boolean isOk() {
+    public boolean isOk() {
         return ok;
     }
 
@@ -58,7 +57,7 @@ public class Message extends javax.swing.JDialog{
     }
 
     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
@@ -139,16 +138,16 @@ public class Message extends javax.swing.JDialog{
 
         pack();
         setLocationRelativeTo(null);
-    }// </editor-fold>                        
+    }// </editor-fold>//GEN-END:initComponents
 
-    private void button2ActionPerformed(java.awt.event.ActionEvent evt) {                                        
+    private void button2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button2ActionPerformed
         ok = true;
         closeMenu();
-    }                                       
+    }//GEN-LAST:event_button2ActionPerformed
 
-    private void button1ActionPerformed(java.awt.event.ActionEvent evt) {                                        
+    private void button1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button1ActionPerformed
         closeMenu();
-    }                                       
+    }//GEN-LAST:event_button1ActionPerformed
 
     private void closeMenu() {
         if (animator.isRunning()) {
@@ -158,13 +157,11 @@ public class Message extends javax.swing.JDialog{
         animator.start();
     }
 
-    // Variables declaration - do not modify                     
+    // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.gym.general.swing.Button button1;
     private com.gym.general.swing.Button button2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lbIcon;
     private javax.swing.JLabel lbMessage;
-    // End of variables declaration                   
+    // End of variables declaration//GEN-END:variables
 }
-
-

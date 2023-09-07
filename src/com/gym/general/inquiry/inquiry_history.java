@@ -14,10 +14,8 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import net.proteanit.sql.DbUtils;
 
-/**
- *
- * @author DELL
- */
+
+
 public class inquiry_history extends javax.swing.JFrame {
 
     Connection con=null;
@@ -25,13 +23,18 @@ public class inquiry_history extends javax.swing.JFrame {
     Statement st=null;
     PreparedStatement pst=null;
       
-      
-    public inquiry_history() {
-               FlatIntelliJLaf.registerCustomDefaultsSource("Flatlab.propeties");
-         FlatIntelliJLaf.setup();
   
+    public inquiry_history() {
+         
+        FlatIntelliJLaf.registerCustomDefaultsSource("Flatlab.propeties");
+        FlatIntelliJLaf.setup();
+  
+        
         initComponents();
         this.setResizable(false);
+        
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        
         show_inquiry_history();
     }
 

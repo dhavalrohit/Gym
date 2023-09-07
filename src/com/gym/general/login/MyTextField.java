@@ -11,6 +11,7 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.RenderingHints;
+import java.awt.SystemColor;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JTextField;
@@ -26,6 +27,7 @@ public class MyTextField extends JTextField{
     public String getHint() {
         return hint;
     }
+    
 
     public void setHint(String hint) {
         this.hint = hint;
@@ -52,6 +54,7 @@ public class MyTextField extends JTextField{
     private Icon prefixIcon;
     private Icon suffixIcon;
     private String hint = "";
+    
 
     public MyTextField() {
         setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -59,6 +62,7 @@ public class MyTextField extends JTextField{
         setForeground(Color.decode("#7A8C8D"));
         setFont(new java.awt.Font("sansserif", 0, 13));
         setSelectionColor(new Color(75, 175, 152));
+        
     }
 
     @Override

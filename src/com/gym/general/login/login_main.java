@@ -138,7 +138,7 @@ public class login_main extends javax.swing.JFrame{
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>                        
-
+    login_main main=null;
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -166,9 +166,13 @@ public class login_main extends javax.swing.JFrame{
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new login_main().setVisible(true);
+                login_main main=new login_main();
+                
+                main.setVisible(true);
+                
             }
         });
+       
     }
     
     private void showMessage(Message.MessageType messageType, String message) {

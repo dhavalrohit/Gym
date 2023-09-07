@@ -1,20 +1,15 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.gym.general.attendance;
 
-/**
- *
- * @author DELL
- */
-public class AttendanceForm1 extends javax.swing.JPanel{
-       public AttendanceForm1() {
+import com.gym.general.form.*;
+
+public class AttendanceForm1 extends javax.swing.JPanel {
+
+    public AttendanceForm1() {
         initComponents();
-           setOpaque(false);
+        setOpaque(false);
     }
     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
@@ -34,9 +29,9 @@ public class AttendanceForm1 extends javax.swing.JPanel{
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
         );
-    }// </editor-fold>                        
+    }// </editor-fold>//GEN-END:initComponents
 
-    // Variables declaration - do not modify                     
+    // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
-    // End of variables declaration    
+    // End of variables declaration//GEN-END:variables
 }

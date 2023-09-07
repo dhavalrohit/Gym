@@ -4,9 +4,9 @@
  */
 package com.gym.general.model;
 
-import com.gym.general.swing.table.EventAction;
-import com.gym.general.swing.table.ModelAction;
-import com.gym.general.swing.table.ModelProfile;
+import com.gym.general.table.EventAction;
+import com.gym.general.table.ModelAction;
+import com.gym.general.table.ModelProfile;
 import java.text.DecimalFormat;
 import javax.swing.Icon;
 

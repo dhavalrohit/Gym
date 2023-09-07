@@ -11,7 +11,7 @@ import java.awt.Color;
  * @author DELL
  */
 public class ModelNoticeBoard {
-    /* public Color getTitleColor() {
+     public Color getTitleColor() {
         return titleColor;
     }
 
@@ -56,5 +56,5 @@ public class ModelNoticeBoard {
     private Color titleColor;
     private String title;
     private String time;
-    private String description;*/
+    private String description;
 }

@@ -2,8 +2,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
+//Constraints set on 06-09-2023
 package com.gym.general.fees;
-
 import com.formdev.flatlaf.FlatIntelliJLaf;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -37,6 +37,7 @@ public class add_new_fees extends javax.swing.JFrame {
         
         initComponents();
         this.setResizable(false);
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         get_fee_id();
         
     }
@@ -73,6 +74,52 @@ public class add_new_fees extends javax.swing.JFrame {
          
     }
     
+    public boolean checkallfields(boolean [] fields){
+        boolean res=true;
+        
+        for(int i=0;i<fields.length;i++){
+            if (fields[i]==false) {
+                res=false;
+                break;
+            }
+            else{
+                res=true;
+                
+            }
+        }
+        return res;
+    
+    }
+    
+      public boolean check_numericfields(String text,String fieldname){
+        text=text.replaceAll("\\s", "");
+          boolean res=true;
+        if (text.isEmpty()) {
+            JOptionPane.showMessageDialog(new JFrame(), fieldname+" Field is Empty", fieldname+" Field Error",JOptionPane.ERROR_MESSAGE);
+            res=false;
+        }
+        else if(text.length()>0)
+            for(int i=0;i<text.length();i++){
+                if (Character.toString(text.charAt(i)).matches("^[0-9]+$")) {
+                    
+                }
+                else{
+                     JOptionPane.showMessageDialog(new JFrame(), fieldname+" Field contains Alphabetic value", fieldname+" Field Error",JOptionPane.ERROR_MESSAGE);
+                    res=false;
+                    break;
+                }
+            }
+        
+        return res;
+    }
+    
+   public void clear(){
+       amount_TextField.setText("");
+       duration_TextField.setText("");
+   
+   }
+      
+      
     public void add_fee(){
            String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
         String username = "sa";
@@ -100,6 +147,8 @@ public class add_new_fees extends javax.swing.JFrame {
             
                 if (count>0) {
                     JOptionPane.showMessageDialog(new JFrame(), "Added Succesfully"); 
+                    clear();
+                    get_fee_id();
                 }
                 else{
                     JOptionPane.showMessageDialog(new JFrame(), "Operation Failed"); 
@@ -268,7 +317,19 @@ public class add_new_fees extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        add_fee();
+         boolean checkdur=check_numericfields(duration_TextField.getText(),"Dration");
+         boolean checkamount=check_numericfields(amount_TextField.getText(),"Amount");
+         System.out.println(checkdur);
+         System.out.println(checkamount);
+        boolean[] fields={checkdur,checkamount};
+        boolean finalres=checkallfields(fields);
+         if (finalres==true) {
+            add_fee();
+        }
+         else{
+             JOptionPane.showMessageDialog(new JFrame(), "Constraint Error");
+         }
+         
     }//GEN-LAST:event_jButton1ActionPerformed
 
    

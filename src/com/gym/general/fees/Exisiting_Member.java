@@ -2,8 +2,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package com.gym.general.fees;
 
+//Constraints set on 06-09-2023
+
+package com.gym.general.fees;
 import com.formdev.flatlaf.FlatIntelliJLaf;
 import com.raven.datechooser.DateChooser;
 import java.awt.Color;
@@ -39,33 +41,33 @@ import javax.swing.table.DefaultTableModel;
  */
 public class Exisiting_Member extends javax.swing.JFrame {
 
-    Connection con=null;
-      ResultSet rs=null;
-      Statement st=null;
-      PreparedStatement pst=null;
-     private int total_members_count;
-       int totalamount=0;
-     int currentpayment=0;
-     DefaultTableModel model=null;
-     
-     TextPrompt memberid_prompt;
-     TextPrompt membername_prompt;
-     TextPrompt mobileno_prompt;
-     
+    Connection con = null;
+    ResultSet rs = null;
+    Statement st = null;
+    PreparedStatement pst = null;
+    private int total_members_count;
+    int totalamount = 0;
+    int currentpayment = 0;
+    DefaultTableModel model = null;
+
+    TextPrompt memberid_prompt;
+    TextPrompt membername_prompt;
+    TextPrompt mobileno_prompt;
+
     private JPopupMenu popupmenu;
     private JPanel panelsearch;
-     private JTable Jtable1;
-     
-     private DateChooser renew_membership_start_date;
-    
+    private JTable Jtable1;
+
+    private DateChooser renew_membership_start_date;
+
     public Exisiting_Member() {
-       FlatIntelliJLaf.registerCustomDefaultsSource("Flatlab.propeties");
+        FlatIntelliJLaf.registerCustomDefaultsSource("Flatlab.propeties");
         FlatIntelliJLaf.setup();
         //total_member_count();
         this.setResizable(false);
-        renew_membership_start_date=new DateChooser();
+        renew_membership_start_date = new DateChooser();
         renew_membership_start_date.setDateFormat(new SimpleDateFormat("YYYY-MM-dd"));
-        
+
         initComponents();
         duration_TextField.addKeyListener(new KeyAdapter() {
             @Override
@@ -73,29 +75,27 @@ public class Exisiting_Member extends javax.swing.JFrame {
                 super.keyReleased(e); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
                 calculate_fees();
             }
-            
+
         });
-        
-        
-        
-        memberid_prompt=new TextPrompt("Enter Member ID to Start Searching ", member_id_TextField);
+
+        memberid_prompt = new TextPrompt("Enter Member ID to Start Searching ", member_id_TextField);
         memberid_prompt.setForeground(Color.GRAY);
         memberid_prompt.setHorizontalAlignment((int) LEFT_ALIGNMENT);
-        memberid_prompt.changeStyle(Font.BOLD+Font.ITALIC);
+        memberid_prompt.changeStyle(Font.BOLD + Font.ITALIC);
         memberid_prompt.setShowPromptOnce(true);
-        
-        membername_prompt=new TextPrompt("Enter Name to Start Searching", membername_TextField);
+
+        membername_prompt = new TextPrompt("Enter Name to Start Searching", membername_TextField);
         membername_prompt.setForeground(Color.GRAY);
         membername_prompt.setHorizontalAlignment((int) LEFT_ALIGNMENT);
-        membername_prompt.changeStyle(Font.BOLD+Font.ITALIC);
+        membername_prompt.changeStyle(Font.BOLD + Font.ITALIC);
         membername_prompt.setShowPromptOnce(true);
-        
-        mobileno_prompt=new TextPrompt("Enter Mobile No to Start Searching", mobileno_TextField);
+
+        mobileno_prompt = new TextPrompt("Enter Mobile No to Start Searching", mobileno_TextField);
         mobileno_prompt.setForeground(Color.GRAY);
         mobileno_prompt.setHorizontalAlignment((int) LEFT_ALIGNMENT);
-        mobileno_prompt.changeStyle(Font.BOLD+Font.ITALIC);
+        mobileno_prompt.changeStyle(Font.BOLD + Font.ITALIC);
         mobileno_prompt.setShowPromptOnce(true);
-        
+
         member_id_TextField.setEditable(true);
         dateofjoin_TextField.setEditable(false);
         mem_start_date_TextField.setEditable(false);
@@ -103,624 +103,599 @@ public class Exisiting_Member extends javax.swing.JFrame {
         mem_renewed_end_date_TextField.setEditable(false);
         discount_ComboBox.setEnabled(false);
         discount_ComboBox.setEditable(false);
-        
+
         membername_TextField.setEditable(true);
         finalamount_TextField.setEditable(false);
-        Jtable1=new JTable();
+        Jtable1 = new JTable();
         showall_members();
-        
+
         namesearchComboBox.setVisible(false);
         idSearchComboBox.setVisible(false);
         mobilenoSearchComboBox.setVisible(false);
-        
-        
+
     }
 
-    
-        
-    public boolean check_numeric_textfields(String text){
-    
-        boolean result=true;
-        
-        /*if (text.isEmpty()) {
-            JOptionPane.showMessageDialog(new JFrame(), "Hieght Field Can't be Empty");
-            result=false;
-        }*/
-        
-            int len=text.length();
-            for (int i = 0; i < len; i++) {
-                if(Character.toString(text.charAt(i)).matches("^[0-9]+$")){
-                    result=true;
-                    continue;
-                        
+  public boolean check_numericfields(String text,String fieldname){
+        boolean res=true;
+        text=text.replaceAll("\\s", "");
+        if (text.isEmpty()) {
+            JOptionPane.showMessageDialog(new JFrame(), fieldname+" Field is Empty", fieldname+" Field Error",JOptionPane.ERROR_MESSAGE);
+            res=false;
+        }
+        else if(text.length()>0)
+            for(int i=0;i<text.length();i++){
+                if (Character.toString(text.charAt(i)).matches("^[0-9]+$")) {
                     
-            }else{
-                    JOptionPane.showMessageDialog(new JFrame(), "Only Digits Allowed","Hieght Field Error",JOptionPane.ERROR_MESSAGE);
-                     System.out.println("Contains Alphabet");
-                     result=false;
-                     
-                     break;
+                }
+                else{
+                     JOptionPane.showMessageDialog(new JFrame(), fieldname+" Field contains Alphabetic value", fieldname+" Field Error",JOptionPane.ERROR_MESSAGE);
+                    res=false;
+                    break;
                 }
             }
         
- return result;
-}
-
-
-  
-    public void show_members_details_by_name() throws SQLException{
+        return res;
+    }
     
-        System.out.println("show members details by mobileNo");
+      public boolean checkallfields(boolean [] fields){
+        boolean res=true;
         
+        for(int i=0;i<fields.length;i++){
+                System.out.println(fields[i]);
+            if (fields[i]==false) {
+                res=false;
+                break;
+            }
+            else{
+                res=true;
+                
+            }
+        }
+        return res;
+    
+    }
+      
+      public boolean check_alphabetic_fields(String text,String fieldname){
+         text=text.replaceAll("\\s", "");
+          boolean result=true;
+         if (text.isEmpty()) {
+            JOptionPane.showMessageDialog(new JFrame(), fieldname+" Field is Empty", fieldname+" Field Error",JOptionPane.ERROR_MESSAGE);
+            result=false;
+        }
+              
+        if(text.length()>0)
+            for(int i=0;i<text.length();i++){
+                if (Character.toString(text.charAt(i)).matches("^[a-zA-Z]+$")) {
+                    
+                }
+                else{
+                    result=false;
+                    JOptionPane.showMessageDialog(new JFrame(), fieldname+" Field contains Numeric value", fieldname+" Field Error",JOptionPane.ERROR_MESSAGE);
+                    break;
+                }
+            }
+        
+        return result;
+    }
+    
+
+
+    public void show_members_details_by_name() throws SQLException {
+
+        System.out.println("show members details by mobileNo");
+
         member_id_TextField.setEditable(true);
         mem_start_date_TextField.setEditable(true);
         mem_end_date_TextField.setEditable(true);
         dateofjoin_TextField.setEditable(true);
         membername_TextField.setEditable(true);
         mobileno_TextField.setEditable(true);
-        
+
         String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
         String username = "sa";
         String password = "Dhaval@7869";
-      
+
         String membership_id_rs;
         String dateofjoin_rs;
         String member_name_rs;
         String mobile_no_rs;
-        
-        String mem_name=membername_TextField.getText();
-        
-        String query="select * from dbo.Mst_Employee where EmpName='"+mem_name+"'";
-        
+
+        String mem_name = membername_TextField.getText();
+
+        String query = "select * from dbo.Mst_Employee where EmpName='" + mem_name + "'";
+
         try {
-             con=DriverManager.getConnection(url, username, password);
-             st=con.createStatement();
-             rs=st.executeQuery(query);
-             
-             if (rs.next()) {                
-                 membership_id_rs=rs.getString("EmpID");
-                 mobile_no_rs=rs.getString("phoneno");
-                dateofjoin_rs=rs.getDate("DateofJoin").toString();
-                String membership_start_date_rs=rs.getDate("ShiftStartDate").toString();
-                String membership_end_date_rs=rs.getString("ReginDate");
-                
+            con = DriverManager.getConnection(url, username, password);
+            st = con.createStatement();
+            rs = st.executeQuery(query);
+
+            if (rs.next()) {
+                membership_id_rs = rs.getString("EmpID");
+                mobile_no_rs = rs.getString("phoneno");
+                dateofjoin_rs = rs.getDate("DateofJoin").toString();
+                String membership_start_date_rs = rs.getDate("ShiftStartDate").toString();
+                String membership_end_date_rs = rs.getString("validityend");
+
                 member_id_TextField.setText(membership_id_rs);
                 member_id_TextField.setEditable(false);
-                
+
                 mobileno_TextField.setText(mobile_no_rs);
                 mobileno_TextField.setEditable(false);
-                
+
                 dateofjoin_TextField.setText(dateofjoin_rs);
                 dateofjoin_TextField.setEditable(false);
-                
+
                 membername_TextField.setText(mem_name);
                 membername_TextField.setEditable(false);
-                
-                
+
                 mem_start_date_TextField.setText(membership_start_date_rs);
                 mem_start_date_TextField.setEditable(false);
-               mem_end_date_TextField.setText(membership_end_date_rs);
+                mem_end_date_TextField.setText(membership_end_date_rs.substring(0, 10));
                 mem_end_date_TextField.setEditable(false);
-                
-             }     
-                 }catch(NullPointerException e){
-                      JOptionPane.showMessageDialog(new Frame(), "SQL EXCEPTION");
-                      e.printStackTrace();
-                 }
-                 catch (Exception e) {
-                     e.printStackTrace();
-                 }
-                
-        finally{
+
+            }
+        } catch (NullPointerException e) {
+            JOptionPane.showMessageDialog(new Frame(), "SQL EXCEPTION");
+            e.printStackTrace();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(new Frame(), "SQL EXCEPTION");
+            e.printStackTrace();
+        } finally {
             con.close();
             member_id_TextField.setEditable(false);
-        mem_start_date_TextField.setEditable(false);
-        mem_end_date_TextField.setEditable(false);
-        dateofjoin_TextField.setEditable(false);
-        
+            mem_start_date_TextField.setEditable(false);
+            mem_end_date_TextField.setEditable(false);
+            dateofjoin_TextField.setEditable(false);
+
         }
     }
 
-    
-   public void show_members_details_by_id() throws SQLException{
-    
+    public void show_members_details_by_id() throws SQLException {
+
         member_id_TextField.setEditable(true);
         mem_start_date_TextField.setEditable(true);
         mem_end_date_TextField.setEditable(true);
         dateofjoin_TextField.setEditable(true);
         membername_TextField.setEditable(true);
         mobileno_TextField.setEditable(true);
-        
+
         String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
         String username = "sa";
         String password = "Dhaval@7869";
-      
+
         String membership_id_rs;
         String dateofjoin_rs;
         String member_name_rs;
         String mobile_no_rs;
-        
-        String mem_id=member_id_TextField.getText();
-        
-        String query="select * from dbo.Mst_Employee where EmpId='"+mem_id+"'";
-        
+
+        String mem_id = member_id_TextField.getText();
+
+        String query = "select * from dbo.Mst_Employee where EmpId='" + mem_id + "'";
+
         try {
-             con=DriverManager.getConnection(url, username, password);
-             st=con.createStatement();
-             rs=st.executeQuery(query);
-             
-             if (rs.next()) {    
-                 member_name_rs=rs.getString("EmpName");
+            con = DriverManager.getConnection(url, username, password);
+            st = con.createStatement();
+            rs = st.executeQuery(query);
+
+            if (rs.next()) {
+                member_name_rs = rs.getString("EmpName");
                 // membership_id_rs=rs.getString("EmpCode");
-                 mobile_no_rs=rs.getString("phoneno");
-                dateofjoin_rs=rs.getDate("DateofJoin").toString();
-                String membership_start_date_rs=rs.getDate("ShiftStartDate").toString();
-                String membership_end_date_rs=rs.getString("ReginDate");
-                
+                mobile_no_rs = rs.getString("phoneno");
+                dateofjoin_rs = rs.getDate("DateofJoin").toString();
+                String membership_start_date_rs = rs.getDate("ShiftStartDate").toString();
+                String membership_end_date_rs = rs.getString("validityend");
+
                 member_id_TextField.setText(mem_id);
                 member_id_TextField.setEditable(false);
-                
+
                 mobileno_TextField.setText(mobile_no_rs);
                 mobileno_TextField.setEditable(false);
-                
+
                 dateofjoin_TextField.setText(dateofjoin_rs);
                 dateofjoin_TextField.setEditable(false);
-                
+
                 membername_TextField.setText(member_name_rs);
                 membername_TextField.setEditable(false);
-                
-                
+
                 mem_start_date_TextField.setText(membership_start_date_rs);
                 mem_start_date_TextField.setEditable(false);
-               mem_end_date_TextField.setText(membership_end_date_rs);
+                mem_end_date_TextField.setText(membership_end_date_rs.substring(0, 10));
                 mem_end_date_TextField.setEditable(false);
-                
-             }     
-                 }catch(NullPointerException e){
-                      JOptionPane.showMessageDialog(new Frame(), "SQL EXCEPTION");
-                      e.printStackTrace();
-                 }
-                 catch (Exception e) {
-                     e.printStackTrace();
-                 }
-                
-        finally{
+
+            }
+        } catch (NullPointerException e) {
+            JOptionPane.showMessageDialog(new Frame(), "SQL EXCEPTION");
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(new Frame(), "SQL EXCEPTION");
+        } finally {
             con.close();
             membername_TextField.setEditable(false);
-        mem_start_date_TextField.setEditable(false);
-        mem_end_date_TextField.setEditable(false);
-        dateofjoin_TextField.setEditable(false);
-        
+            mem_start_date_TextField.setEditable(false);
+            mem_end_date_TextField.setEditable(false);
+            dateofjoin_TextField.setEditable(false);
+
         }
     }
-   
-  
-   public void show_members_details_by_mobileNo() throws SQLException{
-    
+
+    public void show_members_details_by_mobileNo() throws SQLException {
+
         member_id_TextField.setEditable(true);
         mem_start_date_TextField.setEditable(true);
         mem_end_date_TextField.setEditable(true);
         dateofjoin_TextField.setEditable(true);
         membername_TextField.setEditable(true);
         mobileno_TextField.setEditable(true);
-        
+
         String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
         String username = "sa";
         String password = "Dhaval@7869";
-      
+
         String membership_id_rs;
         String dateofjoin_rs;
         String member_name_rs;
         String mobile_no_rs;
-        
-        String mem_mobileno=mobileno_TextField.getText();
-        
-        String query="select * from dbo.Mst_Employee where phoneNo='"+mem_mobileno+"'";
-        
+
+        String mem_mobileno = mobileno_TextField.getText();
+
+        String query = "select * from dbo.Mst_Employee where phoneNo='" + mem_mobileno + "'";
+
         try {
-             con=DriverManager.getConnection(url, username, password);
-             st=con.createStatement();
-             rs=st.executeQuery(query);
-             
-             if (rs.next()) {    
-                 member_name_rs=rs.getString("EmpName");
-                 membership_id_rs=rs.getString("EmpId");
+            con = DriverManager.getConnection(url, username, password);
+            st = con.createStatement();
+            rs = st.executeQuery(query);
+
+            if (rs.next()) {
+                member_name_rs = rs.getString("EmpName");
+                membership_id_rs = rs.getString("EmpId");
                 // mobile_no_rs=rs.getString("phoneno");
-                dateofjoin_rs=rs.getDate("DateofJoin").toString();
-                String membership_start_date_rs=rs.getDate("ShiftStartDate").toString();
-                String membership_end_date_rs=rs.getString("ReginDate");
-                
+                dateofjoin_rs = rs.getDate("DateofJoin").toString();
+                String membership_start_date_rs = rs.getDate("ShiftStartDate").toString();
+                String membership_end_date_rs = rs.getString("validityend");
+
                 member_id_TextField.setText(membership_id_rs);
                 member_id_TextField.setEditable(false);
-                
+
                 mobileno_TextField.setText(mem_mobileno);
                 mobileno_TextField.setEditable(false);
-                
+
                 dateofjoin_TextField.setText(dateofjoin_rs);
                 dateofjoin_TextField.setEditable(false);
-                
+
                 membername_TextField.setText(member_name_rs);
                 membername_TextField.setEditable(false);
-                
-                
+
                 mem_start_date_TextField.setText(membership_start_date_rs);
                 mem_start_date_TextField.setEditable(false);
-                mem_end_date_TextField.setText(membership_end_date_rs);
+                mem_end_date_TextField.setText(membership_end_date_rs.substring(0, 10));
                 mem_end_date_TextField.setEditable(false);
-                
-             }     
-                 }catch(NullPointerException e){
-                      JOptionPane.showMessageDialog(new Frame(), "SQL EXCEPTION");
-                      e.printStackTrace();
-                 }
-                 catch (Exception e) {
-                     e.printStackTrace();
-                 }
-                
-        finally{
+
+            }
+        } catch (NullPointerException e) {
+            JOptionPane.showMessageDialog(new Frame(), "SQL EXCEPTION");
+            e.printStackTrace();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(new Frame(), "SQL EXCEPTION");
+            e.printStackTrace();
+        } finally {
             con.close();
             member_id_TextField.setEditable(false);
             membername_TextField.setEditable(false);
-        mem_start_date_TextField.setEditable(false);
-        mem_end_date_TextField.setEditable(false);
-        dateofjoin_TextField.setEditable(false);
-        
+            mem_start_date_TextField.setEditable(false);
+            mem_end_date_TextField.setEditable(false);
+            dateofjoin_TextField.setEditable(false);
+
         }
     }
-   
- 
-    
+
     private List<String> namesearchresult(String prefix) {
-   
-          String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username = "sa";
-        String password = "Dhaval@7869";
-      
-        List<String> list = new ArrayList<>();
-    String query = "SELECT empname FROM dbo.mst_employee WHERE empname LIKE ?";
-    try {
-       con=DriverManager.getConnection(url,username,password);
-        PreparedStatement pst = con.prepareStatement(query);
-        pst.setString(1, prefix + "%");  
-        ResultSet rs = pst.executeQuery();
-        while (rs.next()) {
-            
-            list.add(rs.getString("empname"));
-        }
-        rs.close();
-        pst.close();
-        
-        
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(new JFrame(), "SEARCH ERROR");
-        e.printStackTrace();
-    }
-        for (Iterator<String> iterator = list.iterator(); iterator.hasNext();) {
-            String next = iterator.next();
-            System.out.println(next);
-            
-        }
-    return list;
-    
-    
-    
-}
-    
-    
-    private List<String> idsearchresult(String prefix) {
-   
-          String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username = "sa";
-        String password = "Dhaval@7869";
-      
-        List<String> list = new ArrayList<>();
-    String query = "SELECT EmpId FROM dbo.mst_employee WHERE EmpId LIKE ?";
-    try {
-       con=DriverManager.getConnection(url,username,password);
-        PreparedStatement pst = con.prepareStatement(query);
-        pst.setString(1, prefix + "%");  
-        ResultSet rs = pst.executeQuery();
-        while (rs.next()) {
-            
-            list.add(rs.getString("empid"));
-        }
-        rs.close();
-        pst.close();
-        
-        
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(new JFrame(), "SEARCH ERROR");
-        e.printStackTrace();
-    }
-        for (Iterator<String> iterator = list.iterator(); iterator.hasNext();) {
-            String next = iterator.next();
-            System.out.println(next);
-            
-        }
-    return list;
-    
-    
-    
-}
-    
-    
-    
-     private List<String> mobilesearchresult(String prefix) {
-   
-          String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username = "sa";
-        String password = "Dhaval@7869";
-      
-        List<String> list = new ArrayList<>();
-    String query = "SELECT phoneNo FROM dbo.mst_employee WHERE PhoneNo LIKE ?";
-    try {
-       con=DriverManager.getConnection(url,username,password);
-        PreparedStatement pst = con.prepareStatement(query);
-        pst.setString(1, prefix + "%");  
-        ResultSet rs = pst.executeQuery();
-        while (rs.next()) {
-            
-            list.add(rs.getString("phoneNo"));
-        }
-        rs.close();
-        pst.close();
-        
-        
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(new JFrame(), "SEARCH ERROR");
-        e.printStackTrace();
-    }
-        for (Iterator<String> iterator = list.iterator(); iterator.hasNext();) {
-            String next = iterator.next();
-            System.out.println(next);
-            
-        }
-    return list;
-    
-    
-    
-} 
-       
-    
-    
-    
-    public void showall_members(){
+
         String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
         String username = "sa";
         String password = "Dhaval@7869";
-      
-        String query="select * from dbo.mst_employee";
-        
+
+        List<String> list = new ArrayList<>();
+        String query = "SELECT empname FROM dbo.mst_employee WHERE empname LIKE ?";
         try {
-            con=DriverManager.getConnection(url,username,password);
-           pst=con.prepareStatement(query);
-           ResultSet rs=pst.executeQuery();
-           
+            con = DriverManager.getConnection(url, username, password);
+            PreparedStatement pst = con.prepareStatement(query);
+            pst.setString(1, prefix + "%");
+            ResultSet rs = pst.executeQuery();
             while (rs.next()) {
-                String memID=rs.getString("empid").toString();
-                String memName=rs.getString("empname");
-                String phoneno=rs.getString("phoneno");
-                
-                Object[] obj={memID,memName,phoneno};
-                 model=(DefaultTableModel) Jtable1.getModel();
-                 model.addRow(obj);
-                 
+
+                list.add(rs.getString("empname"));
             }
-           
-            
+            rs.close();
+            pst.close();
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(new JFrame(), "SEARCH ERROR");
+            e.printStackTrace();
+        }
+        for (Iterator<String> iterator = list.iterator(); iterator.hasNext();) {
+            String next = iterator.next();
+            System.out.println(next);
+
+        }
+        return list;
+
+    }
+
+    private List<String> idsearchresult(String prefix) {
+
+        String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
+        String username = "sa";
+        String password = "Dhaval@7869";
+
+        List<String> list = new ArrayList<>();
+        String query = "SELECT EmpId FROM dbo.mst_employee WHERE EmpId LIKE ?";
+        try {
+            con = DriverManager.getConnection(url, username, password);
+            PreparedStatement pst = con.prepareStatement(query);
+            pst.setString(1, prefix + "%");
+            ResultSet rs = pst.executeQuery();
+            while (rs.next()) {
+
+                list.add(rs.getString("empid"));
+            }
+            rs.close();
+            pst.close();
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(new JFrame(), "SEARCH ERROR");
+            e.printStackTrace();
+        }
+        for (Iterator<String> iterator = list.iterator(); iterator.hasNext();) {
+            String next = iterator.next();
+            System.out.println(next);
+
+        }
+        return list;
+
+    }
+
+    private List<String> mobilesearchresult(String prefix) {
+
+        String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
+        String username = "sa";
+        String password = "Dhaval@7869";
+
+        List<String> list = new ArrayList<>();
+        String query = "SELECT phoneNo FROM dbo.mst_employee WHERE PhoneNo LIKE ?";
+        try {
+            con = DriverManager.getConnection(url, username, password);
+            PreparedStatement pst = con.prepareStatement(query);
+            pst.setString(1, prefix + "%");
+            ResultSet rs = pst.executeQuery();
+            while (rs.next()) {
+
+                list.add(rs.getString("phoneNo"));
+            }
+            rs.close();
+            pst.close();
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(new JFrame(), "SEARCH ERROR");
+            e.printStackTrace();
+        }
+        for (Iterator<String> iterator = list.iterator(); iterator.hasNext();) {
+            String next = iterator.next();
+            System.out.println(next);
+
+        }
+        return list;
+
+    }
+
+    public void showall_members() {
+        String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
+        String username = "sa";
+        String password = "Dhaval@7869";
+
+        String query = "select * from dbo.mst_employee";
+
+        try {
+            con = DriverManager.getConnection(url, username, password);
+            pst = con.prepareStatement(query);
+            ResultSet rs = pst.executeQuery();
+
+            while (rs.next()) {
+                String memID = rs.getString("empid").toString();
+                String memName = rs.getString("empname");
+                String phoneno = rs.getString("phoneno");
+
+                Object[] obj = {memID, memName, phoneno};
+                model = (DefaultTableModel) Jtable1.getModel();
+                model.addRow(obj);
+
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    
-    
-   
-      
-    public void calculate_fees(){
-      String text=duration_TextField.getText();
-      for(int i=0;i<text.length();i++){
-          if(duration_TextField.getText().length()>0 && Character.toString(text.charAt(i)).matches("^[0-9]+$")){
-          System.out.println("calculate fee method");
-          
-          int dur=Integer.parseInt(duration_TextField.getText());
-           totalamount=1200*dur;//to fetch from DB
-          totalfee_TextField.setText(String.valueOf(totalamount));
-          totalfee_TextField.setEditable(false);
-          
-          //int feespaying=Integer.parseInt(currentpayment_TextField.getText());
-          
-            
-          
-          finalamount_TextField.setText(String.valueOf(totalamount));
-          finalamount_TextField.setEditable(false);
-         
-          
-          
-          discount_ComboBox.setEnabled(true);
-             totalamount=Integer.valueOf(totalfee_TextField.getText().toString());
-          System.out.println(totalamount);
-          
-          
+    public void calculate_fees() {
+        String text = duration_TextField.getText();
+        for (int i = 0; i < text.length(); i++) {
+            if (duration_TextField.getText().length() > 0 && Character.toString(text.charAt(i)).matches("^[0-9]+$")) {
+                System.out.println("calculate fee method");
 
-          }
-        else{
-            duration_TextField.setText("");
+                int dur = Integer.parseInt(duration_TextField.getText());
+                totalamount = 1200 * dur;//to fetch from DB
+                totalfee_TextField.setText(String.valueOf(totalamount));
+                totalfee_TextField.setEditable(false);
+
+                //int feespaying=Integer.parseInt(currentpayment_TextField.getText());
+                finalamount_TextField.setText(String.valueOf(totalamount));
+                finalamount_TextField.setEditable(false);
+
+                discount_ComboBox.setEnabled(true);
+                totalamount = Integer.valueOf(totalfee_TextField.getText().toString());
+                System.out.println(totalamount);
+
+            } else {
+                duration_TextField.setText("");
+            }
+
         }
-        
-        
-      }
-        
-      }
-      
-        
-      
-       public void set_renew_mem_end_date(){
-           if (mem_renewed_start_date_TextField.getText().length()>0) {
-               String startdate=mem_renewed_start_date_TextField.getText();
-               System.out.println(startdate);
-               try {
-                   SimpleDateFormat format=new SimpleDateFormat("YYYY-MM-dd");
-                   LocalDate datefrom=LocalDate.parse(startdate);
-                   System.out.println("Date from "+datefrom);
-                   int dur_months=Integer.parseInt(duration_TextField.getText());
-                   LocalDate dateto=datefrom.plusMonths(dur_months);
-                   System.out.println("Date to"+dateto);
-                   mem_renewed_end_date_TextField.setEditable(true);
-                   mem_renewed_end_date_TextField.setText(dateto.toString());
-                   mem_renewed_end_date_TextField.setEditable(false);
-                   
-               } catch (Exception ex) {
-                   Logger.getLogger(Add_Payment.class.getName()).log(Level.SEVERE, null, ex);
-                   ex.printStackTrace();
-                   JOptionPane.showMessageDialog(new JFrame(), "DATE ERROR");
-               }
-                
-           }
-           
-           System.out.println(duration_TextField.getText().toString());
-            
-    }
-       
-       public void set_new_mem_dates(){
-           String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-           String username = "sa";
-           String password = "Dhaval@7869";
-       
-           String empid=member_id_TextField.getText();
-           String shiftstart =mem_renewed_start_date_TextField.getText();
-           String regindate=mem_renewed_end_date_TextField.getText();
-           
-           String query="update attendance_manager.dbo.Mst_Employee\n" +
-"set ShiftStartDate=?,ReginDate=? where empid="+empid;           
-           
-           try {
-               con=DriverManager.getConnection(url,username,password);
-               pst=con.prepareCall(query);
-               pst.setString(1, shiftstart);
-               pst.setString(2, regindate);
-               int count=pst.executeUpdate();
-               if (count>0) {
-                   System.out.println(empid);
-                   JOptionPane.showMessageDialog(new JFrame(), "MemberShip Date Updated");
-               }
-               
-           } catch (Exception e) {
-               e.printStackTrace();
-               JOptionPane.showMessageDialog(new JFrame(), "DATE ERROR");
-               
-           }
-           
-           System.out.println(shiftstart);
-           System.out.println(regindate);
-           System.out.println(empid);
-           
-           
-           
-           
-           
-           
-           
-       }
-      
-      public void add_payment(){
-      
-          int extradiscount=0;
-          
-          int memberid=Integer.parseInt(member_id_TextField.getText());
-          int duration=Integer.parseInt(duration_TextField.getText());
-          int totalfee=Integer.parseInt(totalfee_TextField.getText());
-          int discount=Integer.parseInt(discount_ComboBox.getSelectedItem().toString());
-          int pendingfees=Integer.parseInt(pendingamount_TextField.getText());
-          int final_amount=Integer.parseInt(finalamount_TextField.getText());
-          int current_payment=Integer.parseInt(current_payment_TextField.getText());          
-      
-          
-          
-          String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-          String username = "sa";
-          String password = "Dhaval@7869";
-       
-         String query="INSERT INTO [dbo].[payments]\n" +
-"           ([member_id]\n" +
-"           ,[fee_id]\n" +
-"           ,[duration]\n" +
-"           ,[total_fees]\n" +
-"           ,[balance]\n" +
-"           ,[current_payment]\n" +
-"           ,[discount]\n" +
-"           ,[additional_discount]\n" +
-"           ,[final_amount])\n" +
-"     VALUES\n" +
-"           (?,?,?,?,?,?,?,?,?)";
-         
-         
 
-          System.out.println(memberid);
-          System.out.println(duration);
-          System.out.println(totalfee);
-          System.out.println(discount);
-          System.out.println(extradiscount);
-          System.out.println(final_amount);
-          System.out.println(current_payment);
-          
-          int memid=(Integer.parseInt(member_id_TextField.getText()));
-          
-          try {
-            con=DriverManager.getConnection(url, username, password);
-              pst=con.prepareStatement(query);
-              pst.setInt(1, memberid);
-              pst.setInt(2, duration);
-              pst.setInt(3, duration);
-              pst.setInt(4, totalfee);
-              pst.setInt(5, pendingfees);
-              pst.setInt(6, current_payment);
-              pst.setInt(7, discount);
-              pst.setInt(8, extradiscount);
-              pst.setInt(9, final_amount);
-              
-              int count=pst.executeUpdate();
-              
-              if (count>0) {
-                  System.out.println("success");
-                  JOptionPane.showMessageDialog(new JFrame(), "Payment Added Successfully");
-              } else {
-                  System.out.println("failure");
-                  JOptionPane.showMessageDialog(new JFrame(), "ERROR!:OPERATION FAILED");
-              }
-              
-              try {
-              set_new_mem_dates();
-          } catch (Exception e) {
-              e.printStackTrace();
-              JOptionPane.showMessageDialog(new JFrame(), "DATE ERROR");
-          }
-              
-          }
-          
-         
-          catch (Exception e) {
-              e.printStackTrace();
-              JOptionPane.showMessageDialog(new JFrame(), "ERROR!:OPERATION FAILED");
-          }
-          finally{
-               membername_TextField.setEditable(true);
-        membername_TextField.setText("");
-        mem_start_date_TextField.setEditable(true);
-        mem_start_date_TextField.setText("");
-        mem_end_date_TextField.setEditable(true);
-        mem_end_date_TextField.setText("");
-        member_id_TextField.setEditable(true);
-        member_id_TextField.setText("");
-        dateofjoin_TextField.setEditable(true);
-        dateofjoin_TextField.setText("");
-        
-        
-          }
-                 
-      }
-          
-  /*  public void total_member_count(){
+    }
+
+    public void set_renew_mem_end_date() {
+        if (mem_renewed_start_date_TextField.getText().length() > 0) {
+            String startdate = mem_renewed_start_date_TextField.getText();
+            System.out.println(startdate);
+            try {
+                SimpleDateFormat format = new SimpleDateFormat("YYYY-MM-dd");
+                LocalDate datefrom = LocalDate.parse(startdate);
+                System.out.println("Date from " + datefrom);
+                int dur_months = Integer.parseInt(duration_TextField.getText());
+                LocalDate dateto = datefrom.plusMonths(dur_months);
+                System.out.println("Date to" + dateto);
+                mem_renewed_end_date_TextField.setEditable(true);
+                mem_renewed_end_date_TextField.setText(dateto.toString());
+                mem_renewed_end_date_TextField.setEditable(false);
+
+            } catch (Exception ex) {
+                Logger.getLogger(Add_Payment.class.getName()).log(Level.SEVERE, null, ex);
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(new JFrame(), "DATE ERROR");
+            }
+
+        }
+
+        System.out.println(duration_TextField.getText().toString());
+
+    }
+
+    public void set_new_mem_dates() {
+        String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
+        String username = "sa";
+        String password = "Dhaval@7869";
+
+        String empid = member_id_TextField.getText();
+        String shiftstart = mem_renewed_start_date_TextField.getText();
+        String validityenddate = mem_renewed_end_date_TextField.getText();
+
+        String query = "update attendance_manager.dbo.Mst_Employee\n"
+                + "set ShiftStartDate=?,validityend=? where empid=" + empid;
+
+        try {
+            con = DriverManager.getConnection(url, username, password);
+            pst = con.prepareCall(query);
+            pst.setString(1, shiftstart);
+            pst.setString(2, validityenddate);
+            int count = pst.executeUpdate();
+            if (count > 0) {
+                System.out.println(empid);
+                JOptionPane.showMessageDialog(new JFrame(), "MemberShip Date Updated");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(new JFrame(), "DATE ERROR");
+
+        }
+
+        System.out.println(shiftstart);
+        System.out.println(validityenddate);
+        System.out.println(empid);
+
+    }
+
+    public void add_payment() {
+
+        int extradiscount = 0;
+
+        int memberid = Integer.parseInt(member_id_TextField.getText());
+        int duration = Integer.parseInt(duration_TextField.getText());
+        int totalfee = Integer.parseInt(totalfee_TextField.getText());
+        int discount = Integer.parseInt(discount_ComboBox.getSelectedItem().toString());
+        int pendingfees = Integer.parseInt(pendingamount_TextField.getText());
+        int final_amount = Integer.parseInt(finalamount_TextField.getText());
+        int current_payment = Integer.parseInt(current_payment_TextField.getText());
+
+        String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
+        String username = "sa";
+        String password = "Dhaval@7869";
+
+        String query = "INSERT INTO [dbo].[payments]\n"
+                + "           ([member_id]\n"
+                + "           ,[fee_id]\n"
+                + "           ,[duration]\n"
+                + "           ,[total_fees]\n"
+                + "           ,[balance]\n"
+                + "           ,[current_payment]\n"
+                + "           ,[discount]\n"
+                + "           ,[additional_discount]\n"
+                + "           ,[final_amount])\n"
+                + "     VALUES\n"
+                + "           (?,?,?,?,?,?,?,?,?)";
+
+        System.out.println(memberid);
+        System.out.println(duration);
+        System.out.println(totalfee);
+        System.out.println(discount);
+        System.out.println(extradiscount);
+        System.out.println(final_amount);
+        System.out.println(current_payment);
+
+        int memid = (Integer.parseInt(member_id_TextField.getText()));
+
+        try {
+            con = DriverManager.getConnection(url, username, password);
+            pst = con.prepareStatement(query);
+            pst.setInt(1, memberid);
+            pst.setInt(2, duration);
+            pst.setInt(3, duration);
+            pst.setInt(4, totalfee);
+            pst.setInt(5, pendingfees);
+            pst.setInt(6, current_payment);
+            pst.setInt(7, discount);
+            pst.setInt(8, extradiscount);
+            pst.setInt(9, final_amount);
+
+            int count = pst.executeUpdate();
+
+            if (count > 0) {
+                    System.out.println("success");
+                    try {
+                    set_new_mem_dates();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    JOptionPane.showMessageDialog(new JFrame(), "DATE ERROR");
+                
+                }
+                    JOptionPane.showMessageDialog(new JFrame(), "Payment Added Successfully");
+            } else {
+                System.out.println("failure");
+                JOptionPane.showMessageDialog(new JFrame(), "ERROR!:OPERATION FAILED");
+            }
+
+           
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(new JFrame(), "ERROR!:OPERATION FAILED");
+        } finally {
+            membername_TextField.setEditable(true);
+            membername_TextField.setText("");
+            mem_start_date_TextField.setEditable(true);
+            mem_start_date_TextField.setText("");
+            mem_end_date_TextField.setEditable(true);
+            mem_end_date_TextField.setText("");
+            member_id_TextField.setEditable(true);
+            member_id_TextField.setText("");
+            dateofjoin_TextField.setEditable(true);
+            dateofjoin_TextField.setText("");
+
+        }
+
+    }
+
+    /*  public void total_member_count(){
         
         
         String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
@@ -744,12 +719,6 @@ public class Exisiting_Member extends javax.swing.JFrame {
         System.out.println("total count:"+total_members_count);
         
     }*/
-      
-    
-    
-    
-      
-    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -1247,7 +1216,7 @@ public class Exisiting_Member extends javax.swing.JFrame {
         idSearchComboBox.setEnabled(true);
 
         try {
-            List<String> idsearchresult_list=idsearchresult(searchstring);
+            List<String> idsearchresult_list = idsearchresult(searchstring);
             idSearchComboBox.setModel(new DefaultComboBoxModel<>(idsearchresult_list.toArray(new String[0])));
             //namesearchComboBox.requestFocusInWindow();
         } catch (Exception e) {
@@ -1261,14 +1230,14 @@ public class Exisiting_Member extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_totalfee_TextFieldActionPerformed
 
-    
+
     private void duration_TextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_duration_TextFieldFocusLost
         // TODO add your handling code here:
-        if (duration_TextField.getText().length()>0) {
+        if (duration_TextField.getText().length() > 0) {
             set_renew_mem_end_date();
         }
-        
-        
+
+
     }//GEN-LAST:event_duration_TextFieldFocusLost
 
     private void duration_TextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_duration_TextFieldActionPerformed
@@ -1278,26 +1247,26 @@ public class Exisiting_Member extends javax.swing.JFrame {
 
     private void discount_ComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_discount_ComboBoxActionPerformed
         // TODO add your handling code here:
-        int discount_perc=0;
-        try{
-            if (discount_ComboBox.getSelectedIndex()>0) {
+        int discount_perc = 0;
+        try {
+            if (discount_ComboBox.getSelectedIndex() > 0) {
                 finalamount_TextField.setEditable(true);
 
-                discount_perc=Integer.parseInt(discount_ComboBox.getSelectedItem().toString());
+                discount_perc = Integer.parseInt(discount_ComboBox.getSelectedItem().toString());
                 System.out.println(discount_perc);
-                int discount_amount=(totalamount*discount_perc/100);
-                totalamount=totalamount-discount_amount;
+                int discount_amount = (totalamount * discount_perc / 100);
+                totalamount = totalamount - discount_amount;
                 System.out.println(discount_amount);
                 //int additional_discount=extra_discount_TextField.getText().toString();
                 finalamount_TextField.setText(String.valueOf(totalamount));
 
                 finalamount_TextField.setEditable(false);
 
-            }else{
+            } else {
                 System.out.println(discount_perc);
             }
 
-        }catch(Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(new JFrame(), "ERROR");
         }
@@ -1306,7 +1275,23 @@ public class Exisiting_Member extends javax.swing.JFrame {
 
     private void addpayment_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addpayment_ButtonActionPerformed
         // TODO add your handling code here:
-        add_payment();
+           boolean checkname=check_alphabetic_fields(membername_TextField.getText(),"Member Name Name");
+        boolean checkid=check_numericfields(member_id_TextField.getText(),"Member Id");
+        boolean durationcheck=check_numericfields(duration_TextField.getText(),"Duration");
+        boolean currentpaymentcheck=check_numericfields(current_payment_TextField.getText(),"Current Payment");
+        
+        boolean[] checkallfield_forpayments={checkname,checkid,durationcheck,currentpaymentcheck};
+         boolean check_constraints=checkallfields(checkallfield_forpayments);
+       
+        if (check_constraints==true) {
+            System.out.println("all fields are within constraints");
+            add_payment();
+        }else{
+            System.out.println("Invalid Fields");
+            JOptionPane.showMessageDialog(new JFrame(), "Error:Fields are Empty or Invalid","Add Payment Error",JOptionPane.ERROR_MESSAGE);
+        }
+     
+      
     }//GEN-LAST:event_addpayment_ButtonActionPerformed
 
     private void reset_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reset_ButtonActionPerformed
@@ -1321,33 +1306,50 @@ public class Exisiting_Member extends javax.swing.JFrame {
         member_id_TextField.setText("");
         dateofjoin_TextField.setEditable(true);
         dateofjoin_TextField.setText("");
+        duration_TextField.setText("");
+        duration_TextField.setEditable(true);
+        totalfee_TextField.setEditable(true);
+        totalfee_TextField.setText("");
+        finalamount_TextField.setEditable(true);
+        finalamount_TextField.setText("");
+        finalamount_TextField.setEditable(false);
+        current_payment_TextField.setText("");
+        pendingamount_TextField.setText("");
+        mobileno_TextField.setEditable(true);
+        mobileno_TextField.setText("");
+        mem_renewed_start_date_TextField.setText("");
+        mem_renewed_end_date_TextField.setEditable(true);
+        mem_renewed_end_date_TextField.setText("");
+        mem_renewed_end_date_TextField.setEditable(false);
+        
+        
+        
 
     }//GEN-LAST:event_reset_ButtonActionPerformed
 
-    
-    
+
     private void current_payment_TextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_current_payment_TextFieldKeyReleased
         // TODO add your handling code here:
-    
-                    String text=String.valueOf(current_payment_TextField.getText());
-      for(int i=0;i<text.length();i++){
-         
-        if (current_payment_TextField.getText().length()>0 && Character.toString(text.charAt(i)).matches("^[0-9]+$")) {
-            currentpayment=Integer.parseInt(current_payment_TextField.getText());
-         
-          int pendingamount=totalamount;
-          pendingamount=totalamount-currentpayment;
-         pendingamount_TextField.setText(String.valueOf(pendingamount));
-        
-        }else{
-             JOptionPane.showMessageDialog(new JFrame(), "Only Digits Allowed","Hieght Field Error",JOptionPane.ERROR_MESSAGE);
-                     System.out.println("Contains Alphabet");
-                   current_payment_TextField.setText(null);
-                   pendingamount_TextField.setText(null);
+
+        String text = String.valueOf(current_payment_TextField.getText());
+        for (int i = 0; i < text.length(); i++) {
+
+            if (current_payment_TextField.getText().length() > 0 && Character.toString(text.charAt(i)).matches("^[0-9]+$")) {
+                currentpayment = Integer.parseInt(current_payment_TextField.getText());
+
+                int pendingamount = totalamount;
+                pendingamount = totalamount - currentpayment;
+                pendingamount_TextField.setText(String.valueOf(pendingamount));
+                pendingamount_TextField.setEditable(false);
+
+            } else {
+                JOptionPane.showMessageDialog(new JFrame(), "Error:Only Numbers Allowed");
+                System.out.println("Contains Alphabet");
+                current_payment_TextField.setText(null);
+                pendingamount_TextField.setText(null);
+            }
+
         }
- 
-        
-    }
     }//GEN-LAST:event_current_payment_TextFieldKeyReleased
 
     private void membername_TextFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_membername_TextFieldFocusGained
@@ -1374,7 +1376,7 @@ public class Exisiting_Member extends javax.swing.JFrame {
         namesearchComboBox.setEnabled(true);
 
         try {
-            List<String> namesearchresult_list=namesearchresult(searchstring);
+            List<String> namesearchresult_list = namesearchresult(searchstring);
             namesearchComboBox.setModel(new DefaultComboBoxModel<>(namesearchresult_list.toArray(new String[0])));
             //namesearchComboBox.requestFocusInWindow();
         } catch (Exception e) {
@@ -1402,7 +1404,7 @@ public class Exisiting_Member extends javax.swing.JFrame {
         mobilenoSearchComboBox.setEnabled(true);
 
         try {
-            List<String> mobileNosearchresult_list=mobilesearchresult(searchstring);
+            List<String> mobileNosearchresult_list = mobilesearchresult(searchstring);
             mobilenoSearchComboBox.setModel(new DefaultComboBoxModel<>(mobileNosearchresult_list.toArray(new String[0])));
             //namesearchComboBox.requestFocusInWindow();
         } catch (Exception e) {
@@ -1433,7 +1435,7 @@ public class Exisiting_Member extends javax.swing.JFrame {
 
     private void idSearchComboBoxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_idSearchComboBoxKeyPressed
         // TODO add your handling code here:
-        String result=idSearchComboBox.getSelectedItem().toString();
+        String result = idSearchComboBox.getSelectedItem().toString();
         member_id_TextField.setText(result);
 
         idSearchComboBox.setVisible(false);
@@ -1466,7 +1468,7 @@ public class Exisiting_Member extends javax.swing.JFrame {
 
     private void namesearchComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_namesearchComboBoxActionPerformed
         // TODO add your handling code here:
-        
+
         String selectedResult = (String) namesearchComboBox.getSelectedItem();
         if (selectedResult != null) {
             // Set the selected result to the searchTextField
@@ -1482,7 +1484,7 @@ public class Exisiting_Member extends javax.swing.JFrame {
 
     private void namesearchComboBoxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_namesearchComboBoxKeyPressed
         // TODO add your handling code here:
-         String result=namesearchComboBox.getSelectedItem().toString();
+        String result = namesearchComboBox.getSelectedItem().toString();
         membername_TextField.setText(result);
 
         namesearchComboBox.setVisible(false);
@@ -1495,13 +1497,21 @@ public class Exisiting_Member extends javax.swing.JFrame {
 
     private void duration_TextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_duration_TextFieldKeyReleased
         // TODO add your handling code here:
-        boolean check=check_numeric_textfields(duration_TextField.getText());
-            
-            if (check=false) {
+        
+        if (mem_renewed_start_date_TextField.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(new JFrame(), "Please select Renewal Start Date First!");
             duration_TextField.setText("");
         }else{
+            boolean check = check_numericfields(duration_TextField.getText(),"Duration");
+
+        if (check = false) {
+            duration_TextField.setText("");
+        } else {
             calculate_fees();
-            }
+        }
+        }
+        
+        
     }//GEN-LAST:event_duration_TextFieldKeyReleased
 
     /**

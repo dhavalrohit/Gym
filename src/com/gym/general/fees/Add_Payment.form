@@ -474,6 +474,9 @@
           </Events>
         </Component>
         <Component class="javax.swing.JTextField" name="pendingamount_TextField">
+          <Events>
+            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="pendingamount_TextFieldKeyReleased"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel15">
           <Properties>

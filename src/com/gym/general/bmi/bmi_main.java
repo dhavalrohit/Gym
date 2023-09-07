@@ -25,7 +25,8 @@ public class bmi_main extends javax.swing.JFrame {
         
         bmi_result_TextField.setEnabled(false);
         Fat_Perc_ResultLabel.setEnabled(false);
-        
+        this.setResizable(false);
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         
     }
 
@@ -352,7 +353,7 @@ public boolean check_wieght_textfield(String text){
     }
     
     
-            public boolean checkAllFields(boolean[] fields) {
+public boolean checkAllFields(boolean[] fields) {
     for (boolean field : fields) {
         if (!field) {
             return false; 

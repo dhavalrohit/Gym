@@ -2,6 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
+
+//constraiints added on 07/09/2023
+
 package com.gym.general.fees;
 import com.formdev.flatlaf.FlatIntelliJLaf;
 import com.gym.general.fees.Fee_Detail;
@@ -26,10 +29,59 @@ public class update_fees extends javax.swing.JFrame {
         FlatIntelliJLaf.setup();
        
         initComponents();
+        this.setResizable(false);
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         
     }
     
+    public void clear(){
+       amount_TextField.setText("");
+       duration_TextField.setText("");
    
+   }
+    
+    
+     public boolean check_numericfields(String text,String fieldname){
+        text=text.replaceAll("\\s", "");
+          boolean res=true;
+        if (text.isEmpty()) {
+            JOptionPane.showMessageDialog(new JFrame(), fieldname+" Field is Empty", fieldname+" Field Error",JOptionPane.ERROR_MESSAGE);
+            res=false;
+        }
+        else if(text.length()>0)
+            for(int i=0;i<text.length();i++){
+                if (Character.toString(text.charAt(i)).matches("^[0-9]+$")) {
+                    
+                }
+                else{
+                     JOptionPane.showMessageDialog(new JFrame(), fieldname+" Field contains Alphabetic value", fieldname+" Field Error",JOptionPane.ERROR_MESSAGE);
+                    res=false;
+                    break;
+                }
+            }
+        
+        return res;
+    }
+    
+       public boolean checkallfields(boolean [] fields){
+        boolean res=true;
+        
+        for(int i=0;i<fields.length;i++){
+            if (fields[i]==false) {
+                res=false;
+                break;
+            }
+            else{
+                res=true;
+                
+            }
+        }
+        return res;
+    
+    }
+  
+    
+    
 public void get_fees_details(){
     String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
         String username = "sa";
@@ -69,8 +121,8 @@ public void get_fees_details(){
         amount_TextField = new javax.swing.JTextField();
         fee_id_TextField = new javax.swing.JTextField();
         duration_TextField = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        updateButton = new javax.swing.JButton();
+        clearButton = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
 
@@ -109,14 +161,19 @@ public void get_fees_details(){
             }
         });
 
-        jButton1.setText("UPDATE");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        updateButton.setText("UPDATE");
+        updateButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                updateButtonActionPerformed(evt);
             }
         });
 
-        jButton2.setText("CLEAR");
+        clearButton.setText("CLEAR");
+        clearButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                clearButtonActionPerformed(evt);
+            }
+        });
 
         jButton3.setText("CANCEL");
 
@@ -140,9 +197,9 @@ public void get_fees_details(){
                             .addComponent(fee_id_TextField)
                             .addComponent(duration_TextField)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButton1)
+                        .addComponent(updateButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2)
+                        .addComponent(clearButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jButton3)
                         .addGap(0, 0, Short.MAX_VALUE)))
@@ -166,8 +223,8 @@ public void get_fees_details(){
                             .addComponent(jLabel4))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2)
+                    .addComponent(updateButton)
+                    .addComponent(clearButton)
                     .addComponent(jButton3))
                 .addContainerGap())
         );
@@ -213,10 +270,21 @@ public void get_fees_details(){
         // TODO add your handling code here:
     }//GEN-LAST:event_duration_TextFieldActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void updateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateButtonActionPerformed
         // TODO add your handling code here:
-        update_fees();
-    }//GEN-LAST:event_jButton1ActionPerformed
+        boolean checkdur=check_numericfields(duration_TextField.getText(),"Dration");
+         boolean checkamount=check_numericfields(amount_TextField.getText(),"Amount");
+         System.out.println(checkdur);
+         System.out.println(checkamount);
+        boolean[] fields={checkdur,checkamount};
+        boolean finalres=checkallfields(fields);
+         if (finalres==true) {
+            update_fees();
+        }
+         else{
+             JOptionPane.showMessageDialog(new JFrame(), "Constraint Error");
+         }
+    }//GEN-LAST:event_updateButtonActionPerformed
 
     private void duration_TextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_duration_TextFieldKeyReleased
         // TODO add your handling code here:
@@ -255,6 +323,11 @@ public void get_fees_details(){
     }
     }//GEN-LAST:event_amount_TextFieldKeyReleased
 
+    private void clearButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearButtonActionPerformed
+        // TODO add your handling code here:
+        clear();
+    }//GEN-LAST:event_clearButtonActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -292,15 +365,15 @@ public void get_fees_details(){
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField amount_TextField;
+    private javax.swing.JButton clearButton;
     private javax.swing.JTextField duration_TextField;
     private javax.swing.JTextField fee_id_TextField;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JButton updateButton;
     // End of variables declaration//GEN-END:variables
 }

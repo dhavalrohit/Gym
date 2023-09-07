@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.gym.general.component;
 
 import com.gym.general.model.ModelCard;
@@ -12,12 +8,9 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.text.DecimalFormat;
 
-/**
- *
- * @author DELL
- */
-public class Card extends javax.swing.JPanel{
-     public Color getColorGradient() {
+public class Card extends javax.swing.JPanel {
+
+    public Color getColorGradient() {
         return colorGradient;
     }
 
@@ -46,7 +39,7 @@ public class Card extends javax.swing.JPanel{
     }
 
     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         lbTitle = new javax.swing.JLabel();
@@ -105,7 +98,7 @@ public class Card extends javax.swing.JPanel{
                         .addComponent(pro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap())))
         );
-    }// </editor-fold>                        
+    }// </editor-fold>//GEN-END:initComponents
 
     @Override
     protected void paintComponent(Graphics grphcs) {
@@ -117,14 +110,11 @@ public class Card extends javax.swing.JPanel{
         super.paintComponent(grphcs);
     }
 
-    // Variables declaration - do not modify                     
+    // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel lbIcon;
     private javax.swing.JLabel lbPer;
     private javax.swing.JLabel lbTitle;
     private javax.swing.JLabel lbValues;
     private com.gym.general.swing.ProgressBarCustom pro;
-    // End of variables declaration                   
+    // End of variables declaration//GEN-END:variables
 }
-
-    
-
