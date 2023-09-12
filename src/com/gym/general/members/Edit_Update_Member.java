@@ -2,11 +2,17 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
+//constarint and search added on 07/09/23
+
 package com.gym.general.members;
 
 import com.formdev.flatlaf.FlatIntelliJLaf;
+import com.gym.general.fees.TextPrompt;
 import com.itextpdf.text.log.Logger;
 import com.raven.datechooser.DateChooser;
+import java.awt.Color;
+import static java.awt.Component.LEFT_ALIGNMENT;
+import java.awt.Font;
 import java.awt.Frame;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -26,7 +32,11 @@ import net.proteanit.sql.DbUtils;
 import java.util.logging.Level;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
-
+import javax.swing.RowFilter;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 /**
  *
@@ -35,279 +45,379 @@ import javax.swing.JFrame;
 public class Edit_Update_Member extends javax.swing.JFrame {
 
     private DateChooser dateofbith_dc;
-       private DateChooser dateofjoin_dc;
-       private DateChooser membership_start_date;
-       private DateChooser membership_end_date;
-       private int total_members_count;
+    private DateChooser dateofjoin_dc;
+    private DateChooser membership_start_date;
+    private DateChooser membership_end_date;
+    private int total_members_count;
 
-      String profile_pic_path;
-      
-      Connection con=null;
-      ResultSet rs=null;
-      Statement st=null;
-      PreparedStatement pst=null;
-    
-      ImageIcon profileimg;
-    
+    String profile_pic_path;
+
+    Connection con = null;
+    ResultSet rs = null;
+    Statement st = null;
+    PreparedStatement pst = null;
+
+    private TableRowSorter<TableModel> rowSorter;
+
+    TextPrompt searchprompt;
+
+    ImageIcon profileimg;
+
     public Edit_Update_Member() {
         FlatIntelliJLaf.registerCustomDefaultsSource("Flatlab.propeties");
         FlatIntelliJLaf.setup();
         total_member_count();
-         dateofbith_dc=new DateChooser();
-         dateofjoin_dc=new DateChooser();
-         
-         dateofbith_dc.setDateFormat(new SimpleDateFormat("YYYY-MM-dd"));
-         dateofjoin_dc.setDateFormat(new SimpleDateFormat("YYYY-MM-dd"));
-         
-         membership_start_date=new DateChooser();
-         membership_start_date.setDateFormat(new SimpleDateFormat("YYYY-MM-dd"));
-         
-         membership_end_date=new DateChooser();
-         membership_end_date.setDateFormat(new SimpleDateFormat("YYYY-MM-dd"));
-         this.setResizable(false);
-        
+        dateofbith_dc = new DateChooser();
+        dateofjoin_dc = new DateChooser();
+
+        dateofbith_dc.setDateFormat(new SimpleDateFormat("YYYY-MM-dd"));
+        dateofjoin_dc.setDateFormat(new SimpleDateFormat("YYYY-MM-dd"));
+
+        membership_start_date = new DateChooser();
+        membership_start_date.setDateFormat(new SimpleDateFormat("YYYY-MM-dd"));
+
+        membership_end_date = new DateChooser();
+        membership_end_date.setDateFormat(new SimpleDateFormat("YYYY-MM-dd"));
+        this.setResizable(false);
+
         initComponents();
         showall_members();
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+         searchprompt=new TextPrompt("Search by Name,Mobile No,ID...", searchTextField);
+          searchprompt.setForeground(Color.GRAY);
+        searchprompt.setHorizontalAlignment((int) LEFT_ALIGNMENT);
+        searchprompt.changeStyle(Font.BOLD+Font.ITALIC);
+       
+        
+         initializerowsorter();
+        jTable1.setRowSorter(rowSorter);
+        searchTextField.getDocument().addDocumentListener(new DocumentListener(){
+
+             @Override
+            public void insertUpdate(DocumentEvent e) {
+                String text = searchTextField.getText();
+
+                if (text.trim().length() == 0) {
+                    rowSorter.setRowFilter(null);
+                } else {
+                    rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + text));
+                }
+            }
+
+             @Override
+            public void removeUpdate(DocumentEvent e) {
+                String text = searchTextField.getText();
+
+                if (text.trim().length() == 0) {
+                    rowSorter.setRowFilter(null);
+                } else {
+                    rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + text));
+                }
+            }
+
+             @Override
+            public void changedUpdate(DocumentEvent e) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+             
+
+        });
+
+        
     }
-    
-    public void total_member_count(){
-        
-        
+
+    public void initializerowsorter() {
+        rowSorter = new TableRowSorter<TableModel>(jTable1.getModel());
+
+    }
+
+    public void total_member_count() {
+
         String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
         String username = "sa";
         String password = "Dhaval@7869";
-        String query="select count(empname) from dbo.Mst_Employee";
-        
+        String query = "select count(empname) from dbo.Mst_Employee";
+
         try {
-            con=DriverManager.getConnection(url, username, password);
-            st=con.createStatement();
-            rs=st.executeQuery(query);
-            while (rs.next()) {                
-               total_members_count=rs.getInt(1);
-               
-               
+            con = DriverManager.getConnection(url, username, password);
+            st = con.createStatement();
+            rs = st.executeQuery(query);
+            while (rs.next()) {
+                total_members_count = rs.getInt(1);
+
             }
-            memberscount_Label.setText(total_members_count+"");
-            
+            memberscount_Label.setText(total_members_count + "");
+
         } catch (Exception e) {
         }
-        System.out.println("total count:"+total_members_count);
-        
+        System.out.println("total count:" + total_members_count);
+
     }
-    
-    public void edit(){
-        
-                 name_TextField.setEditable(true);
-                 mobileno_TextField.setEditable(true);
-                 email_TextField.setEditable(true);
-                 dateofbirth_TextField.setEditable(true);
-                 fathername_TextField.setEditable(true);
-                 membership_id_TextField.setEditable(false);
-                 biometric_id_TextField.setEditable(false);
-                 dateofjoin_TextField.setEditable(true);
-                 timimg_ComboBox.setEnabled(true);
-                 timimg_ComboBox.setEditable(true);
-                 membership_start_TextField.setEditable(true);
-                 membership_end_TextField.setEditable(true);
+
+    public void edit() {
+
+        name_TextField.setEditable(true);
+        mobileno_TextField.setEditable(true);
+        email_TextField.setEditable(true);
+        dateofbirth_TextField.setEditable(true);
+        fathername_TextField.setEditable(true);
+        membership_id_TextField.setEditable(false);
+        biometric_id_TextField.setEditable(false);
+        dateofjoin_TextField.setEditable(true);
+        timimg_ComboBox.setEnabled(true);
+        timimg_ComboBox.setEditable(true);
+        membership_start_TextField.setEditable(true);
+        membership_end_TextField.setEditable(true);
+        id_TextField.setEditable(true);
     }
-    
-    
-    public void update_details(){
-         String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
+
+    public boolean check_alphabetic_fields(String text, String fieldname) {
+        text = text.replaceAll("\\s", "");
+        boolean result = true;
+        if (text.isEmpty()) {
+            JOptionPane.showMessageDialog(new JFrame(), fieldname + " Field is Empty", fieldname + " Field Error", JOptionPane.ERROR_MESSAGE);
+            result = false;
+        }
+
+        if (text.length() > 0) {
+            for (int i = 0; i < text.length(); i++) {
+                if (Character.toString(text.charAt(i)).matches("^[a-zA-Z]+$")) {
+
+                } else {
+                    result = false;
+                    JOptionPane.showMessageDialog(new JFrame(), fieldname + " Field contains Numeric value", fieldname + " Field Error", JOptionPane.ERROR_MESSAGE);
+                    break;
+                }
+            }
+        }
+
+        return result;
+    }
+
+    public boolean check_numericfields(String text, String fieldname) {
+        text = text.replaceAll("\\s", "");
+        text = text.replace("-", "");
+        boolean res = true;
+        if (text.isEmpty()) {
+            JOptionPane.showMessageDialog(new JFrame(), fieldname + " Field is Empty", fieldname + " Field Error", JOptionPane.ERROR_MESSAGE);
+            res = false;
+        } else if (text.length() > 0) {
+            for (int i = 0; i < text.length(); i++) {
+                if (Character.toString(text.charAt(i)).matches("^[0-9]+$")) {
+
+                } else {
+                    JOptionPane.showMessageDialog(new JFrame(), fieldname + " Field contains Alphabetic value", fieldname + " Field Error", JOptionPane.ERROR_MESSAGE);
+                    res = false;
+                    break;
+                }
+            }
+        }
+
+        return res;
+    }
+
+    public boolean checkallfields(boolean[] fields) {
+        boolean res = true;
+
+        for (int i = 0; i < fields.length; i++) {
+            System.out.println(fields[i]);
+            if (fields[i] == false) {
+                res = false;
+                break;
+            } else {
+                res = true;
+
+            }
+        }
+        return res;
+
+    }
+
+    public void update_details() {
+        String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
         String username = "sa";
         String password = "Dhaval@7869";
-        
-        String empcode=membership_id_TextField.getText().toString();
+
+        String empcode = membership_id_TextField.getText().toString();
         if (empcode.isEmpty()) {
             JOptionPane.showMessageDialog(new Frame(), "Please Select Member to Update");
         }
-        
-        String name=name_TextField.getText();
-        String mobileno=mobileno_TextField.getText();
-        String email=email_TextField.getText();
-        String dateofbirth=dateofbirth_TextField.getText();
-        String fathername=fathername_TextField.getText();
-        String membership_id=membership_id_TextField.getText();
-        String biometric_id=biometric_id_TextField.getText();
-        String id=id_TextField.getText();
-        String dateofjoin=dateofjoin_TextField.getText();
-        String timing=timimg_ComboBox.getSelectedItem().toString();
-        String membership_start_date=membership_start_TextField.getText();
-        String membership_end_date=membership_end_TextField.getText();
-        
-        
+
+        String name = name_TextField.getText();
+        String mobileno = mobileno_TextField.getText();
+        String email = email_TextField.getText();
+        String dateofbirth = dateofbirth_TextField.getText();
+        String fathername = fathername_TextField.getText();
+        String membership_id = membership_id_TextField.getText();
+        String biometric_id = biometric_id_TextField.getText();
+        String id = id_TextField.getText();
+        String dateofjoin = dateofjoin_TextField.getText();
+        String timing = timimg_ComboBox.getSelectedItem().toString();
+        String membership_start_date = membership_start_TextField.getText();
+        String membership_end_date = membership_end_TextField.getText();
+
         //String query="update dbo.Mst_Employee where emcode='"+empcode+"'";
-        
-        String mainquery="update dbo.Mst_Employee set EmpName=?, fathername=? ,ReginDate=?,DateofJoin=?,ShiftType=?"
-                + ",EmailAddress=?,PhoneNo=?,DateofBirth=?,ShiftStartDate=?,ShiftCode=? where empcode="+empcode;
-        
-        
+        String mainquery = "update dbo.Mst_Employee set EmpName=?, fathername=? ,validityend=?,DateofJoin=?,ShiftType=?"
+                + ",EmailAddress=?,PhoneNo=?,DateofBirth=?,ShiftStartDate=?,ShiftCode=?,Bank_Ifsc_Code=? where empcode=" + empcode;
+
         try {
-            con=DriverManager.getConnection(url, username, password);
-             pst=con.prepareStatement(mainquery);
-             
-             pst.setString(1, name);
-             pst.setString(2, fathername);
-             pst.setString(3, membership_end_date);
-             pst.setString(4, dateofjoin);
-             pst.setString(5, timing);
-             pst.setString(6, email);
-             pst.setString(7, mobileno);
-             pst.setString(8, dateofbirth);
-             pst.setString(9, membership_start_date);
-             pst.setString(10, timing);
-             
-             int count=pst.executeUpdate();
-            if (count>0) {
+            con = DriverManager.getConnection(url, username, password);
+            pst = con.prepareStatement(mainquery);
+
+            pst.setString(1, name);
+            pst.setString(2, fathername);
+            pst.setString(3, membership_end_date);
+            pst.setString(4, dateofjoin);
+            pst.setString(5, timing);
+            pst.setString(6, email);
+            pst.setString(7, mobileno);
+            pst.setString(8, dateofbirth);
+            pst.setString(9, membership_start_date);
+            pst.setString(10, timing);
+            pst.setString(11, id);
+
+            int count = pst.executeUpdate();
+            if (count > 0) {
                 JOptionPane.showMessageDialog(new Frame(), "Member Updated Succesfully");
                 System.out.println("Member Updated Succesfully");
                 showall_members();
                 total_member_count();
-            }else{
+                reset();
+            } else {
                 System.out.println("Member Updation failed");
                 JOptionPane.showMessageDialog(new Frame(), "ERROR:Member Updation Failed");
             }
-             
-             
+
         } catch (SQLException e) {
-            
+
             e.printStackTrace();
             JOptionPane.showMessageDialog(new Frame(), "SQL Exception");
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(new Frame(), "ERROR:Updation Failed");
         }
-        
+
     }
-    
-        public void view_selected_member() throws SQLException{
-        
-         String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
+
+    public void view_selected_member() throws SQLException {
+
+        String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
         String username = "sa";
         String password = "Dhaval@7869";
-      
-        
-        
-            int selectedrow= jTable1.getSelectedRow();
-            String name= (String) jTable1.getModel().getValueAt(selectedrow, 1);
-            System.out.println(selectedrow+" "+name);
-        
-         
-        
-        
-        String query="select * from dbo.Mst_Employee where EmpName='"+name+"'";
-     
-        try {
-             con=DriverManager.getConnection(url, username, password);
-             st=con.createStatement();
-             rs=st.executeQuery(query);
-             if (rs.next()) {                
-                 String name_rs=rs.getString("Empname");
-                 String mobileno_rs=rs.getString("PhoneNo");
-                String email_rs=rs.getString("EmailAddress");
-                String dateofbirth_rs=rs.getDate("DateofBirth").toString();
-                String fathername_rs=rs.getString("FatherName");
-                String membership_id_rs=rs.getString("EmpCode");
-                String biometric_id_rs=rs.getString("CardNo");
-                
-                String dateofjoin_rs=rs.getDate("DateofJoin").toString();
-                String timing_rs=rs.getString("ShiftCode");
-                String membership_start_date_rs=rs.getDate("ShiftStartDate").toString();
-                String membership_end_date_rs=rs.getString("ReginDate");
-                
-                   try {
-                     Blob blobdata=rs.getBlob("profilepic");
-                     if (blobdata!=null) {
-                         
-                 InputStream input=blobdata.getBinaryStream();
-                 BufferedImage imageicon=ImageIO.read(input);
-                
-                Image dimg = imageicon.getScaledInstance(profilepic.getWidth(), profilepic.getHeight(),
-                Image.SCALE_SMOOTH);
-                
-                  profileimg=new ImageIcon(dimg);
-                  profilepic.setIcon(profileimg);
-                     }
-                     else{
-                         JOptionPane.showMessageDialog(new Frame(), "Details Shown Without Image");
-                         profilepic.setIcon(null);
-                         profilepic.revalidate();
-                         
-                     }
-                     
-                 
-                 }catch(NullPointerException e){
-                      JOptionPane.showMessageDialog(new Frame(), "Image Not Found");
-                      e.printStackTrace();
-                 }
-                 catch (Exception e) {
-                     e.printStackTrace();
-                 }
-                
-              
-                
-                 System.out.println(name_rs);
-                 System.out.println(mobileno_rs);
-                 System.out.println(email_rs);
-                 System.out.println(dateofbirth_rs);
-                 System.out.println(fathername_rs);
-                 System.out.println(membership_id_rs);
-                 System.out.println(biometric_id_rs);
-                 System.out.println(dateofjoin_rs);
-                 System.out.println(timing_rs);
-                 System.out.println(membership_start_date_rs);
-                 System.out.println(membership_end_date_rs);
-                 
-                 name_TextField.setText(name_rs);
-                 name_TextField.setEditable(false);
-                 
-                 mobileno_TextField.setText(mobileno_rs);
-                 mobileno_TextField.setEditable(false);
-                 
-                 email_TextField.setText(email_rs);
-                 email_TextField.setEditable(false);
-                 
-                 dateofbirth_TextField.setText(dateofbirth_rs);
-                 dateofbirth_TextField.setEditable(false);
-                 
-                 fathername_TextField.setText(fathername_rs);
-                 fathername_TextField.setEditable(false);
-                 
-                 membership_id_TextField.setText(membership_id_rs);
-                 membership_id_TextField.setEditable(false);
-                 
-                 biometric_id_TextField.setText(biometric_id_rs);
-                 biometric_id_TextField.setEditable(false);
-                 
-                 dateofjoin_TextField.setText(dateofjoin_rs);
-                 dateofjoin_TextField.setEditable(false);
-                 
-                 timimg_ComboBox.setSelectedItem(timing_rs);
-                 timimg_ComboBox.setEnabled(false);
-                 timimg_ComboBox.setEditable(false);
-                 
-                 membership_start_TextField.setText(membership_start_date_rs);
-                 membership_start_TextField.setEditable(false);
-                 
-                 membership_end_TextField.setText(membership_end_date_rs);
-                 membership_end_TextField.setEditable(false);
 
+        int selectedrow = jTable1.getSelectedRow();
+        String name = (String) jTable1.getModel().getValueAt(selectedrow, 1);
+        System.out.println(selectedrow + " " + name);
+
+        String query = "select * from dbo.Mst_Employee where EmpName='" + name + "'";
+
+        try {
+            con = DriverManager.getConnection(url, username, password);
+            st = con.createStatement();
+            rs = st.executeQuery(query);
+            if (rs.next()) {
+                String name_rs = rs.getString("Empname");
+                String mobileno_rs = rs.getString("PhoneNo");
+                String email_rs = rs.getString("EmailAddress");
+                String dateofbirth_rs = rs.getDate("DateofBirth").toString();
+                String fathername_rs = rs.getString("FatherName");
+                String membership_id_rs = rs.getString("EmpCode");
+                String biometric_id_rs = rs.getString("CardNo");
+
+                String dateofjoin_rs = rs.getDate("DateofJoin").toString();
+                String timing_rs = rs.getString("ShiftCode");
+                String membership_start_date_rs = rs.getDate("ShiftStartDate").toString();
+                String membership_end_date_rs = rs.getString("validityend");
+                String id_rs = rs.getString("Bank_Ifsc_Code");
+
+                try {
+                    Blob blobdata = rs.getBlob("profilepic");
+                    if (blobdata != null) {
+
+                        InputStream input = blobdata.getBinaryStream();
+                        BufferedImage imageicon = ImageIO.read(input);
+
+                        Image dimg = imageicon.getScaledInstance(profilepic.getWidth(), profilepic.getHeight(),
+                                Image.SCALE_SMOOTH);
+
+                        profileimg = new ImageIcon(dimg);
+                        profilepic.setIcon(profileimg);
+                    } else {
+                        JOptionPane.showMessageDialog(new Frame(), "Details Shown Without Image");
+                        profilepic.setIcon(null);
+                        profilepic.revalidate();
+
+                    }
+
+                } catch (NullPointerException e) {
+                    JOptionPane.showMessageDialog(new Frame(), "Image Not Found");
+                    e.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                System.out.println(name_rs);
+                System.out.println(mobileno_rs);
+                System.out.println(email_rs);
+                System.out.println(dateofbirth_rs);
+                System.out.println(fathername_rs);
+                System.out.println(membership_id_rs);
+                System.out.println(biometric_id_rs);
+                System.out.println(dateofjoin_rs);
+                System.out.println(timing_rs);
+                System.out.println(membership_start_date_rs);
+                System.out.println(membership_end_date_rs);
+
+                name_TextField.setText(name_rs);
+                name_TextField.setEditable(false);
+
+                mobileno_TextField.setText(mobileno_rs);
+                mobileno_TextField.setEditable(false);
+
+                email_TextField.setText(email_rs);
+                email_TextField.setEditable(false);
+
+                dateofbirth_TextField.setText(dateofbirth_rs);
+                dateofbirth_TextField.setEditable(false);
+
+                fathername_TextField.setText(fathername_rs);
+                fathername_TextField.setEditable(false);
+
+                membership_id_TextField.setText(membership_id_rs);
+                membership_id_TextField.setEditable(false);
+
+                biometric_id_TextField.setText(biometric_id_rs);
+                biometric_id_TextField.setEditable(false);
+
+                dateofjoin_TextField.setText(dateofjoin_rs);
+                dateofjoin_TextField.setEditable(false);
+
+                timimg_ComboBox.setSelectedItem(timing_rs);
+                timimg_ComboBox.setEnabled(false);
+                timimg_ComboBox.setEditable(false);
+                membership_start_TextField.setText(membership_start_date_rs);
+                membership_start_TextField.setEditable(false);
+
+                membership_end_TextField.setText(membership_end_date_rs.substring(0, 10));
+                membership_end_TextField.setEditable(false);
+
+                id_TextField.setText(id_rs);
+                id_TextField.setEditable(false);
+
+            } else {
+                System.out.println("No member found");
             }
-             else{
-                 System.out.println("No member found");
-             }
-             
-        }catch (ArrayIndexOutOfBoundsException e) {
-             JOptionPane.showMessageDialog(new Frame(), "Please Select Member");
-             
-        }
-        catch (Exception e) {
+
+        } catch (ArrayIndexOutOfBoundsException e) {
+            JOptionPane.showMessageDialog(new Frame(), "Please Select Member");
+
+        } catch (Exception e) {
             e.printStackTrace();
-        }finally{
+        } finally {
             con.close();
         }
-        
+
     }
 
     public void selectFile() {
@@ -320,28 +430,41 @@ public class Edit_Update_Member extends javax.swing.JFrame {
             // user changed their mind
         }
     }
-    
-    
-       public void showall_members(){
+
+    public void reset() {
+
+        name_TextField.setText("");
+        membership_id_TextField.setText("");
+        biometric_id_TextField.setText("");
+        membership_start_TextField.setText("");
+        membership_end_TextField.setText("");
+        dateofjoin_TextField.setText("");
+        dateofbirth_TextField.setText("");
+        mobileno_TextField.setText("");
+        email_TextField.setText("");
+        fathername_TextField.setText("");
+        id_TextField.setText("");
+
+    }
+
+    public void showall_members() {
         String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
         String username = "sa";
         String password = "Dhaval@7869";
-      
-        String query="select empid as Member_ID,empname as Name,phoneno as Mobile_No from dbo.mst_employee";
-        
+
+        String query = "select empid as Member_ID,empname as Name,phoneno as Mobile_No from dbo.mst_employee";
+
         try {
-            con=DriverManager.getConnection(url,username,password);
-            st=con.createStatement();
-            rs=st.executeQuery(query);
+            con = DriverManager.getConnection(url, username, password);
+            st = con.createStatement();
+            rs = st.executeQuery(query);
             jTable1.setModel(DbUtils.resultSetToTableModel(rs));
-            
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-
-    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -349,8 +472,7 @@ public class Edit_Update_Member extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
-        jTextField1 = new javax.swing.JTextField();
-        jButton2 = new javax.swing.JButton();
+        searchTextField = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jLabel10 = new javax.swing.JLabel();
@@ -385,6 +507,7 @@ public class Edit_Update_Member extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         timimg_ComboBox = new javax.swing.JComboBox<>();
         view_Button = new javax.swing.JButton();
+        cancel_Button = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -402,8 +525,6 @@ public class Edit_Update_Member extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
-
-        jButton2.setIcon(new javax.swing.ImageIcon("C:\\Users\\DELL\\Downloads\\search.png")); // NOI18N
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -438,9 +559,7 @@ public class Edit_Update_Member extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(searchTextField))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 431, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -454,12 +573,10 @@ public class Edit_Update_Member extends javax.swing.JFrame {
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jButton1)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jButton2))
+                .addGap(15, 15, 15)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1)
+                    .addComponent(searchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel10)
@@ -586,6 +703,17 @@ public class Edit_Update_Member extends javax.swing.JFrame {
             }
         });
 
+        cancel_Button.setBackground(new java.awt.Color(32, 161, 93));
+        cancel_Button.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
+        cancel_Button.setForeground(java.awt.Color.white);
+        cancel_Button.setText("CANCEL");
+        cancel_Button.setBorderPainted(false);
+        cancel_Button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancel_ButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -646,7 +774,9 @@ public class Edit_Update_Member extends javax.swing.JFrame {
                                         .addComponent(membership_start_TextField))
                                     .addComponent(membership_end_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(209, 209, 209)
+                        .addGap(132, 132, 132)
+                        .addComponent(cancel_Button)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(view_Button)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(edit_Button)
@@ -714,7 +844,8 @@ public class Edit_Update_Member extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(edit_Button)
                     .addComponent(update_Button)
-                    .addComponent(view_Button))
+                    .addComponent(view_Button)
+                    .addComponent(cancel_Button))
                 .addContainerGap(44, Short.MAX_VALUE))
         );
 
@@ -747,8 +878,7 @@ public class Edit_Update_Member extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    
-    
+
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         showall_members();
@@ -757,7 +887,7 @@ public class Edit_Update_Member extends javax.swing.JFrame {
 
     private void browseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseActionPerformed
         selectFile();
-        ImageIcon profileimg=new ImageIcon(profile_pic_path);
+        ImageIcon profileimg = new ImageIcon(profile_pic_path);
         profilepic.setIcon(profileimg);
     }//GEN-LAST:event_browseActionPerformed
 
@@ -767,20 +897,35 @@ public class Edit_Update_Member extends javax.swing.JFrame {
 
     private void edit_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_edit_ButtonActionPerformed
         // TODO add your handling code here:
-       if (membership_id_TextField.getText().toString().isEmpty()) {
+        if (membership_id_TextField.getText().toString().isEmpty()) {
             JOptionPane.showMessageDialog(new Frame(), "Please Select Member");
-        }else{
-        edit();
-       }
+        } else {
+            edit();
+        }
     }//GEN-LAST:event_edit_ButtonActionPerformed
 
     private void update_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_update_ButtonActionPerformed
         // TODO add your handling code here:
-        if (membership_id_TextField.getText().toString().isEmpty()) {
-            JOptionPane.showMessageDialog(new Frame(), "Please Select Member to update");
-        }else{
-        update_details();
+        boolean membername = check_alphabetic_fields(name_TextField.getText(), "Member Name");
+        boolean fathername = check_alphabetic_fields(fathername_TextField.getText(), "Father Name");
+        boolean checkmobile = check_numericfields(mobileno_TextField.getText(), "Mobile No");
+        boolean checkdateofbirth = check_numericfields(dateofbirth_TextField.getText(), "Date of Birth");
+        boolean dateofjoin = check_numericfields(dateofjoin_TextField.getText(), "Date of Join");
+        boolean memstart = check_numericfields(membership_start_TextField.getText(), "Membership Start Date");
+        boolean memend = check_numericfields(membership_end_TextField.getText(), "Membership End Date");
+
+        boolean[] checkallfield_forpayments = {membername, fathername, checkmobile, checkdateofbirth, dateofjoin, memstart, memend};
+        boolean check_constraints = checkallfields(checkallfield_forpayments);
+
+        if (check_constraints == true) {
+            update_details();
+
+        } else {
+            System.out.println("Invalid Fields");
+            JOptionPane.showMessageDialog(new JFrame(), "Error:Fields are Empty or Invalid", "Add Payment Error", JOptionPane.ERROR_MESSAGE);
         }
+
+
     }//GEN-LAST:event_update_ButtonActionPerformed
 
     private void dateofjoin_TextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dateofjoin_TextFieldActionPerformed
@@ -789,69 +934,60 @@ public class Edit_Update_Member extends javax.swing.JFrame {
 
     private void view_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_view_ButtonActionPerformed
 
-
-
         try {
             // TODO add your handling code here:
 
             view_selected_member();
 
-        }
-        catch (ArrayIndexOutOfBoundsException e) {
+        } catch (ArrayIndexOutOfBoundsException e) {
             JOptionPane.showMessageDialog(new Frame(), "Please Select Member");
-        }
-        catch (SQLException ex) {
-          JOptionPane.showMessageDialog(new Frame(), "SQL Exception");
-          ex.printStackTrace();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(new Frame(), "SQL Exception");
+            ex.printStackTrace();
         }
 
     }//GEN-LAST:event_view_ButtonActionPerformed
 
     private void name_TextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_name_TextFieldKeyReleased
         // TODO add your handling code here:
-        String text=name_TextField.getText();
-          int len=text.length();
-            for (int i = 0; i < len; i++) {
-                if(Character.toString(text.charAt(i)).matches("^[a-zA-Z]+$")){
-                    continue;
+        String text = name_TextField.getText();
+        int len = text.length();
+        for (int i = 0; i < len; i++) {
+            if (Character.toString(text.charAt(i)).matches("^[a-zA-Z]+$")) {
+                continue;
+            } else {
+
+                JOptionPane.showMessageDialog(new JFrame(), "Name Field Contains Number", "Name Field Error", JOptionPane.ERROR_MESSAGE);
+                System.out.println("Contains number");
+                name_TextField.setText(null);
             }
-            
-            else{
-                 
-                    JOptionPane.showMessageDialog(new JFrame(), "Name Field Contains Number","Name Field Error",JOptionPane.ERROR_MESSAGE);
-                     System.out.println("Contains number");
-                     name_TextField.setText(null);
-                }
-            }
-            
+        }
+
     }//GEN-LAST:event_name_TextFieldKeyReleased
 
     private void mobileno_TextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_mobileno_TextFieldKeyReleased
-       
-       
-        
-       String text=mobileno_TextField.getText();
-       for(int i=0;i<text.length();i++){
-         int len=0;
-         
-        if (mobileno_TextField.getText().length()>0 && Character.toString(text.charAt(i)).matches("^[0-9]+$")) {
-            len=text.length();
-            
-        }else{
-             JOptionPane.showMessageDialog(new JFrame(), "Only Digits Allowed","Hieght Field Error",JOptionPane.ERROR_MESSAGE);
-                     System.out.println("Contains Alphabet");
-        }
- 
-        
-    }
-       
-    }//GEN-LAST:event_mobileno_TextFieldKeyReleased
-    
 
-    
-    
-    
-    
+        String text = mobileno_TextField.getText();
+        for (int i = 0; i < text.length(); i++) {
+            int len = 0;
+
+            if (mobileno_TextField.getText().length() > 0 && Character.toString(text.charAt(i)).matches("^[0-9]+$")) {
+                len = text.length();
+
+            } else {
+                JOptionPane.showMessageDialog(new JFrame(), "Only Digits Allowed", "Hieght Field Error", JOptionPane.ERROR_MESSAGE);
+                System.out.println("Contains Alphabet");
+            }
+
+        }
+
+    }//GEN-LAST:event_mobileno_TextFieldKeyReleased
+
+    private void cancel_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancel_ButtonActionPerformed
+        // TODO add your handling code here:
+        reset();
+    }//GEN-LAST:event_cancel_ButtonActionPerformed
+
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -889,6 +1025,7 @@ public class Edit_Update_Member extends javax.swing.JFrame {
     private javax.swing.JLabel biometric_id;
     private javax.swing.JTextField biometric_id_TextField;
     private javax.swing.JButton browse;
+    private javax.swing.JButton cancel_Button;
     private javax.swing.JLabel dateofbirth;
     private javax.swing.JTextField dateofbirth_TextField;
     private javax.swing.JTextField dateofjoin_TextField;
@@ -899,7 +1036,6 @@ public class Edit_Update_Member extends javax.swing.JFrame {
     private javax.swing.JTextField id_TextField;
     private javax.swing.JLabel id_aadhar;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
@@ -910,7 +1046,6 @@ public class Edit_Update_Member extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JLabel memberscount_Label;
     private javax.swing.JTextField membership_end_TextField;
     private javax.swing.JLabel membership_id;
@@ -921,6 +1056,7 @@ public class Edit_Update_Member extends javax.swing.JFrame {
     private javax.swing.JLabel name;
     private javax.swing.JTextField name_TextField;
     private javax.swing.JLabel profilepic;
+    private javax.swing.JTextField searchTextField;
     private javax.swing.JComboBox<String> timimg_ComboBox;
     private javax.swing.JButton update_Button;
     private javax.swing.JButton view_Button;

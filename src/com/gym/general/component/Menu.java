@@ -65,17 +65,17 @@ public class Menu extends javax.swing.JPanel {
     }
 
     public void initMenuItem() {
-         addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/gym/general/icon/1.png")), "Dashboard", "Home",  "Attendance"));
-        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/gym/general/icon/2.png")), "Members", "Add New Member", "Delete Member","Update Member Details","Search/View Members Details"));
-        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/gym/general/icon/3.png")), "Fees", "Fees Detail", "Add Fees/Duration","Update Fees/Duration"));
-        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/gym/general/icon/4.png")), "Payments", "Add New Member Payments", "Renew Membership/Add Payments","Show Payment History"));
-        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/gym/general/icon/5.png")), "Body Measurments", "BMI/Fat Calculator","Body Measurement Form"));
-        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/gym/general/icon/6.png")), "Diet Planner"));
-        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/gym/general/icon/7.png")), "Workout", "Create Workout", "Show Added Workouts"));
-        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/gym/general/icon/8.png")), "History", "Attendance History", "Payment History","Inquiry History"));
-        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/gym/general/icon/10.png")), "Inquiry", "Add Inquiry", "Inquiry History"));
-        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/gym/general/icon/12.png")), "Help", "About","Update Software", "How To?"));
-        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/gym/general/icon/13.png")), "Account","Log Out","Update Accounts"));
+         addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/gym/general/icon/1.png")), "Dashboard", "Home",  "Attendance"));//0
+        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/gym/general/icon/2.png")), "Members", "Add New Member", "Delete Member","Update Member Details","Search/View Members Details"));//1
+        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/gym/general/icon/3.png")), "Fees", "Fees Detail", "Add Fees/Duration","Update Fees/Duration"));//2
+        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/gym/general/icon/4.png")), "Payments", "Add New Member Payments", "Renew Membership/Add Payments","Show Payment History"));//3
+        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/gym/general/icon/5.png")), "Body Measurments", "BMI/Fat Calculator","Body Measurement Form"));//4
+        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/gym/general/icon/6.png")), "Diet Planner"));//5
+        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/gym/general/icon/7.png")), "Workout", "Create Workout", "Show Added Workouts"));//6
+        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/gym/general/icon/8.png")), "History", "Attendance History", "Payment History","Inquiry History"));//7
+        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/gym/general/icon/10.png")), "Inquiry", "Add Inquiry", "Inquiry History"));//8
+        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/gym/general/icon/12.png")), "Help", "About","Update Software", "How To?"));//9
+        addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/gym/general/icon/13.png")), "Account","Log Out","Log History"));//10
         addMenu(new ModelMenu(new ImageIcon(getClass().getResource("/com/gym/general/icon/close.png")), "Close"));
    
     }

@@ -5,7 +5,6 @@
 package com.gym.general.members;
 import com.gym.general.main.*;
 import com.formdev.flatlaf.FlatIntelliJLaf;
-
 import com.raven.datechooser.DateChooser;
 import java.awt.Frame;
 import java.awt.Image;
@@ -156,14 +155,15 @@ public class Add_Member extends javax.swing.JFrame {
     
     
      public boolean check_numericfields(String text,String fieldname){
-        text=text.replaceAll("\\s", "");
-        text=text.replace("-", "");
+       
           boolean res=true;
         if (text.isEmpty()) {
             JOptionPane.showMessageDialog(new JFrame(), fieldname+" Field is Empty", fieldname+" Field Error",JOptionPane.ERROR_MESSAGE);
             res=false;
         }
-        else if(text.length()>0)
+        else if(text.length()>0){
+             text=text.replaceAll("\\s", "");
+            text=text.replace("-", "");
             for(int i=0;i<text.length();i++){
                 if (Character.toString(text.charAt(i)).matches("^[0-9]+$")) {
                     
@@ -174,7 +174,7 @@ public class Add_Member extends javax.swing.JFrame {
                     break;
                 }
             }
-        
+        }
         return res;
     }
    

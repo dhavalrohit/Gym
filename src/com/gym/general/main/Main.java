@@ -26,11 +26,12 @@ import java.awt.event.ActionListener;
 import java.lang.System.Logger.Level;
 import java.sql.SQLException;
 import com.gym.general.fees.Exisiting_Member;
-import com.gym.general.fees.Fee_Detail;
+import com.gym.general.fees.Fee_Details;
 import com.gym.general.fees.fees_payment_history;
 import com.gym.general.fees.update_fees;
 import com.gym.general.inquiry.inquiry_form;
 import com.gym.general.inquiry.inquiry_history;
+import com.gym.general.logger.Logging_history;
 import com.gym.general.login.login_main;
 import com.gym.general.members.Edit_Update_Member;
 import com.gym.general.members.View_Member;
@@ -143,9 +144,9 @@ public class Main extends javax.swing.JFrame {
                 
                 if (menuIndex==2) {
                     if (subMenuIndex==0) {
-                        Fee_Detail fee=null;
+                        Fee_Details fee=null;
                         try {
-                            fee=new Fee_Detail();
+                            fee=new Fee_Details();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -372,6 +373,19 @@ public class Main extends javax.swing.JFrame {
                              log=new login_main();
                              log.setVisible(true);
                              dispose();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                
+                if (menuIndex==10) {
+                    if (subMenuIndex==1) {
+                        Logging_history log=null;
+                        try {
+                             log=new Logging_history();
+                             log.setVisible(true);
+                             
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

@@ -437,8 +437,8 @@ public class Workout_Creator extends javax.swing.JFrame {
         boolean repscheck=check_numericfields(reps_TextField.getText(),"Reps");
         boolean restcheck=check_numericfields(rest_TextField.getText(),"Rest");
         
-        boolean[] checkallfield_forpayments={exercisename,checksets,repscheck,restcheck};
-         boolean check_constraints=checkallfields(checkallfield_forpayments);
+        boolean[] checkallfield_forworkout={exercisename,checksets,repscheck,restcheck};
+         boolean check_constraints=checkallfields(checkallfield_forworkout);
        
         if (check_constraints==true) {
                 System.out.println("all fields are within constraints");

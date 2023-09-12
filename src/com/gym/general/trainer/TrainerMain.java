@@ -27,7 +27,7 @@ import java.awt.event.ActionListener;
 import java.lang.System.Logger.Level;
 import java.sql.SQLException;
 import com.gym.general.fees.Exisiting_Member;
-import com.gym.general.fees.Fee_Detail;
+import com.gym.general.fees.Fee_Details;
 import com.gym.general.fees.fees_payment_history;
 import com.gym.general.fees.update_fees;
 import com.gym.general.inquiry.inquiry_form;

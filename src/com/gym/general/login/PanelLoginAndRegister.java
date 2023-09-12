@@ -5,7 +5,6 @@
 package com.gym.general.login;
 
 import com.gym.general.attendance.week.attendanceWeekRecord;
-//import com.gym.general.main.Login_Main;
 import com.gym.general.main.Main;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -27,19 +26,21 @@ import net.miginfocom.swing.MigLayout;
 import com.gym.general.main.Main;
 import com.gym.general.login.Message;
 import com.gym.general.trainer.TrainerMain;
+import com.gym.general.workout.added_workouts;
 import java.awt.Window;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
+import java.util.logging.FileHandler;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
-/**
- *
- * @author DELL
- */
+
+
+
+
 public class PanelLoginAndRegister extends javax.swing.JLayeredPane{
     
      // Variables declaration - do not modify                     
@@ -58,8 +59,13 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane{
     private MyTextField reg_username;
     private MyPasswordField reg_userpass;
     private MyTextField reg_name;
+    private MyPasswordField confirmtxtPass;
     
     String access_check_db;
+    
+      java.util.logging.Logger logger=java.util.logging.Logger.getLogger(added_workouts.class.getName());
+      FileHandler fileHandler;
+    
     
       Connection con=null;
     ResultSet rs=null;
@@ -73,8 +79,12 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane{
         initLogin();
         login.setVisible(false);
         register.setVisible(true);
+       
+       
+       
     }
 
+    
     private void initRegister() {
         register.setLayout(new MigLayout("wrap", "push[center]push", "push[]25[]10[]10[]25[]10[]10[]10[]push"));
         JLabel label = new JLabel("Add User");
@@ -97,7 +107,7 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane{
         reg_userpass.setHint("Password");
         register.add(reg_userpass, "w 60%");
         
-        MyPasswordField confirmtxtPass = new MyPasswordField();
+         confirmtxtPass = new MyPasswordField();
         confirmtxtPass.setPrefixIcon(new ImageIcon(getClass().getResource("pass.png")));
         confirmtxtPass.setHint("Confirm Password");
         register.add(confirmtxtPass, "w 60%");
@@ -137,10 +147,31 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane{
             @Override
             public void actionPerformed(ActionEvent e) {
          //       throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-                    add_user();
+                    boolean checkname=check_alphabetic_fields(reg_name.getText(), "Name");
+                    boolean checkusername=check_alphabetic_fields(reg_username.getText(), "UserName");
+                    boolean checkpassfield=check_alphabetic_fields(reg_userpass.getText(), "Password");
+                    boolean checkpass=checkpass(reg_userpass.getText(), confirmtxtPass.getText());
+                     boolean[] checkall={checkusername,checkname,checkpassfield,checkpass};
+                     boolean checkconstraints=checkallfields(checkall);
+                     if (checkconstraints==true) {
+                            try {
+                             add_user();
+                         } catch (Exception ex) {
+                             ex.printStackTrace();
+                             JOptionPane.showMessageDialog(new JFrame(), "SQL Error","Database Error",JOptionPane.ERROR_MESSAGE);
+                         }
+                }else{
+                         System.out.println("Invalid Fields");
+                        JOptionPane.showMessageDialog(new JFrame(), "Error:Fields are Empty or Invalid","Add Payment Error",JOptionPane.ERROR_MESSAGE);
+        
+                     }
+                
+         
+                    
             }
         });
     }
+   
     
     private void initLogin() {
         login.setLayout(new MigLayout("wrap", "push[center]push", "push[]25[]10[]10[]25[]10[]10[]10[]push"));
@@ -201,19 +232,82 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane{
                 System.out.println(txtusername.getText());
                 System.out.println(txtPass.getText());
                 
-                try {
-                  
-                    login_method();
-                    
-                    
-                    
-                } catch (SQLException ex) {
-                    Logger.getLogger(PanelLoginAndRegister.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                boolean checkusername=check_alphabetic_fields(txtusername.getText(), "Username");
+                boolean checkpass=check_alphabetic_fields(txtPass.getText(), "Password");
+                boolean[] checkall={checkusername,checkpass};
+                boolean checkconstraints=checkallfields(checkall);
+                
+                if (checkconstraints==true) {
+                            try {
 
+                            login_method();
+
+
+
+                        } catch (SQLException ex) {
+                            Logger.getLogger(PanelLoginAndRegister.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+
+                }
+                
+                else{
+            System.out.println("Invalid Fields");
+            JOptionPane.showMessageDialog(new JFrame(), "Error:Fields are Empty or Invalid","Add Payment Error",JOptionPane.ERROR_MESSAGE);
+        
+                }
+        
+                
+                
+                
             }
         });
     }
+    
+    
+    public boolean checkpass(String pass,String confirmpass){
+        boolean res=true;    
+        if (pass.equals(confirmpass)) {
+                res=true;
+        }else{
+            res=false;
+            JOptionPane.showMessageDialog(new JFrame(), "Password and Confirm Password do no match");
+        }
+        return res;
+    
+    }
+    
+       public boolean checkallfields(boolean [] fields){
+        boolean res=true;
+        
+        for(int i=0;i<fields.length;i++){
+                System.out.println(fields[i]);
+            if (fields[i]==false) {
+                res=false;
+                break;
+            }
+            else{
+                res=true;
+                
+            }
+        }
+        return res;
+    
+    }
+  
+    
+      public boolean check_alphabetic_fields(String text,String fieldname){
+         text=text.replaceAll("\\s", "");
+          boolean result=true;
+         if (text.isEmpty()) {
+            JOptionPane.showMessageDialog(new JFrame(), fieldname+" Field is Empty", fieldname+" Field Error",JOptionPane.ERROR_MESSAGE);
+            result=false;
+        }
+              
+        
+        
+        return result;
+    }
+    
     
     public void check_access_type(){
         String type_check=typeforlogin.getSelectedItem().toString();
@@ -230,6 +324,8 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane{
                     trainermain.setusernametest(txtusername.getText());
                     JOptionPane.showMessageDialog(new JFrame(), "Login Success");
                     JOptionPane.showMessageDialog(new JFrame(), "Logged in as Trainer");
+                    logger.info("Trainer Logged In");
+                    logging_log_entry();
         
             }else{
                 
@@ -247,11 +343,15 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane{
                     main.setusernametest(txtusername.getText());
                     JOptionPane.showMessageDialog(new JFrame(), "Login Success");
                     JOptionPane.showMessageDialog(new JFrame(), "Logged in as Admin");
+                    logger.info("Admin Logged In");
+                    logging_log_entry();
+                    
         
             }
             else{
                 
-                JOptionPane.showMessageDialog(new JFrame(), "User Type Mismatch");   
+                JOptionPane.showMessageDialog(new JFrame(), "User Type Mismatch");
+                logger.warning("User Type Miscmatch Occured While Logging");
             }
             
         
@@ -286,6 +386,7 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane{
             Logger.getLogger(PanelLoginAndRegister.class.getName()).log(Level.SEVERE, null, ex);
             ex.printStackTrace();
             JOptionPane.showMessageDialog(new JFrame(), "username or password incorrect");
+            logger.warning("");
         }finally{
             try {
                 con.close();
@@ -362,10 +463,14 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane{
                      if (res.equalsIgnoreCase("trainer")) {
                          System.out.println("success");
                         JOptionPane.showMessageDialog(new JFrame(), "Trainer Added Successfully");
+                        registration_log_entry();
+                        clear();
               
                      }else{
                         System.out.println("success");
                         JOptionPane.showMessageDialog(new JFrame(), "Admin Added Successfully");
+                        registration_log_entry();
+                        clear();
               
                      }
                  
@@ -383,6 +488,86 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane{
           
         }
     
+    }
+    
+    public void registration_log_entry(){
+              Date date=new Date();
+	SimpleDateFormat format=new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
+	String datetoday=format.format(date);
+			
+        String message="Registraion of User: "+reg_name.getText()+" Successfull as  "+typeforregister.getSelectedItem().toString();
+        String url="jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
+        String username="sa";
+        String password="Dhaval@7869";
+      
+        String query="INSERT INTO [dbo].[history]\n" +
+"           ([Date]\n" +
+"           ,[Message])\n" +
+"     VALUES\n" +
+"           (?,?)";
+        
+        try {
+             con=DriverManager.getConnection(url, username, password);
+            pst=con.prepareStatement(query);
+           
+            pst.setString(1, datetoday);
+            pst.setString(2, message);
+            int count=pst.executeUpdate();
+            if (count>0) {
+                System.out.println("Log Saved Successfully");
+            }
+            else{
+             JOptionPane.showMessageDialog(new JFrame(),"Log Error", "Logged in as Admin",JOptionPane.ERROR_MESSAGE);   
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(new JFrame(),"Log Error", "Logged in as Admin",JOptionPane.ERROR_MESSAGE);
+        }
+    
+    }
+    
+    public void logging_log_entry(){
+        
+        Date date=new Date();
+	SimpleDateFormat format=new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
+	String datetoday=format.format(date);
+			
+        String message="Logged in by: "+txtusername.getText();
+        String url="jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
+        String username="sa";
+        String password="Dhaval@7869";
+      
+        String query="INSERT INTO [dbo].[history]\n" +
+"           ([Date]\n" +
+"           ,[Message])\n" +
+"     VALUES\n" +
+"           (?,?)";
+        
+        try {
+             con=DriverManager.getConnection(url, username, password);
+            pst=con.prepareStatement(query);
+           
+            pst.setString(1, datetoday);
+            pst.setString(2, message);
+            int count=pst.executeUpdate();
+            if (count>0) {
+                System.out.println("Log Saved Successfully");
+            }
+            else{
+             JOptionPane.showMessageDialog(new JFrame(),"Log Error", "Logged in as Admin",JOptionPane.ERROR_MESSAGE);   
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(new JFrame(),"Log Error", "Logged in as Admin",JOptionPane.ERROR_MESSAGE);
+        }
+    
+    }
+    
+    public void clear(){
+        reg_name.setText("");
+        reg_username.setText("");
+        reg_userpass.setText("");
+        confirmtxtPass.setText("");
     }
     
     public void login_method() throws SQLException, SQLException, SQLException, SQLException{

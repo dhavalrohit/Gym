@@ -18,7 +18,7 @@ import javax.swing.plaf.ButtonUI;
 import net.proteanit.sql.DbUtils;
 
 
-public class Fee_Detail extends javax.swing.JFrame {
+public class Fee_Details extends javax.swing.JFrame {
 
     Connection con=null;
       ResultSet rs=null;
@@ -26,15 +26,25 @@ public class Fee_Detail extends javax.swing.JFrame {
       PreparedStatement pst=null;
       
       int selectedrow;
+      int feeid=0;
       
     
-    public Fee_Detail() {
+    public Fee_Details() {
          FlatIntelliJLaf.registerCustomDefaultsSource("Flatlab.propeties");
         FlatIntelliJLaf.setup();
         initComponents();
         this.setResizable(false);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        view_added_fees();
      
+    }
+    
+    public int get_fee_id_from_table(){
+        int selected_row=jTable1.getSelectedRow();
+        feeid=(int) jTable1.getValueAt(selected_row, 0);
+        System.out.println(feeid);
+        return feeid;
+        
     }
     
     public void showFeesDetails(){
@@ -45,7 +55,7 @@ public class Fee_Detail extends javax.swing.JFrame {
       
         
          selectedrow= jTable1.getSelectedRow();
-        String selectedfeeID=  jTable1.getModel().getValueAt(selectedrow, 1).toString();
+        String selectedfeeID=  jTable1.getModel().getValueAt(selectedrow, 0).toString();
         System.out.println(selectedfeeID);
         
        
@@ -58,8 +68,6 @@ public class Fee_Detail extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         update_Button = new javax.swing.JButton();
-        updateALL_Button = new javax.swing.JButton();
-        view_Button = new javax.swing.JButton();
         new_Button = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
@@ -83,23 +91,6 @@ public class Fee_Detail extends javax.swing.JFrame {
         update_Button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 update_ButtonActionPerformed(evt);
-            }
-        });
-
-        updateALL_Button.setBackground(new java.awt.Color(32, 161, 93));
-        updateALL_Button.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
-        updateALL_Button.setForeground(java.awt.Color.white);
-        updateALL_Button.setText("UPDATE ALL");
-        updateALL_Button.setBorderPainted(false);
-
-        view_Button.setBackground(new java.awt.Color(32, 161, 93));
-        view_Button.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
-        view_Button.setForeground(java.awt.Color.white);
-        view_Button.setText("VIEW");
-        view_Button.setBorderPainted(false);
-        view_Button.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                view_ButtonActionPerformed(evt);
             }
         });
 
@@ -149,11 +140,7 @@ public class Fee_Detail extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(new_Button)
                         .addGap(18, 18, 18)
-                        .addComponent(update_Button)
-                        .addGap(18, 18, 18)
-                        .addComponent(updateALL_Button)
-                        .addGap(18, 18, 18)
-                        .addComponent(view_Button))
+                        .addComponent(update_Button))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
@@ -163,9 +150,7 @@ public class Fee_Detail extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(new_Button)
-                    .addComponent(update_Button)
-                    .addComponent(updateALL_Button)
-                    .addComponent(view_Button))
+                    .addComponent(update_Button))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE)
                 .addContainerGap())
@@ -201,15 +186,21 @@ public class Fee_Detail extends javax.swing.JFrame {
         
     }//GEN-LAST:event_new_ButtonActionPerformed
 
-    private void view_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_view_ButtonActionPerformed
-        // TODO add your handling code here:
-        view_added_fees();
-    }//GEN-LAST:event_view_ButtonActionPerformed
-
     private void update_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_update_ButtonActionPerformed
         // TODO add your handling code here:
-        showFeesDetails();
-        new update_fees().setVisible(true);
+        
+        if (jTable1.getSelectionModel().isSelectionEmpty()) {
+            JOptionPane.showMessageDialog(new JFrame(), "Please select any one value to Update");
+        }else{
+            get_fee_id_from_table();
+            update_fees update=new update_fees();
+            update.setVisible(true);
+            update.set_fee_id(feeid);
+            
+            update.get_fee_details();
+            
+        }
+        
         
         
     }//GEN-LAST:event_update_ButtonActionPerformed
@@ -247,20 +238,21 @@ public class Fee_Detail extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Fee_Detail.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Fee_Details.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Fee_Detail.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Fee_Details.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Fee_Detail.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Fee_Details.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Fee_Detail.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Fee_Details.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Fee_Detail().setVisible(true);
+                new Fee_Details().setVisible(true);
             }
         });
     }
@@ -271,8 +263,6 @@ public class Fee_Detail extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JButton new_Button;
-    private javax.swing.JButton updateALL_Button;
     private javax.swing.JButton update_Button;
-    private javax.swing.JButton view_Button;
     // End of variables declaration//GEN-END:variables
 }

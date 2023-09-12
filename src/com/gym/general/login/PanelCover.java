@@ -131,13 +131,17 @@ public class PanelCover extends javax.swing.JPanel{
             if (login) {
                title.setText("Welcome Back!");
                 description.setText("To keep connected with us please");
-                description1.setText("login with your personal info");
-                button.setText("SIGN IN");
+                //description1.setText("login with your personal info");
+                //button.setText("SIGN IN");
+                    description1.setText("Add a New Admin User or Trainer");
+                button.setText("Register User");
+            
             } else {
                 title.setText("Welcome Back!");
                 description.setText("To keep connected with us please");
                 description1.setText("login with your personal info");
                 button.setText("SIGN IN");
+            
             }
             this.isLogin = login;
         }

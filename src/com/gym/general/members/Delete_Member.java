@@ -2,10 +2,15 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
+//constarint and search added on 07/09/23
 package com.gym.general.members;
 
 import com.formdev.flatlaf.FlatIntelliJLaf;
+import com.gym.general.fees.TextPrompt;
 import com.raven.datechooser.DateChooser;
+import java.awt.Color;
+import static java.awt.Component.LEFT_ALIGNMENT;
+import java.awt.Font;
 import java.awt.Frame;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -22,6 +27,11 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.RowFilter;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 import net.proteanit.sql.DbUtils;
 
 /**
@@ -44,6 +54,10 @@ public class Delete_Member extends javax.swing.JFrame {
       PreparedStatement pst=null;
       
       ImageIcon profileimg;
+      
+       private TableRowSorter<TableModel> rowSorter;
+
+    TextPrompt searchprompt;
   
        public Delete_Member() {
        FlatIntelliJLaf.registerCustomDefaultsSource("Flatlab.propeties");
@@ -68,7 +82,55 @@ public class Delete_Member extends javax.swing.JFrame {
         total_member_count();
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         
+         searchprompt=new TextPrompt("Search by Name,Mobile No,ID...", searchTextField);
+          searchprompt.setForeground(Color.GRAY);
+        searchprompt.setHorizontalAlignment((int) LEFT_ALIGNMENT);
+        searchprompt.changeStyle(Font.BOLD+Font.ITALIC);
+       
+        
+         initializerowsorter();
+        jTable1.setRowSorter(rowSorter);
+        searchTextField.getDocument().addDocumentListener(new DocumentListener(){
+
+             @Override
+            public void insertUpdate(DocumentEvent e) {
+                String text = searchTextField.getText();
+
+                if (text.trim().length() == 0) {
+                    rowSorter.setRowFilter(null);
+                } else {
+                    rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + text));
+                }
+            }
+
+             @Override
+            public void removeUpdate(DocumentEvent e) {
+                String text = searchTextField.getText();
+
+                if (text.trim().length() == 0) {
+                    rowSorter.setRowFilter(null);
+                } else {
+                    rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + text));
+                }
+            }
+
+             @Override
+            public void changedUpdate(DocumentEvent e) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+             
+
+        });
+
+        
     }
+       
+           public void initializerowsorter() {
+        rowSorter = new TableRowSorter<TableModel>(jTable1.getModel());
+
+    }
+
       
      public void showall_members(){
         String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
@@ -163,8 +225,9 @@ public class Delete_Member extends javax.swing.JFrame {
                 String dateofjoin_rs=rs.getDate("DateofJoin").toString();
                 String timing_rs=rs.getString("ShiftCode");
                 String membership_start_date_rs=rs.getDate("ShiftStartDate").toString();
-                String membership_end_date_rs=rs.getString("ReginDate");
-                
+                String membership_end_date_rs = rs.getString("validityend");
+                String id_rs = rs.getString("Bank_Ifsc_Code");
+ 
                   try {
                      Blob blobdata=rs.getBlob("profilepic");
                      if (blobdata!=null) {
@@ -237,9 +300,13 @@ public class Delete_Member extends javax.swing.JFrame {
                  membership_start_TextField.setText(membership_start_date_rs);
                  membership_start_TextField.setEditable(false);
                  
-                 membership_end_TextField.setText(membership_end_date_rs);
+                 membership_end_TextField.setText(membership_end_date_rs.substring(0, 10));
                  membership_end_TextField.setEditable(false);
+                 
+                 id_TextField.setText(id_rs);
+                id_TextField.setEditable(false);
 
+                 
             }
              else{
                  System.out.println("No member found");
@@ -307,8 +374,7 @@ public class Delete_Member extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
-        jTextField1 = new javax.swing.JTextField();
-        jButton2 = new javax.swing.JButton();
+        searchTextField = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jLabel10 = new javax.swing.JLabel();
@@ -361,8 +427,6 @@ public class Delete_Member extends javax.swing.JFrame {
             }
         });
 
-        jButton2.setIcon(new javax.swing.ImageIcon("C:\\Users\\DELL\\Downloads\\search.png")); // NOI18N
-
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -396,9 +460,7 @@ public class Delete_Member extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(searchTextField))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 431, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -412,12 +474,10 @@ public class Delete_Member extends javax.swing.JFrame {
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jButton1)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jButton2))
+                .addGap(15, 15, 15)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1)
+                    .addComponent(searchTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel10)
@@ -793,7 +853,6 @@ public class Delete_Member extends javax.swing.JFrame {
     private javax.swing.JTextField id_TextField;
     private javax.swing.JLabel id_aadhar;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
@@ -804,7 +863,6 @@ public class Delete_Member extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JLabel memberscount_Label;
     private javax.swing.JTextField membership_end_TextField;
     private javax.swing.JLabel membership_id;
@@ -815,6 +873,7 @@ public class Delete_Member extends javax.swing.JFrame {
     private javax.swing.JLabel name;
     private javax.swing.JTextField name_TextField;
     private javax.swing.JLabel profilepic;
+    private javax.swing.JTextField searchTextField;
     private javax.swing.JComboBox<String> timimg_ComboBox;
     private javax.swing.JButton view_Button;
     // End of variables declaration//GEN-END:variables

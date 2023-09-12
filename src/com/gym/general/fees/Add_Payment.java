@@ -7,6 +7,7 @@
 
 package com.gym.general.fees;
 import com.formdev.flatlaf.FlatIntelliJLaf;
+import com.raven.datechooser.DateChooser;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Frame;
@@ -79,7 +80,7 @@ public class Add_Payment extends javax.swing.JFrame {
      String datenow;
      int paymentid=0;
      
-    
+    private  DateChooser paymentdate;
      
     public Add_Payment() {
         FlatIntelliJLaf.registerCustomDefaultsSource("Flatlab.propeties");
@@ -87,6 +88,10 @@ public class Add_Payment extends javax.swing.JFrame {
         //total_member_count();
         this.setResizable(false);
         this.setTitle("Add Payment");
+               paymentdate=new DateChooser();
+         paymentdate.setDateFormat(new SimpleDateFormat("dd/MM/YYYY"));
+  
+        
         initComponents();
         
         
@@ -95,19 +100,19 @@ public class Add_Payment extends javax.swing.JFrame {
         memberid_prompt.setForeground(Color.GRAY);
         memberid_prompt.setHorizontalAlignment((int) LEFT_ALIGNMENT);
         memberid_prompt.changeStyle(Font.BOLD+Font.ITALIC);
-        memberid_prompt.setShowPromptOnce(true);
+        
         
         membername_prompt=new TextPrompt("Enter Name to Start Searching", membername_TextField);
         membername_prompt.setForeground(Color.GRAY);
         membername_prompt.setHorizontalAlignment((int) LEFT_ALIGNMENT);
         membername_prompt.changeStyle(Font.BOLD+Font.ITALIC);
-        membername_prompt.setShowPromptOnce(true);
+        
         
         mobileno_prompt=new TextPrompt("Enter Mobile No to Start Searching", mobileno_TextField);
         mobileno_prompt.setForeground(Color.GRAY);
         mobileno_prompt.setHorizontalAlignment((int) LEFT_ALIGNMENT);
         mobileno_prompt.changeStyle(Font.BOLD+Font.ITALIC);
-        mobileno_prompt.setShowPromptOnce(true);
+        
         
         member_id_TextField.setEditable(true);
         dateofjoin_TextField.setEditable(false);
@@ -125,12 +130,12 @@ public class Add_Payment extends javax.swing.JFrame {
         idSearchComboBox.setVisible(false);
         mobilenoSearchComboBox.setVisible(false);
         
-          DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/YYYY ");  
+          DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/YYYY");  
             LocalDateTime now = LocalDateTime.now();  
              datenow=dtf.format(now);
             System.out.println(dtf.format(now)); 
             paymentdate_TextField.setText(datenow);
-            paymentdate_TextField.setEditable(false);
+            paymentdate_TextField.setEditable(true);
             
             pendingamount_TextField.setEditable(false);
           
@@ -531,6 +536,7 @@ public class Add_Payment extends javax.swing.JFrame {
             
         } catch (Exception e) {
             e.printStackTrace();
+            
         }
     }
 
@@ -540,12 +546,42 @@ public class Add_Payment extends javax.swing.JFrame {
       
       public void calculate_fees(){
       String text=duration_TextField.getText();
+      
       for(int i=0;i<text.length();i++){
           if(duration_TextField.getText().length()>0 && Character.toString(text.charAt(i)).matches("^[0-9]+$")){
           System.out.println("calculate fee method");
           
           int dur=Integer.parseInt(duration_TextField.getText());
-           totalamount=1200*dur;//to fetch from DB
+          
+          String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
+        String username = "sa";
+        String password = "Dhaval@7869";
+      
+        String query="select * from dbo.fees where duration="+dur;
+              try {
+                   con=DriverManager.getConnection(url,username,password);
+                    pst=con.prepareStatement(query);
+                    ResultSet rs=pst.executeQuery();
+                    
+                    if (rs.next()) {
+                        totalamount=rs.getInt("Amount");
+                      
+                  }else{
+                        JOptionPane.showMessageDialog(new JFrame(), "Fees Value Does Not Exist");
+                        totalfee_TextField.setEditable(true);
+                        totalfee_TextField.setText("");
+                        duration_TextField.setText("");
+                    }
+                  
+              } catch (Exception e) {
+                     JOptionPane.showMessageDialog(new JFrame(), "SEARCH ERROR");
+                     e.printStackTrace();
+                  
+              }
+        
+          
+          
+           //totalamount=1200*dur;//to fetch from DB
           totalfee_TextField.setText(String.valueOf(totalamount));
           totalfee_TextField.setEditable(false);
           
@@ -567,6 +603,9 @@ public class Add_Payment extends javax.swing.JFrame {
           }
         else{
             duration_TextField.setText("");
+            totalfee_TextField.setEditable(true);
+            totalfee_TextField.setText("");
+            totalfee_TextField.setEditable(false);
         }
         
         
@@ -831,13 +870,15 @@ public class Add_Payment extends javax.swing.JFrame {
 
  
       public boolean check_numericfields(String text,String fieldname){
-        text=text.replaceAll("\\s", "");
+        
           boolean res=true;
         if (text.isEmpty()) {
             JOptionPane.showMessageDialog(new JFrame(), fieldname+" Field is Empty", fieldname+" Field Error",JOptionPane.ERROR_MESSAGE);
             res=false;
         }
-        else if(text.length()>0)
+        else if(text.length()>0){
+            text=text.replaceAll("\\s", "");
+            text=text.replace("-", "");
             for(int i=0;i<text.length();i++){
                 if (Character.toString(text.charAt(i)).matches("^[0-9]+$")) {
                     
@@ -848,7 +889,7 @@ public class Add_Payment extends javax.swing.JFrame {
                     break;
                 }
             }
-        
+        }
         return res;
     }
     
@@ -1184,6 +1225,7 @@ public class Add_Payment extends javax.swing.JFrame {
         jLabel16.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         jLabel16.setText("DATE");
 
+        paymentdate.setTextField(paymentdate_TextField);
         paymentdate_TextField.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 paymentdate_TextFieldFocusLost(evt);
@@ -1418,8 +1460,12 @@ public class Add_Payment extends javax.swing.JFrame {
         boolean checkid=check_numericfields(member_id_TextField.getText(),"Member Id");
         boolean durationcheck=check_numericfields(duration_TextField.getText(),"Duration");
         boolean currentpaymentcheck=check_numericfields(current_payment_TextField.getText(),"Current Payment");
+        boolean dateofjoining=check_numericfields(dateofjoin_TextField.getText(), "Date of Join");
+        boolean mem_start_date_check=check_numericfields(mem_start_date_TextField.getText(), "Membership Start Date");
+        boolean mem_end_date_check=check_numericfields(mem_end_date_TextField.getText(), "Membership End Date");
         
-        boolean[] checkallfield_forpayments={checkname,checkid,durationcheck,currentpaymentcheck};
+        
+        boolean[] checkallfield_forpayments={checkname,checkid,durationcheck,currentpaymentcheck,dateofjoining,mem_start_date_check,mem_end_date_check};
          boolean check_constraints=checkallfields(checkallfield_forpayments);
        
         if (check_constraints==true) {
@@ -1660,13 +1706,19 @@ public class Add_Payment extends javax.swing.JFrame {
 
     private void duration_TextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_duration_TextFieldKeyReleased
         // TODO add your handling code here:
-            boolean check=check_numericfields(duration_TextField.getText(),"Duration");
+            String text=duration_TextField.getText();
+           
+                for (int i = 0; i < text.length(); i++) {
+                    if (Character.toString(text.charAt(i)).matches("^[0-9]+$")) {
+                        calculate_fees();
+                    }else{
+                    JOptionPane.showMessageDialog(new JFrame(), " Field contains Alphabetic or Invalid value", "Duration Field Error",JOptionPane.ERROR_MESSAGE);
+                    duration_TextField.setText("");
+                }
+                }
             
-            if (check=false) {
-            duration_TextField.setText("");
-        }else{
-            calculate_fees();
-            }
+                    
+            
                     
     }//GEN-LAST:event_duration_TextFieldKeyReleased
 

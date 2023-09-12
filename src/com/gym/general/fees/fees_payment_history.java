@@ -5,6 +5,7 @@
 package com.gym.general.fees;
 
 import com.formdev.flatlaf.FlatIntelliJLaf;
+import com.raven.datechooser.DateChooser;
 import java.awt.Color;
 import static java.awt.Component.LEFT_ALIGNMENT;
 import java.awt.Font;
@@ -13,6 +14,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.DriverManager;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -42,17 +44,22 @@ public class fees_payment_history extends javax.swing.JFrame {
      TextPrompt membername_prompt;
      TextPrompt mobileno_prompt;
      private TableRowSorter<TableModel> rowSorter;
+     
+     private  DateChooser paymentdate;
       
     public fees_payment_history() {
          FlatIntelliJLaf.registerCustomDefaultsSource("Flatlab.propeties");
          FlatIntelliJLaf.setup();
+         
+         paymentdate=new DateChooser();
+         paymentdate.setDateFormat(new SimpleDateFormat("dd/MM/YYYY"));
   
         initComponents();
         show_payment_history();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setResizable(false);
         
-        memberid_prompt=new TextPrompt("Enter Member ID to Search", member_id_no_search_TextField);
+        memberid_prompt=new TextPrompt("Enter ID to Search", member_id_no_search_TextField);
         memberid_prompt.setForeground(Color.GRAY);
         memberid_prompt.setHorizontalAlignment((int) LEFT_ALIGNMENT);
         memberid_prompt.changeStyle(Font.BOLD+Font.ITALIC);
@@ -104,6 +111,40 @@ public class fees_payment_history extends javax.swing.JFrame {
 
         });
     
+       dateTextField.getDocument().addDocumentListener(new DocumentListener(){
+
+             @Override
+            public void insertUpdate(DocumentEvent e) {
+                String text = dateTextField.getText();
+
+                if (text.trim().length() == 0) {
+                    rowSorter.setRowFilter(null);
+                } else {
+                    rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + text));
+                }
+            }
+
+             @Override
+            public void removeUpdate(DocumentEvent e) {
+                String text = dateTextField.getText();
+
+                if (text.trim().length() == 0) {
+                    rowSorter.setRowFilter(null);
+                } else {
+                    rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + text));
+                }
+            }
+
+             @Override
+            public void changedUpdate(DocumentEvent e) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+             
+
+        });
+    
+        
         member_id_no_search_TextField.getDocument().addDocumentListener(new DocumentListener(){
 
              @Override
@@ -188,10 +229,11 @@ public class fees_payment_history extends javax.swing.JFrame {
         name_search_TextField = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        search_Button = new javax.swing.JButton();
         refershButton = new javax.swing.JButton();
         mobile_no_search_TextField = new javax.swing.JTextField();
         member_id_no_search_TextField = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        dateTextField = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -226,13 +268,6 @@ public class fees_payment_history extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(jTable1);
 
-        search_Button.setIcon(new javax.swing.ImageIcon("C:\\Users\\DELL\\Downloads\\search.png")); // NOI18N
-        search_Button.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                search_ButtonActionPerformed(evt);
-            }
-        });
-
         refershButton.setText("Refresh");
         refershButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -252,6 +287,10 @@ public class fees_payment_history extends javax.swing.JFrame {
             }
         });
 
+        jLabel2.setText("Search By Date");
+
+        paymentdate.setTextField(dateTextField);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -263,14 +302,16 @@ public class fees_payment_history extends javax.swing.JFrame {
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 896, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap())
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(name_search_TextField)
+                        .addComponent(name_search_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(mobile_no_search_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(mobile_no_search_TextField)
                         .addGap(18, 18, 18)
-                        .addComponent(member_id_no_search_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(member_id_no_search_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(search_Button, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
+                        .addComponent(jLabel2)
+                        .addGap(11, 11, 11)
+                        .addComponent(dateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(12, 12, 12)
                         .addComponent(refershButton)
                         .addGap(20, 20, 20))))
         );
@@ -279,14 +320,16 @@ public class fees_payment_history extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(refershButton)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(refershButton)
+                        .addComponent(dateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(1, 1, 1)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(name_search_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(mobile_no_search_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(member_id_no_search_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(search_Button))
+                            .addComponent(member_id_no_search_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2))))
                 .addGap(16, 16, 16)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -323,41 +366,13 @@ public class fees_payment_history extends javax.swing.JFrame {
         show_payment_history();
     }//GEN-LAST:event_refershButtonActionPerformed
 
-    private void mobile_no_search_TextFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_mobile_no_search_TextFieldFocusGained
-        // TODO add your handling code here:
-    }//GEN-LAST:event_mobile_no_search_TextFieldFocusGained
-
     private void member_id_no_search_TextFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_member_id_no_search_TextFieldFocusGained
         // TODO add your handling code here:
     }//GEN-LAST:event_member_id_no_search_TextFieldFocusGained
 
-    private void search_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_search_ButtonActionPerformed
-       String nameSearch = name_search_TextField.getText();
-    String mobileSearch = mobile_no_search_TextField.getText();
-    String memberIdSearch = member_id_no_search_TextField.getText();
-
-    DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-    
-     int rowCount = model.getRowCount();
-    for (int i = rowCount - 1; i >= 0; i--) {
-        String name = model.getValueAt(i, 3).toString(); 
-        String mobile = model.getValueAt(i, 2).toString(); 
-        String memberId = model.getValueAt(i, 3).toString(); 
-
-        if (!name.toLowerCase().contains(nameSearch.toLowerCase()) ||
-            !mobile.toLowerCase().contains(mobileSearch.toLowerCase()) ||
-            !memberId.toLowerCase().contains(memberIdSearch.toLowerCase())) {
-            model.removeRow(i);
-        }
-    }
-
-
-
-
-
-
-
-    }//GEN-LAST:event_search_ButtonActionPerformed
+    private void mobile_no_search_TextFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_mobile_no_search_TextFieldFocusGained
+        // TODO add your handling code here:
+    }//GEN-LAST:event_mobile_no_search_TextFieldFocusGained
 
     public void show_payment_history(){
         
@@ -421,7 +436,9 @@ public class fees_payment_history extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField dateTextField;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
@@ -429,6 +446,5 @@ public class fees_payment_history extends javax.swing.JFrame {
     private javax.swing.JTextField mobile_no_search_TextField;
     private javax.swing.JTextField name_search_TextField;
     private javax.swing.JButton refershButton;
-    private javax.swing.JButton search_Button;
     // End of variables declaration//GEN-END:variables
 }

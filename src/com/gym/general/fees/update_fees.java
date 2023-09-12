@@ -7,7 +7,7 @@
 
 package com.gym.general.fees;
 import com.formdev.flatlaf.FlatIntelliJLaf;
-import com.gym.general.fees.Fee_Detail;
+import com.gym.general.fees.Fee_Details;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -31,12 +31,81 @@ public class update_fees extends javax.swing.JFrame {
         initComponents();
         this.setResizable(false);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        feeidTextField.setEditable(false);
+        feeidTextField.setFocusable(false);
+        oldamountTextField.setEditable(false);
+        durationTextField.setEditable(false);
+        
+        //get_fee_details();
+        newamountTextField.requestFocusInWindow();
+        
+    }
+    
+    
+    public void set_fee_id(int fee_id){
+        feeidTextField.setText(String.valueOf(fee_id));
+    }
+    
+    public void update_fee_value(){
+            String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
+        String username = "sa";
+        String password = "Dhaval@7869";
+        String query="UPDATE [dbo].[fees]\n" +
+"   SET \n" +
+"      [Amount] = ?\n" +
+" WHERE feeID=?";
+        int newamount=Integer.valueOf(newamountTextField.getText());
+        int feeid=Integer.valueOf(feeidTextField.getText());
+        try {
+            con=DriverManager.getConnection(url, username, password);
+            pst=con.prepareStatement(query);
+            pst.setInt(1,newamount );
+            pst.setInt(2, feeid);
+            int count=pst.executeUpdate();
+            if (count>0) {
+                System.out.println("Success");
+                JOptionPane.showMessageDialog(new JFrame(), "Fee Values Updated Successfulyy");
+                dispose();
+                
+            }
+        } catch (Exception e) {
+                e.printStackTrace();
+            JOptionPane.showMessageDialog(new JFrame(), "SQL Exception:Error While Fetching Fee Values");
+        
+        }
+      
+    }
+    
+    public void get_fee_details(){
+        System.out.println("Fee Id Value"+feeidTextField.getText());
+        int feeid=Integer.valueOf(feeidTextField.getText());
+            String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
+        String username = "sa";
+        String password = "Dhaval@7869";
+        String query="select * from dbo.fees where feeId="+feeid;
+      
+        try {
+            con=DriverManager.getConnection(url,username,password);
+            st=con.createStatement();
+            rs=st.executeQuery(query);
+            while (rs.next()) {
+                durationTextField.setText(String.valueOf(rs.getInt("Duration")));
+                oldamountTextField.setText(String.valueOf(rs.getInt("Amount")));
+                
+            }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(new JFrame(), "SQL Exception:Error While Fetching Fee Values");
+        
+        }
         
     }
     
     public void clear(){
-       amount_TextField.setText("");
-       duration_TextField.setText("");
+       oldamountTextField.setText("");
+       newamountTextField.setText("");
+       durationTextField.setText("");
    
    }
     
@@ -82,30 +151,7 @@ public class update_fees extends javax.swing.JFrame {
   
     
     
-public void get_fees_details(){
-    String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username = "sa";
-        String password = "Dhaval@7869";
-        //String query=""
-        
-        try {
-            con=DriverManager.getConnection(url, username, password);
-            
-        
-    } catch (Exception e) {
-    }
-    
-}
-    
-    public void update_fees(){
-    String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username = "sa";
-        String password = "Dhaval@7869";
-      
-      // String query="select feeid as FEE_ID,duaration as DURATION,amount as AMOUNT from dbo.fees";
-         
-    
-    }
+  
     
     
 
@@ -114,120 +160,21 @@ public void get_fees_details(){
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        amount_TextField = new javax.swing.JTextField();
-        fee_id_TextField = new javax.swing.JTextField();
-        duration_TextField = new javax.swing.JTextField();
-        updateButton = new javax.swing.JButton();
-        clearButton = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        newamountTextField = new javax.swing.JTextField();
+        oldamountTextField = new javax.swing.JTextField();
+        durationTextField = new javax.swing.JTextField();
+        feeidTextField = new javax.swing.JTextField();
+        updateButton = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(290, 240));
-
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
-        jLabel2.setText("FEE ID");
-
-        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
-        jLabel3.setText("DURATION");
-
-        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
-        jLabel4.setText("AMOUNT");
-
-        amount_TextField.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                amount_TextFieldKeyReleased(evt);
-            }
-        });
-
-        fee_id_TextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                fee_id_TextFieldActionPerformed(evt);
-            }
-        });
-
-        duration_TextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                duration_TextFieldActionPerformed(evt);
-            }
-        });
-        duration_TextField.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                duration_TextFieldKeyReleased(evt);
-            }
-        });
-
-        updateButton.setText("UPDATE");
-        updateButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                updateButtonActionPerformed(evt);
-            }
-        });
-
-        clearButton.setText("CLEAR");
-        clearButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                clearButtonActionPerformed(evt);
-            }
-        });
-
-        jButton3.setText("CANCEL");
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel4)
-                        .addGap(28, 28, 28)
-                        .addComponent(amount_TextField))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel2))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(fee_id_TextField)
-                            .addComponent(duration_TextField)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(updateButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(clearButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton3)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(fee_id_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel3)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(duration_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(amount_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel4))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(updateButton)
-                    .addComponent(clearButton)
-                    .addComponent(jButton3))
-                .addContainerGap())
-        );
+        setPreferredSize(new java.awt.Dimension(310, 310));
 
         jLabel1.setBackground(new java.awt.Color(32, 161, 93));
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
@@ -236,97 +183,144 @@ public void get_fees_details(){
         jLabel1.setText("UPDATE FESS");
         jLabel1.setOpaque(true);
 
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel5.setText("FEE ID");
+
+        jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel6.setText("Duration (Months)");
+
+        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel7.setText("Old Amount");
+
+        jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel8.setText("New Amount");
+
+        newamountTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                newamountTextFieldKeyReleased(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel6))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(durationTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE)
+                            .addComponent(feeidTextField)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel7)
+                            .addComponent(jLabel8))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(newamountTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE)
+                            .addComponent(oldamountTextField))))
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(feeidTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(durationTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7)
+                    .addComponent(oldamountTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8)
+                    .addComponent(newamountTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(28, Short.MAX_VALUE))
+        );
+
+        updateButton.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
+        updateButton.setText("Update");
+        updateButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                updateButtonActionPerformed(evt);
+            }
+        });
+
+        jButton2.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
+        jButton2.setText("Close");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 294, Short.MAX_VALUE)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addContainerGap()))
+            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jButton2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(updateButton)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 214, Short.MAX_VALUE))
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                    .addContainerGap(67, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap()))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(25, 25, 25)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(updateButton)
+                    .addComponent(jButton2))
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void fee_id_TextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fee_id_TextFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_fee_id_TextFieldActionPerformed
-
-    private void duration_TextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_duration_TextFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_duration_TextFieldActionPerformed
-
     private void updateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateButtonActionPerformed
         // TODO add your handling code here:
-        boolean checkdur=check_numericfields(duration_TextField.getText(),"Dration");
-         boolean checkamount=check_numericfields(amount_TextField.getText(),"Amount");
-         System.out.println(checkdur);
-         System.out.println(checkamount);
-        boolean[] fields={checkdur,checkamount};
-        boolean finalres=checkallfields(fields);
-         if (finalres==true) {
-            update_fees();
-        }
-         else{
-             JOptionPane.showMessageDialog(new JFrame(), "Constraint Error");
-         }
-    }//GEN-LAST:event_updateButtonActionPerformed
-
-    private void duration_TextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_duration_TextFieldKeyReleased
-        // TODO add your handling code here:
-        
-                        String text=String.valueOf(duration_TextField.getText());
-      for(int i=0;i<text.length();i++){
-         
-        if (duration_TextField.getText().length()>0 && Character.toString(text.charAt(i)).matches("^[0-9]+$")) {
-            
-        }else{
-             JOptionPane.showMessageDialog(new JFrame(), "Only Digits Allowed","Hieght Field Error",JOptionPane.ERROR_MESSAGE);
-                     System.out.println("Contains Alphabet");
-                   duration_TextField.setText(null);
-        }
- 
-        
-    }
-    }//GEN-LAST:event_duration_TextFieldKeyReleased
-
-    private void amount_TextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_amount_TextFieldKeyReleased
-        // TODO add your handling code here:
-                        String text=String.valueOf(amount_TextField.getText());
-      for(int i=0;i<text.length();i++){
-        
-          
-        if (amount_TextField.getText().length()>0 && Character.toString(text.charAt(i)).matches("^[0-9]+$")) {
+        boolean checknewamount=check_numericfields(newamountTextField.getText(), "New Amount TextField");
+        boolean[] fields={checknewamount};
+        boolean checkall=checkallfields(fields);
+        if (checkall==true) {
+            update_fee_value();
             
         }
         else{
-             JOptionPane.showMessageDialog(new JFrame(), "Only Digits Allowed","Hieght Field Error",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(new JFrame(), "Fields are Empty or Invalid");
+        }
+    }//GEN-LAST:event_updateButtonActionPerformed
+
+    private void newamountTextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_newamountTextFieldKeyReleased
+        // TODO add your handling code here:
+               String text=String.valueOf(newamountTextField.getText());
+      for(int i=0;i<text.length();i++){
+         
+        if (newamountTextField.getText().length()>0 && Character.toString(text.charAt(i)).matches("^[0-9]+$")) {
+            
+        }else{
+             JOptionPane.showMessageDialog(new JFrame(), "Only Digits Allowed","New Amount Field Error",JOptionPane.ERROR_MESSAGE);
                      System.out.println("Contains Alphabet");
-                   amount_TextField.setText(null);
+                   newamountTextField.setText(null);
         }
  
         
     }
-    }//GEN-LAST:event_amount_TextFieldKeyReleased
-
-    private void clearButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearButtonActionPerformed
-        // TODO add your handling code here:
-        clear();
-    }//GEN-LAST:event_clearButtonActionPerformed
+    }//GEN-LAST:event_newamountTextFieldKeyReleased
 
     /**
      * @param args the command line arguments
@@ -364,16 +358,17 @@ public void get_fees_details(){
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextField amount_TextField;
-    private javax.swing.JButton clearButton;
-    private javax.swing.JTextField duration_TextField;
-    private javax.swing.JTextField fee_id_TextField;
-    private javax.swing.JButton jButton3;
+    private javax.swing.JTextField durationTextField;
+    private javax.swing.JTextField feeidTextField;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JTextField newamountTextField;
+    private javax.swing.JTextField oldamountTextField;
     private javax.swing.JButton updateButton;
     // End of variables declaration//GEN-END:variables
 }

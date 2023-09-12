@@ -76,6 +76,8 @@ public class inquiry_form extends javax.swing.JFrame {
               if (count>0) {
                   System.out.println("success");
                   JOptionPane.showMessageDialog(new JFrame(), "Inquiry Added Successfully");
+                  reset();
+                  get_inquiry_id();
               } else {
                   System.out.println("failure");
                   JOptionPane.showMessageDialog(new JFrame(), "ERROR!:OPERATION FAILED");
@@ -92,7 +94,82 @@ public class inquiry_form extends javax.swing.JFrame {
     }
     
     
+     public boolean check_numericfields(String text,String fieldname){
+         boolean res=true;
+        if (text.isEmpty()) {
+            JOptionPane.showMessageDialog(new JFrame(), fieldname+" Field is Empty", fieldname+" Field Error",JOptionPane.ERROR_MESSAGE);
+            res=false;
+        }
+        else if(text.length()>0)
+            text=text.replaceAll("\\s", "");
+         text=text.replace("-", "");
+         
+            for(int i=0;i<text.length();i++){
+                if (Character.toString(text.charAt(i)).matches("^[0-9]+$")) {
+                    
+                }
+                else{
+                     JOptionPane.showMessageDialog(new JFrame(), fieldname+" Field contains Alphabetic value", fieldname+" Field Error",JOptionPane.ERROR_MESSAGE);
+                    res=false;
+                    break;
+                }
+            }
+        
+        return res;
+    }
+   
+     public boolean checkallfields(boolean [] fields){
+        boolean res=true;
+        
+        for(int i=0;i<fields.length;i++){
+                System.out.println(fields[i]);
+            if (fields[i]==false) {
+                res=false;
+                break;
+            }
+            else{
+                res=true;
+                
+            }
+        }
+        return res;
     
+    }
+      
+
+      public boolean check_alphabetic_fields(String text,String fieldname){
+         
+          boolean result=true;
+         if (text.isEmpty()) {
+            JOptionPane.showMessageDialog(new JFrame(), fieldname+" Field is Empty", fieldname+" Field Error",JOptionPane.ERROR_MESSAGE);
+            result=false;
+        }
+              
+        if(text.length()>0)
+            text=text.replaceAll("\\s", "");
+            for(int i=0;i<text.length();i++){
+                if (Character.toString(text.charAt(i)).matches("^[a-zA-Z]+$")) {
+                    
+                }
+                else{
+                    result=false;
+                    JOptionPane.showMessageDialog(new JFrame(), fieldname+" Field contains Numeric value", fieldname+" Field Error",JOptionPane.ERROR_MESSAGE);
+                    break;
+                }
+            }
+        
+        return result;
+    }
+    
+    
+    public void reset(){
+        dateTextField.setText("");
+        nameTextField.setText("");
+        mobilenoTextField.setText("");
+        addressTextField.setText("");
+        inquiryTextField.setText("");
+    }
+      
     public  void get_inquiry_id(){
             String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
            String username = "sa";
@@ -302,12 +379,34 @@ public class inquiry_form extends javax.swing.JFrame {
 
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
         // TODO add your handling code here:
-        add_inquiry();
+         boolean name=check_alphabetic_fields(nameTextField.getText(),"Name");
+        boolean checkmobno=check_numericfields(mobilenoTextField.getText(),"Mobile No");
+        boolean checkdate=check_numericfields(dateTextField.getText(),"Date");
+        
+        
+        boolean[] checkallfield_forinquiry={name,checkmobno,checkdate};
+         boolean check_constraints=checkallfields(checkallfield_forinquiry);
+         
+         System.out.println(check_constraints);
+         
+         if (check_constraints==true) {
+             
+             add_inquiry();
+        }
+         else{
+            System.out.println("Invalid Fields");
+            JOptionPane.showMessageDialog(new JFrame(), "Error:Fields are Empty or Invalid","Add Payment Error",JOptionPane.ERROR_MESSAGE);
+        }
+       
+        
+        
+        
     }//GEN-LAST:event_saveButtonActionPerformed
 
     private void nameTextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nameTextFieldKeyReleased
         // TODO add your handling code here:
         String text=nameTextField.getText();
+         text=text.replaceAll("\\s", "");
           int len=text.length();
             for (int i = 0; i < len; i++) {
                 if(Character.toString(text.charAt(i)).matches("^[a-zA-Z]+$")){
@@ -328,7 +427,8 @@ public class inquiry_form extends javax.swing.JFrame {
 
     private void mobilenoTextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_mobilenoTextFieldKeyReleased
         // TODO add your handling code here:
-                        String text=mobilenoTextField.getText();
+          String text=mobilenoTextField.getText();
+           text=text.replaceAll("\\s", "");
       for(int i=0;i<text.length();i++){
          
         if (mobilenoTextField.getText().length()>0 && Character.toString(text.charAt(i)).matches("^[0-9]+$")) {

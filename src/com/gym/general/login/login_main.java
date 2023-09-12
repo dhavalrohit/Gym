@@ -4,11 +4,14 @@
  */
 package com.gym.general.login;
 
+import com.gym.general.workout.added_workouts;
+import com.itextpdf.text.log.Logger;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
+import java.util.logging.FileHandler;
 import net.miginfocom.swing.MigLayout;
 import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTarget;
@@ -30,9 +33,22 @@ public class login_main extends javax.swing.JFrame{
     private final double loginSize = 60;
     private javax.swing.JLayeredPane bg;
     
+      java.util.logging.Logger logger=java.util.logging.Logger.getLogger(added_workouts.class.getName());
+      FileHandler fileHandler;
+    
+    
     public login_main() {
         initComponents();
         init();
+         try {
+           fileHandler  = new FileHandler("app.log", true);
+        } catch (Exception e) {
+        }
+       logger.addHandler(fileHandler);
+       
+       logger.info("Login Window Opened");
+        
+    
     }
 
     private void init() {
@@ -169,6 +185,7 @@ public class login_main extends javax.swing.JFrame{
                 login_main main=new login_main();
                 
                 main.setVisible(true);
+                
                 
             }
         });

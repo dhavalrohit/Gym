@@ -24,6 +24,8 @@ import javax.swing.event.DocumentListener;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import net.proteanit.sql.DbUtils;
+import java.util.logging.Logger;
+import java.util.logging.FileHandler;
 
 
 public class added_workouts extends javax.swing.JFrame {
@@ -36,15 +38,26 @@ public class added_workouts extends javax.swing.JFrame {
       TextPrompt exercisename;
       private TableRowSorter<TableModel> rowSorter;
     
+      Logger logger=Logger.getLogger(added_workouts.class.getName());
+      FileHandler fileHandler;
     
     public added_workouts() {
         FlatMacDarkLaf.registerCustomDefaultsSource("Flatlab.propeties");
         FlatMacDarkLaf.setup();
         
         initComponents();
-        show_all_workouts();
+        
+        try {
+           fileHandler  = new FileHandler("app.log", true);
+        } catch (Exception e) {
+        }
+       logger.addHandler(fileHandler);
+       
+        
         this.setResizable(false);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        
+        show_all_workouts();
         exercisename=new TextPrompt("Enter Exercise To Search", exercisenameTextField);
         exercisename.setForeground(Color.GRAY);
         exercisename.setHorizontalAlignment((int) LEFT_ALIGNMENT);
@@ -95,6 +108,7 @@ public class added_workouts extends javax.swing.JFrame {
   
     }
     
+    
      public void show_all_workouts(){
          String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
         String username = "sa";
@@ -103,15 +117,17 @@ public class added_workouts extends javax.swing.JFrame {
         
         
         try {
+            
             con=DriverManager.getConnection(url, username, password);
             st=con.createStatement();
             rs=st.executeQuery(query);
             
             jTable2.setModel(DbUtils.resultSetToTableModel(rs));
+            logger.info("Show all Workouts Method Run");
             
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(new JFrame(),"DATA FETCH ERROR","Inquiry History",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(new JFrame(),"DATA FETCH ERROR","Workout History",JOptionPane.ERROR_MESSAGE);
         
         }
         
@@ -204,6 +220,8 @@ public class added_workouts extends javax.swing.JFrame {
      */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
+        
+        
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
@@ -232,7 +250,11 @@ public class added_workouts extends javax.swing.JFrame {
                 new added_workouts().setVisible(true);
             }
         });
+        
+        
+        
     }
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField exercisenameTextField;

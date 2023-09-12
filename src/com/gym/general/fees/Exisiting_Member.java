@@ -82,19 +82,19 @@ public class Exisiting_Member extends javax.swing.JFrame {
         memberid_prompt.setForeground(Color.GRAY);
         memberid_prompt.setHorizontalAlignment((int) LEFT_ALIGNMENT);
         memberid_prompt.changeStyle(Font.BOLD + Font.ITALIC);
-        memberid_prompt.setShowPromptOnce(true);
+        
 
         membername_prompt = new TextPrompt("Enter Name to Start Searching", membername_TextField);
         membername_prompt.setForeground(Color.GRAY);
         membername_prompt.setHorizontalAlignment((int) LEFT_ALIGNMENT);
         membername_prompt.changeStyle(Font.BOLD + Font.ITALIC);
-        membername_prompt.setShowPromptOnce(true);
+        
 
         mobileno_prompt = new TextPrompt("Enter Mobile No to Start Searching", mobileno_TextField);
         mobileno_prompt.setForeground(Color.GRAY);
         mobileno_prompt.setHorizontalAlignment((int) LEFT_ALIGNMENT);
         mobileno_prompt.changeStyle(Font.BOLD + Font.ITALIC);
-        mobileno_prompt.setShowPromptOnce(true);
+        
 
         member_id_TextField.setEditable(true);
         dateofjoin_TextField.setEditable(false);
@@ -117,12 +117,14 @@ public class Exisiting_Member extends javax.swing.JFrame {
 
   public boolean check_numericfields(String text,String fieldname){
         boolean res=true;
-        text=text.replaceAll("\\s", "");
+       
         if (text.isEmpty()) {
             JOptionPane.showMessageDialog(new JFrame(), fieldname+" Field is Empty", fieldname+" Field Error",JOptionPane.ERROR_MESSAGE);
             res=false;
         }
-        else if(text.length()>0)
+        else if(text.length()>0){
+                text=text.replaceAll("\\s", "");
+            text=text.replace("-", "");
             for(int i=0;i<text.length();i++){
                 if (Character.toString(text.charAt(i)).matches("^[0-9]+$")) {
                     
@@ -133,7 +135,7 @@ public class Exisiting_Member extends javax.swing.JFrame {
                     break;
                 }
             }
-        
+        }
         return res;
     }
     
@@ -569,6 +571,36 @@ public class Exisiting_Member extends javax.swing.JFrame {
         System.out.println(duration_TextField.getText().toString());
 
     }
+    
+    public void reset(){
+    
+        membername_TextField.setEditable(true);
+        membername_TextField.setText("");
+        mem_start_date_TextField.setEditable(true);
+        mem_start_date_TextField.setText("");
+        mem_end_date_TextField.setEditable(true);
+        mem_end_date_TextField.setText("");
+        member_id_TextField.setEditable(true);
+        member_id_TextField.setText("");
+        dateofjoin_TextField.setEditable(true);
+        dateofjoin_TextField.setText("");
+        duration_TextField.setText("");
+        duration_TextField.setEditable(true);
+        totalfee_TextField.setEditable(true);
+        totalfee_TextField.setText("");
+        finalamount_TextField.setEditable(true);
+        finalamount_TextField.setText("");
+        finalamount_TextField.setEditable(false);
+        current_payment_TextField.setText("");
+        pendingamount_TextField.setText("");
+        mobileno_TextField.setEditable(true);
+        mobileno_TextField.setText("");
+        mem_renewed_start_date_TextField.setText("");
+        mem_renewed_end_date_TextField.setEditable(true);
+        mem_renewed_end_date_TextField.setText("");
+        mem_renewed_end_date_TextField.setEditable(false);
+        
+    }
 
     public void set_new_mem_dates() {
         String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
@@ -591,6 +623,8 @@ public class Exisiting_Member extends javax.swing.JFrame {
             if (count > 0) {
                 System.out.println(empid);
                 JOptionPane.showMessageDialog(new JFrame(), "MemberShip Date Updated");
+                reset();
+                
             }
 
         } catch (Exception e) {
@@ -661,6 +695,7 @@ public class Exisiting_Member extends javax.swing.JFrame {
 
             if (count > 0) {
                     System.out.println("success");
+                    JOptionPane.showMessageDialog(new JFrame(), "Payment Added Successfully");
                     try {
                     set_new_mem_dates();
                 } catch (Exception e) {
@@ -668,7 +703,7 @@ public class Exisiting_Member extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(new JFrame(), "DATE ERROR");
                 
                 }
-                    JOptionPane.showMessageDialog(new JFrame(), "Payment Added Successfully");
+                    
             } else {
                 System.out.println("failure");
                 JOptionPane.showMessageDialog(new JFrame(), "ERROR!:OPERATION FAILED");
@@ -1279,8 +1314,14 @@ public class Exisiting_Member extends javax.swing.JFrame {
         boolean checkid=check_numericfields(member_id_TextField.getText(),"Member Id");
         boolean durationcheck=check_numericfields(duration_TextField.getText(),"Duration");
         boolean currentpaymentcheck=check_numericfields(current_payment_TextField.getText(),"Current Payment");
+         boolean dateofjoining=check_numericfields(dateofjoin_TextField.getText(), "Date of Join");
+        boolean mem_start_date_check=check_numericfields(mem_start_date_TextField.getText(), "Membership Start Date");
+        boolean mem_end_date_check=check_numericfields(mem_end_date_TextField.getText(), "Membership End Date");
+        boolean renew_start_date=check_numericfields(mem_renewed_start_date_TextField.getText(), "Membership Renew Start Date");
+        boolean renew_end_date=check_numericfields(mem_renewed_end_date_TextField.getText(), "Membership Renew End Date");
+       
         
-        boolean[] checkallfield_forpayments={checkname,checkid,durationcheck,currentpaymentcheck};
+        boolean[] checkallfield_forpayments={checkname,checkid,durationcheck,currentpaymentcheck,dateofjoining,mem_start_date_check,mem_end_date_check,renew_start_date,renew_end_date};
          boolean check_constraints=checkallfields(checkallfield_forpayments);
        
         if (check_constraints==true) {
@@ -1296,32 +1337,7 @@ public class Exisiting_Member extends javax.swing.JFrame {
 
     private void reset_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reset_ButtonActionPerformed
         // TODO add your handling code here:
-        membername_TextField.setEditable(true);
-        membername_TextField.setText("");
-        mem_start_date_TextField.setEditable(true);
-        mem_start_date_TextField.setText("");
-        mem_end_date_TextField.setEditable(true);
-        mem_end_date_TextField.setText("");
-        member_id_TextField.setEditable(true);
-        member_id_TextField.setText("");
-        dateofjoin_TextField.setEditable(true);
-        dateofjoin_TextField.setText("");
-        duration_TextField.setText("");
-        duration_TextField.setEditable(true);
-        totalfee_TextField.setEditable(true);
-        totalfee_TextField.setText("");
-        finalamount_TextField.setEditable(true);
-        finalamount_TextField.setText("");
-        finalamount_TextField.setEditable(false);
-        current_payment_TextField.setText("");
-        pendingamount_TextField.setText("");
-        mobileno_TextField.setEditable(true);
-        mobileno_TextField.setText("");
-        mem_renewed_start_date_TextField.setText("");
-        mem_renewed_end_date_TextField.setEditable(true);
-        mem_renewed_end_date_TextField.setText("");
-        mem_renewed_end_date_TextField.setEditable(false);
-        
+       reset();
         
         
 
