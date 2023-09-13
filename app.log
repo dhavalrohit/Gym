@@ -104,3 +104,51 @@
   <message>Login Window Opened</message>
 </record>
 </log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2023-09-12T16:31:28.779585600Z</date>
+  <millis>1694536288779</millis>
+  <nanos>585600</nanos>
+  <sequence>0</sequence>
+  <logger>com.gym.general.workout.added_workouts</logger>
+  <level>INFO</level>
+  <class>com.gym.general.login.login_main</class>
+  <method>&lt;init&gt;</method>
+  <thread>18</thread>
+  <message>Login Window Opened</message>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2023-09-12T16:32:16.363144Z</date>
+  <millis>1694536336363</millis>
+  <nanos>144000</nanos>
+  <sequence>0</sequence>
+  <logger>com.gym.general.workout.added_workouts</logger>
+  <level>INFO</level>
+  <class>com.gym.general.login.login_main</class>
+  <method>&lt;init&gt;</method>
+  <thread>18</thread>
+  <message>Login Window Opened</message>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2023-09-13T06:04:50.140245400Z</date>
+  <millis>1694585090140</millis>
+  <nanos>245400</nanos>
+  <sequence>0</sequence>
+  <logger>com.gym.general.workout.added_workouts</logger>
+  <level>INFO</level>
+  <class>com.gym.general.workout.added_workouts</class>
+  <method>show_all_workouts</method>
+  <thread>18</thread>
+  <message>Show all Workouts Method Run</message>
+</record>
+</log>

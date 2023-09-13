@@ -117,9 +117,12 @@ public class Form_Home extends javax.swing.JPanel {
         /*String sql_query_join="select dbo.mst_employee.EmpName,dbo.mst_employee.Empcode, dbo.tran_machinerawpunch.cardno,\n" +
 "dbo.tran_machinerawpunch.punchdatetime from dbo.mst_employee \n" +
 "INNER JOIN dbo.tran_machinerawpunch on dbo.mst_employee.cardno=dbo.tran_machinerawpunch.cardno order by punchdatetime";*/
-       
-        String sql_query_join="select dbo.Mst_Employee.empname ,dbo.Tran_Attendance.empid,dbo.Tran_Attendance.DateOFFICE,dbo.Tran_Attendance.Punch1,dbo.Tran_Attendance.Punch2,dbo.Tran_Attendance.allpunchs from dbo.Mst_Employee\n" +
-"inner join dbo.Tran_Attendance on dbo.Mst_Employee.EmpId=dbo.Tran_Attendance.EmpId order by DateOFFICE";
+       /* String sql_query_join="select dbo.Mst_Employee.empname ,dbo.Tran_Attendance.empid,dbo.Tran_Attendance.DateOFFICE as Date,convert(char(5), dbo.Tran_Attendance.Punch1 , 108) [punch1] ,convert(char(5), dbo.Tran_Attendance.Punch2 , 108) [punch2],dbo.Tran_Attendance.allpunchs from dbo.Mst_Employee \n" +
+"inner join dbo.Tran_Attendance on dbo.Mst_Employee.EmpId=dbo.Tran_Attendance.EmpId where convert(varchar(10), DateOFFICE, 102) \n" +
+"    = convert(varchar(10), getdate(), 102) order by DateOFFICE";*/
+        String sql_query_join="select dbo.Mst_Employee.empname ,convert(date,dbo.Tran_Attendance.DateOFFICE,104)[Date],convert(char(5), dbo.Tran_Attendance.Punch1 , 108) [punch1] ,convert(char(5), dbo.Tran_Attendance.Punch2 , 108) [punch2],dbo.Tran_Attendance.allpunchs from dbo.Mst_Employee \n" +
+"inner join dbo.Tran_Attendance on dbo.Mst_Employee.EmpId=dbo.Tran_Attendance.EmpId where convert(varchar(10), DateOFFICE, 102) \n" +
+"    = convert(varchar(10), getdate(), 102) order by DateOFFICE";
         
         String url="jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
         String username="sa";
@@ -182,7 +185,8 @@ public class Form_Home extends javax.swing.JPanel {
     }    
       
   public void get_daily_attendance_count(){
-        String sql="select count(*) from dbo.tran_machinerawpunch where punchdatetime=getdate()";
+        String sql="select count(*) from dbo.Tran_Attendance where convert(varchar(10), DateOFFICE, 102) \n" +
+"    = convert(varchar(10), getdate(), 102)";
         String url="jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
         String username="sa";
         String password="Dhaval@7869";
@@ -195,7 +199,7 @@ public class Form_Home extends javax.swing.JPanel {
             while (rs.next()) {                
                 daily_attendance_count=rs.getInt(1);
             }
-            System.out.println(daily_attendance_count);
+            System.out.println("Daily Attendance count"+daily_attendance_count);
             //table1.setModel(DbUtils.resultSetToTableModel(rs));
             
             pst.close();
