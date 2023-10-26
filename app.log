@@ -152,3 +152,188 @@
   <message>Show all Workouts Method Run</message>
 </record>
 </log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2023-09-25T07:41:39.710541500Z</date>
+  <millis>1695627699710</millis>
+  <nanos>541500</nanos>
+  <sequence>0</sequence>
+  <logger>com.gym.general.workout.added_workouts</logger>
+  <level>INFO</level>
+  <class>com.gym.general.login.login_main</class>
+  <method>&lt;init&gt;</method>
+  <thread>18</thread>
+  <message>Login Window Opened</message>
+</record>
+<record>
+  <date>2023-09-25T07:41:54.008207900Z</date>
+  <millis>1695627714008</millis>
+  <nanos>207900</nanos>
+  <sequence>1</sequence>
+  <logger>com.gym.general.workout.added_workouts</logger>
+  <level>INFO</level>
+  <class>com.gym.general.login.PanelLoginAndRegister</class>
+  <method>check_access_type</method>
+  <thread>18</thread>
+  <message>Admin Logged In</message>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2023-09-25T08:00:44.780792800Z</date>
+  <millis>1695628844780</millis>
+  <nanos>792800</nanos>
+  <sequence>0</sequence>
+  <logger>com.gym.general.workout.added_workouts</logger>
+  <level>INFO</level>
+  <class>com.gym.general.workout.added_workouts</class>
+  <method>show_all_workouts</method>
+  <thread>18</thread>
+  <message>Show all Workouts Method Run</message>
+</record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2023-09-25T08:02:40.997480100Z</date>
+  <millis>1695628960997</millis>
+  <nanos>480100</nanos>
+  <sequence>0</sequence>
+  <logger>com.gym.general.workout.added_workouts</logger>
+  <level>INFO</level>
+  <class>com.gym.general.login.login_main</class>
+  <method>&lt;init&gt;</method>
+  <thread>18</thread>
+  <message>Login Window Opened</message>
+</record>
+</log>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2023-09-25T09:38:27.336673300Z</date>
+  <millis>1695634707336</millis>
+  <nanos>673300</nanos>
+  <sequence>0</sequence>
+  <logger>com.gym.general.workout.added_workouts</logger>
+  <level>INFO</level>
+  <class>com.gym.general.login.login_main</class>
+  <method>&lt;init&gt;</method>
+  <thread>18</thread>
+  <message>Login Window Opened</message>
+</record>
+<record>
+  <date>2023-09-25T09:38:42.060749200Z</date>
+  <millis>1695634722060</millis>
+  <nanos>749200</nanos>
+  <sequence>1</sequence>
+  <logger>com.gym.general.workout.added_workouts</logger>
+  <level>INFO</level>
+  <class>com.gym.general.login.PanelLoginAndRegister</class>
+  <method>check_access_type</method>
+  <thread>18</thread>
+  <message>Admin Logged In</message>
+</record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2023-10-06T05:25:52.820998100Z</date>
+  <millis>1696569952820</millis>
+  <nanos>998100</nanos>
+  <sequence>0</sequence>
+  <logger>com.gym.general.workout.added_workouts</logger>
+  <level>INFO</level>
+  <class>com.gym.general.workout.added_workouts</class>
+  <method>show_all_workouts</method>
+  <thread>18</thread>
+  <message>Show all Workouts Method Run</message>
+</record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2023-10-06T05:39:36.312433300Z</date>
+  <millis>1696570776312</millis>
+  <nanos>433300</nanos>
+  <sequence>0</sequence>
+  <logger>com.gym.general.workout.added_workouts</logger>
+  <level>INFO</level>
+  <class>com.gym.general.workout.added_workouts</class>
+  <method>show_all_workouts</method>
+  <thread>18</thread>
+  <message>Show all Workouts Method Run</message>
+</record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2023-10-06T05:54:12.338010200Z</date>
+  <millis>1696571652338</millis>
+  <nanos>10200</nanos>
+  <sequence>0</sequence>
+  <logger>com.gym.general.workout.added_workouts</logger>
+  <level>INFO</level>
+  <class>com.gym.general.login.login_main</class>
+  <method>&lt;init&gt;</method>
+  <thread>18</thread>
+  <message>Login Window Opened</message>
+</record>
+<record>
+  <date>2023-10-06T05:54:54.354822100Z</date>
+  <millis>1696571694354</millis>
+  <nanos>822100</nanos>
+  <sequence>1</sequence>
+  <logger>com.gym.general.workout.added_workouts</logger>
+  <level>INFO</level>
+  <class>com.gym.general.login.PanelLoginAndRegister</class>
+  <method>check_access_type</method>
+  <thread>18</thread>
+  <message>Admin Logged In</message>
+</record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2023-10-06T06:57:21.360811700Z</date>
+  <millis>1696575441360</millis>
+  <nanos>811700</nanos>
+  <sequence>0</sequence>
+  <logger>com.gym.general.workout.added_workouts</logger>
+  <level>INFO</level>
+  <class>com.gym.general.login.login_main</class>
+  <method>&lt;init&gt;</method>
+  <thread>18</thread>
+  <message>Login Window Opened</message>
+</record>
+<record>
+  <date>2023-10-06T07:01:50.614319300Z</date>
+  <millis>1696575710614</millis>
+  <nanos>319300</nanos>
+  <sequence>1</sequence>
+  <logger>com.gym.general.workout.added_workouts</logger>
+  <level>INFO</level>
+  <class>com.gym.general.login.PanelLoginAndRegister</class>
+  <method>check_access_type</method>
+  <thread>18</thread>
+  <message>Admin Logged In</message>
+</record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2023-10-13T09:22:52.123547200Z</date>
+  <millis>1697188972123</millis>
+  <nanos>547200</nanos>
+  <sequence>0</sequence>
+  <logger>com.gym.general.workout.added_workouts</logger>
+  <level>INFO</level>
+  <class>com.gym.general.workout.added_workouts</class>
+  <method>show_all_workouts</method>
+  <thread>18</thread>
+  <message>Show all Workouts Method Run</message>
+</record>

@@ -18,6 +18,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import net.proteanit.sql.DbUtils;
+import com.gym.connection.connection;
 
 
 public class Sms_Main extends javax.swing.JFrame {
@@ -41,15 +42,13 @@ public class Sms_Main extends javax.swing.JFrame {
 
     public void get_all_numbers(){
         try {
-             String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-            String username = "sa";
-            String password = "Dhaval@7869";
+            
             String query="select phoneno as Mobile_no from dbo.Mst_Employee";
             
             DefaultTableModel table1 = (DefaultTableModel)jTable1.getModel();
 		        	
             
-             con=DriverManager.getConnection(url, username, password);
+             con=connection.getConnection();
             pst=con.prepareStatement(query);
             rs=pst.executeQuery();
             String message=message_TextArea.getText();

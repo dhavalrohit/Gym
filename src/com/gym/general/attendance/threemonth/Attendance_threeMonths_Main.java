@@ -17,8 +17,11 @@ import com.gym.general.swing.icon.IconFontSwing;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 import java.sql.SQLException;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import net.miginfocom.swing.MigLayout;
 import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTarget;
@@ -33,14 +36,14 @@ public class Attendance_threeMonths_Main extends javax.swing.JFrame {
     private Animator animator;
     private static Attendance_threeMonths_Main main_obj;
     
-    public Attendance_threeMonths_Main() throws SQLException {
+    public Attendance_threeMonths_Main() throws SQLException, IOException {
         initComponents();
         init();
     }
     
   
 
-    private void init() throws SQLException {
+    private void init() throws SQLException, IOException {
         layout = new MigLayout("fill", "0[]0[100%, fill]0", "0[fill, top]0");
         bg.setLayout(layout);
         menu = new attendance_three_month_menu();
@@ -59,6 +62,9 @@ public class Attendance_threeMonths_Main extends javax.swing.JFrame {
                            
                         } catch (SQLException ex) {
                             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (IOException ex) {
+                            Logger.getLogger(Attendance_threeMonths_Main.class.getName()).log(Level.SEVERE, null, ex);
+                            JOptionPane.showMessageDialog(new JFrame(), "Connection File Error");
                         }
                     } else if (subMenuIndex == 1) {
                         main1.showForm(new Form1());
@@ -257,6 +263,9 @@ public class Attendance_threeMonths_Main extends javax.swing.JFrame {
                     main_obj=new Attendance_threeMonths_Main();
                 } catch (SQLException ex) {
                     java.util.logging.Logger.getLogger(Attendance_threeMonths_Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+                } catch (IOException ex) {
+                    Logger.getLogger(Attendance_threeMonths_Main.class.getName()).log(Level.SEVERE, null, ex);
+                    JOptionPane.showMessageDialog(new JFrame(), "Connection File Error");
                 }
                main_obj.setVisible(true);
                

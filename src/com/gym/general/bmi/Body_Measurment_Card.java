@@ -26,6 +26,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import com.gym.connection.connection;
 
 
 public class Body_Measurment_Card extends javax.swing.JFrame {
@@ -61,9 +62,7 @@ public class Body_Measurment_Card extends javax.swing.JFrame {
         memberidTextField.setEditable(true);
         nameTextField.setEditable(true);
         
-        String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username = "sa";
-        String password = "Dhaval@7869";
+        
       
         String membership_id_rs;
         String dateofjoin_rs;
@@ -75,7 +74,7 @@ public class Body_Measurment_Card extends javax.swing.JFrame {
         String query="select * from dbo.Mst_Employee where EmpName='"+mem_name+"'";
         
         try {
-             con=DriverManager.getConnection(url, username, password);
+             con=connection.getConnection();
              st=con.createStatement();
              rs=st.executeQuery(query);
              
@@ -114,13 +113,11 @@ public class Body_Measurment_Card extends javax.swing.JFrame {
     }
 
      public  void get_measurment_id(){
-            String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-           String username = "sa";
-           String password = "Dhaval@7869";
+           
            String query="select IDENT_CURRENT('bodymeasurment')";
 
         try {
-            con=DriverManager.getConnection(url, username, password);
+            con=connection.getConnection();
             st=con.createStatement();
             rs=st.executeQuery(query);
             if (rs.next()) {
@@ -201,9 +198,7 @@ public class Body_Measurment_Card extends javax.swing.JFrame {
          
          try {
              
-          String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-          String username = "sa";
-          String password = "Dhaval@7869";
+          
           
           String query="INSERT INTO [dbo].[BodyMeasurment]\n" +
 "           ([Member_ID]\n" +
@@ -235,7 +230,7 @@ public class Body_Measurment_Card extends javax.swing.JFrame {
 "     VALUES\n" +
 "           (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
           
-           con=DriverManager.getConnection(url, username, password);
+           con=connection.getConnection();
               pst=con.prepareStatement(query);
               pst.setString(1, mem_id);
               pst.setString(2, mem_name);
@@ -289,9 +284,7 @@ public class Body_Measurment_Card extends javax.swing.JFrame {
         memberidTextField.setEditable(true);
         nameTextField.setEditable(true);
         
-        String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username = "sa";
-        String password = "Dhaval@7869";
+        
       
         String membership_id_rs;
         String dateofjoin_rs;
@@ -303,7 +296,7 @@ public class Body_Measurment_Card extends javax.swing.JFrame {
         String query="select * from dbo.Mst_Employee where Empid='"+mem_id+"'";
         
         try {
-             con=DriverManager.getConnection(url, username, password);
+             con=connection.getConnection();
              st=con.createStatement();
              rs=st.executeQuery(query);
              
@@ -344,14 +337,12 @@ public class Body_Measurment_Card extends javax.swing.JFrame {
    
      private List<String> namesearchresult(String prefix) {
    
-          String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username = "sa";
-        String password = "Dhaval@7869";
+        
       
         List<String> list = new ArrayList<>();
     String query = "SELECT empname FROM dbo.mst_employee WHERE empname LIKE ?";
     try {
-       con=DriverManager.getConnection(url,username,password);
+       con=connection.getConnection();
         PreparedStatement pst = con.prepareStatement(query);
         pst.setString(1, prefix + "%");  
         ResultSet rs = pst.executeQuery();
@@ -381,14 +372,11 @@ public class Body_Measurment_Card extends javax.swing.JFrame {
     
     private List<String> idsearchresult(String prefix) {
    
-          String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username = "sa";
-        String password = "Dhaval@7869";
       
         List<String> list = new ArrayList<>();
     String query = "SELECT empid FROM dbo.mst_employee WHERE empid LIKE ?";
     try {
-       con=DriverManager.getConnection(url,username,password);
+       con=connection.getConnection();
         PreparedStatement pst = con.prepareStatement(query);
         pst.setString(1, prefix + "%");  
         ResultSet rs = pst.executeQuery();
@@ -1172,6 +1160,7 @@ public class Body_Measurment_Card extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_printrecieptButtonActionPerformed
 
+    
     private void generaterecieptButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generaterecieptButtonActionPerformed
         // TODO add your handling code here:
         jt.setVisible(true);

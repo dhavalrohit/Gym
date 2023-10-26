@@ -15,6 +15,7 @@ import java.sql.Statement;
 import java.sql.DriverManager;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import com.gym.connection.connection;
 
 public class update_fees extends javax.swing.JFrame {
 
@@ -23,6 +24,8 @@ public class update_fees extends javax.swing.JFrame {
       Statement st=null;
       PreparedStatement pst=null;
      
+      Fee_Details fee=new Fee_Details();
+      
     
     public update_fees() {
          FlatIntelliJLaf.registerCustomDefaultsSource("Flatlab.propeties");
@@ -47,9 +50,7 @@ public class update_fees extends javax.swing.JFrame {
     }
     
     public void update_fee_value(){
-            String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username = "sa";
-        String password = "Dhaval@7869";
+        
         String query="UPDATE [dbo].[fees]\n" +
 "   SET \n" +
 "      [Amount] = ?\n" +
@@ -57,15 +58,25 @@ public class update_fees extends javax.swing.JFrame {
         int newamount=Integer.valueOf(newamountTextField.getText());
         int feeid=Integer.valueOf(feeidTextField.getText());
         try {
-            con=DriverManager.getConnection(url, username, password);
+            con=connection.getConnection();
             pst=con.prepareStatement(query);
             pst.setInt(1,newamount );
             pst.setInt(2, feeid);
             int count=pst.executeUpdate();
             if (count>0) {
                 System.out.println("Success");
-                JOptionPane.showMessageDialog(new JFrame(), "Fee Values Updated Successfulyy");
+                JOptionPane.showMessageDialog(new JFrame(), "Fee Values Updated Successfully");
+                
+                
+                fee.refersh();
+                fee.view_added_fees();
+             
+                Thread.sleep(500);
+                
                 dispose();
+                
+                
+                
                 
             }
         } catch (Exception e) {
@@ -79,18 +90,18 @@ public class update_fees extends javax.swing.JFrame {
     public void get_fee_details(){
         System.out.println("Fee Id Value"+feeidTextField.getText());
         int feeid=Integer.valueOf(feeidTextField.getText());
-            String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username = "sa";
-        String password = "Dhaval@7869";
+        
         String query="select * from dbo.fees where feeId="+feeid;
       
         try {
-            con=DriverManager.getConnection(url,username,password);
+            con=connection.getConnection();
             st=con.createStatement();
             rs=st.executeQuery(query);
             while (rs.next()) {
                 durationTextField.setText(String.valueOf(rs.getInt("Duration")));
+                System.out.println(String.valueOf(rs.getInt("Duration")));
                 oldamountTextField.setText(String.valueOf(rs.getInt("Amount")));
+                System.out.println(String.valueOf(rs.getInt("Amount")));
                 
             }
             
@@ -248,16 +259,27 @@ public class update_fees extends javax.swing.JFrame {
                 .addContainerGap(28, Short.MAX_VALUE))
         );
 
+        updateButton.setBackground(new java.awt.Color(32, 161, 93));
         updateButton.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
-        updateButton.setText("Update");
+        updateButton.setForeground(new java.awt.Color(255, 255, 255));
+        updateButton.setText("UPDATE");
+        updateButton.setBorderPainted(false);
         updateButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 updateButtonActionPerformed(evt);
             }
         });
 
+        jButton2.setBackground(new java.awt.Color(32, 161, 93));
         jButton2.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
-        jButton2.setText("Close");
+        jButton2.setForeground(new java.awt.Color(255, 255, 255));
+        jButton2.setText("CLOSE");
+        jButton2.setBorderPainted(false);
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -321,6 +343,10 @@ public class update_fees extends javax.swing.JFrame {
         
     }
     }//GEN-LAST:event_newamountTextFieldKeyReleased
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments

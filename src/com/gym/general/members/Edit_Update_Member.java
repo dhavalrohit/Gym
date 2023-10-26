@@ -37,6 +37,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
+import com.gym.connection.connection;
 
 /**
  *
@@ -134,13 +135,11 @@ public class Edit_Update_Member extends javax.swing.JFrame {
 
     public void total_member_count() {
 
-        String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username = "sa";
-        String password = "Dhaval@7869";
+        
         String query = "select count(empname) from dbo.Mst_Employee";
 
         try {
-            con = DriverManager.getConnection(url, username, password);
+            con = connection.getConnection();
             st = con.createStatement();
             rs = st.executeQuery(query);
             while (rs.next()) {
@@ -235,9 +234,6 @@ public class Edit_Update_Member extends javax.swing.JFrame {
     }
 
     public void update_details() {
-        String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username = "sa";
-        String password = "Dhaval@7869";
 
         String empcode = membership_id_TextField.getText().toString();
         if (empcode.isEmpty()) {
@@ -262,7 +258,7 @@ public class Edit_Update_Member extends javax.swing.JFrame {
                 + ",EmailAddress=?,PhoneNo=?,DateofBirth=?,ShiftStartDate=?,ShiftCode=?,Bank_Ifsc_Code=? where empcode=" + empcode;
 
         try {
-            con = DriverManager.getConnection(url, username, password);
+            con = connection.getConnection();
             pst = con.prepareStatement(mainquery);
 
             pst.setString(1, name);
@@ -302,9 +298,6 @@ public class Edit_Update_Member extends javax.swing.JFrame {
 
     public void view_selected_member() throws SQLException {
 
-        String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username = "sa";
-        String password = "Dhaval@7869";
 
         int selectedrow = jTable1.getSelectedRow();
         String name = (String) jTable1.getModel().getValueAt(selectedrow, 1);
@@ -313,7 +306,7 @@ public class Edit_Update_Member extends javax.swing.JFrame {
         String query = "select * from dbo.Mst_Employee where EmpName='" + name + "'";
 
         try {
-            con = DriverManager.getConnection(url, username, password);
+            con = connection.getConnection();
             st = con.createStatement();
             rs = st.executeQuery(query);
             if (rs.next()) {
@@ -448,14 +441,14 @@ public class Edit_Update_Member extends javax.swing.JFrame {
     }
 
     public void showall_members() {
-        String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username = "sa";
-        String password = "Dhaval@7869";
+        initializerowsorter();
+        jTable1.setRowSorter(rowSorter);
+        
 
         String query = "select empid as Member_ID,empname as Name,phoneno as Mobile_No from dbo.mst_employee";
 
         try {
-            con = DriverManager.getConnection(url, username, password);
+            con = connection.getConnection();
             st = con.createStatement();
             rs = st.executeQuery(query);
             jTable1.setModel(DbUtils.resultSetToTableModel(rs));
@@ -506,8 +499,9 @@ public class Edit_Update_Member extends javax.swing.JFrame {
         membership_end_TextField = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         timimg_ComboBox = new javax.swing.JComboBox<>();
-        view_Button = new javax.swing.JButton();
+        select_Button = new javax.swing.JButton();
         cancel_Button = new javax.swing.JButton();
+        close_Button = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -537,9 +531,16 @@ public class Edit_Update_Member extends javax.swing.JFrame {
             Class[] types = new Class [] {
                 java.lang.String.class, java.lang.String.class, java.lang.Object.class
             };
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
             }
         });
         jScrollPane1.setViewportView(jTable1);
@@ -692,14 +693,14 @@ public class Edit_Update_Member extends javax.swing.JFrame {
 
         timimg_ComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "MOR", "EVE" }));
 
-        view_Button.setBackground(new java.awt.Color(32, 161, 93));
-        view_Button.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
-        view_Button.setForeground(java.awt.Color.white);
-        view_Button.setText("VIEW");
-        view_Button.setBorderPainted(false);
-        view_Button.addActionListener(new java.awt.event.ActionListener() {
+        select_Button.setBackground(new java.awt.Color(32, 161, 93));
+        select_Button.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
+        select_Button.setForeground(java.awt.Color.white);
+        select_Button.setText("SELECT");
+        select_Button.setBorderPainted(false);
+        select_Button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                view_ButtonActionPerformed(evt);
+                select_ButtonActionPerformed(evt);
             }
         });
 
@@ -711,6 +712,17 @@ public class Edit_Update_Member extends javax.swing.JFrame {
         cancel_Button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cancel_ButtonActionPerformed(evt);
+            }
+        });
+
+        close_Button.setBackground(new java.awt.Color(32, 161, 93));
+        close_Button.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
+        close_Button.setForeground(java.awt.Color.white);
+        close_Button.setText("CLOSE");
+        close_Button.setBorderPainted(false);
+        close_Button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                close_ButtonActionPerformed(evt);
             }
         });
 
@@ -774,10 +786,12 @@ public class Edit_Update_Member extends javax.swing.JFrame {
                                         .addComponent(membership_start_TextField))
                                     .addComponent(membership_end_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(132, 132, 132)
+                        .addGap(39, 39, 39)
+                        .addComponent(close_Button)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(cancel_Button)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(view_Button)
+                        .addComponent(select_Button)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(edit_Button)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -844,8 +858,9 @@ public class Edit_Update_Member extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(edit_Button)
                     .addComponent(update_Button)
-                    .addComponent(view_Button)
-                    .addComponent(cancel_Button))
+                    .addComponent(select_Button)
+                    .addComponent(cancel_Button)
+                    .addComponent(close_Button))
                 .addContainerGap(44, Short.MAX_VALUE))
         );
 
@@ -932,7 +947,7 @@ public class Edit_Update_Member extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_dateofjoin_TextFieldActionPerformed
 
-    private void view_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_view_ButtonActionPerformed
+    private void select_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_select_ButtonActionPerformed
 
         try {
             // TODO add your handling code here:
@@ -946,7 +961,7 @@ public class Edit_Update_Member extends javax.swing.JFrame {
             ex.printStackTrace();
         }
 
-    }//GEN-LAST:event_view_ButtonActionPerformed
+    }//GEN-LAST:event_select_ButtonActionPerformed
 
     private void name_TextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_name_TextFieldKeyReleased
         // TODO add your handling code here:
@@ -988,6 +1003,11 @@ public class Edit_Update_Member extends javax.swing.JFrame {
         reset();
     }//GEN-LAST:event_cancel_ButtonActionPerformed
 
+    private void close_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_close_ButtonActionPerformed
+        // TODO add your handling code here:
+        dispose();
+    }//GEN-LAST:event_close_ButtonActionPerformed
+
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -1026,6 +1046,7 @@ public class Edit_Update_Member extends javax.swing.JFrame {
     private javax.swing.JTextField biometric_id_TextField;
     private javax.swing.JButton browse;
     private javax.swing.JButton cancel_Button;
+    private javax.swing.JButton close_Button;
     private javax.swing.JLabel dateofbirth;
     private javax.swing.JTextField dateofbirth_TextField;
     private javax.swing.JTextField dateofjoin_TextField;
@@ -1057,8 +1078,8 @@ public class Edit_Update_Member extends javax.swing.JFrame {
     private javax.swing.JTextField name_TextField;
     private javax.swing.JLabel profilepic;
     private javax.swing.JTextField searchTextField;
+    private javax.swing.JButton select_Button;
     private javax.swing.JComboBox<String> timimg_ComboBox;
     private javax.swing.JButton update_Button;
-    private javax.swing.JButton view_Button;
     // End of variables declaration//GEN-END:variables
 }

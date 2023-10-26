@@ -12,7 +12,7 @@ import java.awt.Color;
 import static java.awt.Component.LEFT_ALIGNMENT;
 import java.awt.Font;
 import java.sql.Connection;
-import java.sql.DriverManager;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -26,6 +26,7 @@ import javax.swing.table.TableRowSorter;
 import net.proteanit.sql.DbUtils;
 import java.util.logging.Logger;
 import java.util.logging.FileHandler;
+import com.gym.connection.connection;
 
 
 public class added_workouts extends javax.swing.JFrame {
@@ -34,6 +35,8 @@ public class added_workouts extends javax.swing.JFrame {
     ResultSet rs=null;
     Statement st=null;
     PreparedStatement pst=null;
+    
+    
       
       TextPrompt exercisename;
       private TableRowSorter<TableModel> rowSorter;
@@ -110,15 +113,13 @@ public class added_workouts extends javax.swing.JFrame {
     
     
      public void show_all_workouts(){
-         String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username = "sa";
-        String password = "Dhaval@7869";
+        
         String query="select day as Day,level_type as Level,Body_Part as Body_Part ,exercise as Exercise,equipment as Equipment,sets as Sets,reps as Reps,rest as Rest from dbo.workout";
         
         
+        
         try {
-            
-            con=DriverManager.getConnection(url, username, password);
+            con=connection.getConnection();
             st=con.createStatement();
             rs=st.executeQuery(query);
             
@@ -163,9 +164,16 @@ public class added_workouts extends javax.swing.JFrame {
             Class[] types = new Class [] {
                 java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false
+            };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
             }
         });
         jScrollPane2.setViewportView(jTable2);

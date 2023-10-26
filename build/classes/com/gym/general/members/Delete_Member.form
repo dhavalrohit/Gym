@@ -141,10 +141,29 @@
               <Properties>
                 <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                   <Table columnCount="3" rowCount="0">
-                    <Column editable="true" title="Member ID" type="java.lang.String"/>
-                    <Column editable="true" title="Name" type="java.lang.String"/>
-                    <Column editable="true" title="Mobile No" type="java.lang.Object"/>
+                    <Column editable="false" title="Member ID" type="java.lang.String"/>
+                    <Column editable="false" title="Name" type="java.lang.String"/>
+                    <Column editable="false" title="Mobile No" type="java.lang.Object"/>
                   </Table>
+                </Property>
+                <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
+                  <TableColumnModel selectionModel="0">
+                    <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                      <Title/>
+                      <Editor/>
+                      <Renderer/>
+                    </Column>
+                    <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                      <Title/>
+                      <Editor/>
+                      <Renderer/>
+                    </Column>
+                    <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                      <Title/>
+                      <Editor/>
+                      <Renderer/>
+                    </Column>
+                  </TableColumnModel>
                 </Property>
                 <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
                   <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
@@ -243,7 +262,7 @@
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
-                          <Component id="back_Button" min="-2" max="-2" attributes="0"/>
+                          <Component id="close_Button" min="-2" max="-2" attributes="0"/>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Component id="view_Button" min="-2" max="-2" attributes="0"/>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
@@ -331,7 +350,7 @@
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="delete_Button" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="view_Button" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="back_Button" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="close_Button" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace pref="44" max="32767" attributes="0"/>
               </Group>
@@ -550,7 +569,7 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="view_ButtonActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="back_Button">
+        <Component class="javax.swing.JButton" name="close_Button">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="5d" green="a1" red="20" type="rgb"/>
@@ -561,11 +580,11 @@
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="ff" id="white" palette="1" red="ff" type="palette"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="BACK"/>
+            <Property name="text" type="java.lang.String" value="CLOSE"/>
             <Property name="borderPainted" type="boolean" value="false"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="back_ButtonActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="close_ButtonActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>

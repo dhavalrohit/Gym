@@ -1,6 +1,7 @@
 package com.gym.general.main;
 
-import com.gym.controller.Add_Fees;
+
+
 import com.gym.general.attendance.AttendanceNew;
 import com.gym.general.bmi.Body_Measurment_Card;
 import com.gym.general.bmi.bmi_main;
@@ -27,6 +28,7 @@ import java.lang.System.Logger.Level;
 import java.sql.SQLException;
 import com.gym.general.fees.Exisiting_Member;
 import com.gym.general.fees.Fee_Details;
+import com.gym.general.fees.add_new_fees;
 import com.gym.general.fees.fees_payment_history;
 import com.gym.general.fees.update_fees;
 import com.gym.general.inquiry.inquiry_form;
@@ -37,6 +39,9 @@ import com.gym.general.members.Edit_Update_Member;
 import com.gym.general.members.View_Member;
 import com.gym.general.workout.Workout_Creator;
 import com.gym.general.workout.added_workouts;
+import java.io.IOException;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import net.miginfocom.swing.MigLayout;
 import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTarget;
@@ -51,14 +56,14 @@ public class Main extends javax.swing.JFrame {
     private Animator animator;
     private static Main main_obj;
     
-    public Main() {
+    public Main() throws IOException {
         initComponents();
         init();
     }
     
   
 
-    private void init() {
+    private void init() throws IOException {
         layout = new MigLayout("fill", "0[]0[100%, fill]0", "0[fill, top]0");
         bg.setLayout(layout);
         menu = new Menu();
@@ -74,6 +79,9 @@ public class Main extends javax.swing.JFrame {
                             main.showForm(new Form_Home());
                         } catch (SQLException ex) {
                             ex.printStackTrace();
+                        } catch (IOException ex) {
+                            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+                            JOptionPane.showMessageDialog(new JFrame(), "Connection File Error");
                         }
                     } 
                 }
@@ -155,9 +163,9 @@ public class Main extends javax.swing.JFrame {
                 }
                 if (menuIndex==2) {
                     if (subMenuIndex==1) {
-                        Add_Fees fee=null;
+                        add_new_fees fee=null;
                         try {
-                            fee=new Add_Fees();
+                            fee=new add_new_fees();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -183,10 +191,11 @@ public class Main extends javax.swing.JFrame {
                         Add_Payment add=null;
                         try {
                               add=new Add_Payment();
-                             add.setVisible(true);
+                             
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
+                        add.setVisible(true);
                        
                     }
                     
@@ -551,8 +560,13 @@ public class Main extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-               // new Main().setVisible(true);
-               main_obj=new Main();
+                try {
+                    // new Main().setVisible(true);
+                    main_obj=new Main();
+                } catch (IOException ex) {
+                    java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+                    JOptionPane.showMessageDialog(new JFrame(), "Connection File Error");
+                }
                main_obj.setVisible(true);
                
             }

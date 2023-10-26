@@ -14,11 +14,9 @@ import java.sql.DriverManager;
 import java.text.SimpleDateFormat;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import com.gym.connection.connection;
 
-/**
- *
- * @author DELL
- */
+
 public class inquiry_form extends javax.swing.JFrame {
 
      private DateChooser date_dc;
@@ -50,9 +48,7 @@ public class inquiry_form extends javax.swing.JFrame {
         String inquiryfor=inquiryTextField.getText();
         
         try {
-                String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-          String username = "sa";
-          String password = "Dhaval@7869";
+          
           
           
          String query="INSERT INTO [dbo].[inquiry]\n" +
@@ -64,7 +60,7 @@ public class inquiry_form extends javax.swing.JFrame {
 "     VALUES\n" +
 "           (?,?,?,?,?)";
          
-         con=DriverManager.getConnection(url, username, password);
+         con=connection.getConnection();
               pst=con.prepareStatement(query);
               pst.setString(1, date);
               pst.setString(2, name);
@@ -171,13 +167,11 @@ public class inquiry_form extends javax.swing.JFrame {
     }
       
     public  void get_inquiry_id(){
-            String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-           String username = "sa";
-           String password = "Dhaval@7869";
+           
            String query="select IDENT_CURRENT('inquiry')";
 
         try {
-            con=DriverManager.getConnection(url, username, password);
+            con=connection.getConnection();
             st=con.createStatement();
             rs=st.executeQuery(query);
             if (rs.next()) {

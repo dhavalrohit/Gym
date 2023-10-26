@@ -36,6 +36,8 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+import com.gym.connection.connection;
+import java.io.IOException;
 
 
 
@@ -246,7 +248,9 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane{
 
                         } catch (SQLException ex) {
                             Logger.getLogger(PanelLoginAndRegister.class.getName()).log(Level.SEVERE, null, ex);
-                        }
+                        } catch (IOException ex) {
+                        Logger.getLogger(PanelLoginAndRegister.class.getName()).log(Level.SEVERE, null, ex);
+                    }
 
                 }
                 
@@ -309,7 +313,7 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane{
     }
     
     
-    public void check_access_type(){
+    public void check_access_type() throws IOException{
         String type_check=typeforlogin.getSelectedItem().toString();
         
         System.out.println("access_check_db:"+access_check_db);
@@ -336,7 +340,7 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane{
         }
         if (type_check.equalsIgnoreCase("admin")) {
             if (access_check_db.equalsIgnoreCase("1")) {
-                    main=new Main();
+                     main=new Main();
                     
                     main.setVisible(true);
                     main.setroletext("Admin");
@@ -361,10 +365,8 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane{
     }
     
     
-    public void get_access_type(){
-        String url="jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username="sa";
-        String password="Dhaval@7869";
+    public void get_access_type() throws IOException{
+        
            
         String username_login=txtusername.getText();
          access_check_db="";
@@ -372,7 +374,7 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane{
          
         String query="select AllowAccess from dbo.mst_user where user_name='"+username_login+"'";
         try {
-            con=DriverManager.getConnection(url, username, password);
+            con=connection.getConnection();
             st=con.createStatement();
             rs=st.executeQuery(query);
             if (rs.next()) {
@@ -401,9 +403,7 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane{
     }
     
     public void add_user(){
-           String url="jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-          String username="sa";
-            String password="Dhaval@7869";
+           
             
             String uname=reg_username.getText();
             String pass=reg_userpass.getText();
@@ -443,7 +443,7 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane{
 "           (?,?,?,?,?,?,?,?,?,?,?,?,?)";
             try {
             
-                con=DriverManager.getConnection(url, username, password);
+                con=connection.getConnection();
                  pst=con.prepareStatement(sqlquery);
                  pst.setString(1, uname);
                  pst.setString(2, uname);
@@ -496,10 +496,7 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane{
 	String datetoday=format.format(date);
 			
         String message="Registraion of User: "+reg_name.getText()+" Successfull as  "+typeforregister.getSelectedItem().toString();
-        String url="jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username="sa";
-        String password="Dhaval@7869";
-      
+              
         String query="INSERT INTO [dbo].[history]\n" +
 "           ([Date]\n" +
 "           ,[Message])\n" +
@@ -507,7 +504,7 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane{
 "           (?,?)";
         
         try {
-             con=DriverManager.getConnection(url, username, password);
+             con=connection.getConnection();
             pst=con.prepareStatement(query);
            
             pst.setString(1, datetoday);
@@ -533,9 +530,7 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane{
 	String datetoday=format.format(date);
 			
         String message="Logged in by: "+txtusername.getText();
-        String url="jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username="sa";
-        String password="Dhaval@7869";
+        
       
         String query="INSERT INTO [dbo].[history]\n" +
 "           ([Date]\n" +
@@ -544,7 +539,7 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane{
 "           (?,?)";
         
         try {
-             con=DriverManager.getConnection(url, username, password);
+             con=connection.getConnection();
             pst=con.prepareStatement(query);
            
             pst.setString(1, datetoday);
@@ -570,17 +565,14 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane{
         confirmtxtPass.setText("");
     }
     
-    public void login_method() throws SQLException, SQLException, SQLException, SQLException{
-         String url="jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username="sa";
-        String password="Dhaval@7869";
+    public void login_method() throws SQLException, SQLException, SQLException, SQLException, IOException{
         String sqlquery="select USER_NAME,user_password from dbo.Mst_User where user_name=? and User_Password=?";
         
         String uname=txtusername.getText();
         String pass=txtPass.getText();
         
         try {
-            con=DriverManager.getConnection(url, username, password);
+            con=connection.getConnection();
             pst=con.prepareStatement(sqlquery);
            
             pst.setString(1, uname);
@@ -603,7 +595,7 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane{
                  
                 System.out.println("Login Success");
                    
-                   get_access_type();
+                    get_access_type();
                    
                    
                    

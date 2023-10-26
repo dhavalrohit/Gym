@@ -28,8 +28,11 @@ import com.gym.general.swing.icon.IconFontSwing;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 import java.sql.SQLException;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import net.miginfocom.swing.MigLayout;
 import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTarget;
@@ -44,14 +47,14 @@ public class AttendanceNew extends javax.swing.JFrame {
     private Animator animator;
     private static AttendanceNew main_obj;
     
-    public AttendanceNew() throws SQLException {
+    public AttendanceNew() throws SQLException, IOException {
         initComponents();
         init();
     }
     
   
 
-    private void init() throws SQLException {
+    private void init() throws SQLException, IOException {
         layout = new MigLayout("fill", "0[]0[100%, fill]0", "0[fill, top]0");
         bg.setLayout(layout);
         menu = new attendanceMenu();
@@ -71,6 +74,9 @@ public class AttendanceNew extends javax.swing.JFrame {
                            
                         } catch (SQLException ex) {
                             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (IOException ex) {
+                            Logger.getLogger(AttendanceNew.class.getName()).log(Level.SEVERE, null, ex);
+                            JOptionPane.showMessageDialog(new JFrame(), "Connection File Error");
                         }
                     } else if (subMenuIndex == 1) {
                         main1.showForm(new Form1());
@@ -97,6 +103,9 @@ public class AttendanceNew extends javax.swing.JFrame {
                            aa=new Attendance_Week_Main();
                         } catch (SQLException ex) {
                             Logger.getLogger(AttendanceNew.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (IOException ex) {
+                            Logger.getLogger(AttendanceNew.class.getName()).log(Level.SEVERE, null, ex);
+                            JOptionPane.showMessageDialog(new JFrame(), "Connection File Error");
                         }
                         aa.setVisible(true);
                     }
@@ -109,6 +118,9 @@ public class AttendanceNew extends javax.swing.JFrame {
                            aa=new Attendance_Month_Main();
                         } catch (SQLException ex) {
                             Logger.getLogger(AttendanceNew.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (IOException ex) {
+                            Logger.getLogger(AttendanceNew.class.getName()).log(Level.SEVERE, null, ex);
+                            JOptionPane.showMessageDialog(new JFrame(), "Connection File Error");
                         }
                         aa.setVisible(true);
                     }
@@ -121,6 +133,9 @@ public class AttendanceNew extends javax.swing.JFrame {
                            aa=new Attendance_threeMonths_Main();
                         } catch (SQLException ex) {
                             Logger.getLogger(AttendanceNew.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (IOException ex) {
+                            Logger.getLogger(AttendanceNew.class.getName()).log(Level.SEVERE, null, ex);
+                            JOptionPane.showMessageDialog(new JFrame(), "Connection File Error");
                         }
                         aa.setVisible(true);
                     }
@@ -316,6 +331,9 @@ public class AttendanceNew extends javax.swing.JFrame {
                     main_obj=new AttendanceNew();
                 } catch (SQLException ex) {
                     java.util.logging.Logger.getLogger(AttendanceNew.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+                } catch (IOException ex) {
+                    Logger.getLogger(AttendanceNew.class.getName()).log(Level.SEVERE, null, ex);
+                    JOptionPane.showMessageDialog(new JFrame(), "Connection File Error");
                 }
                main_obj.setVisible(true);
                

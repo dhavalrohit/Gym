@@ -15,11 +15,13 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import com.gym.connection.connection;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JTextField;
 import net.proteanit.sql.DbUtils;
+import java.sql.Statement;
 
 import com.raven.datechooser.*;
 import com.raven.datechooser.DateBetween;
@@ -38,15 +40,20 @@ import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import com.gym.connection.connection;
+import java.io.IOException;
 
 public class attendanceAdvancedRecord extends javax.swing.JPanel {
 
     Connection con = null;
     ResultSet rs = null;
     PreparedStatement pst = null;
+    Statement st = null;
     double x = 50;
     double y = 50;
     private DateChooser startdate;
+
+    FlatTableUI flattable = new FlatTableUI();
 
     private DateChooser enddate;
 
@@ -58,8 +65,6 @@ public class attendanceAdvancedRecord extends javax.swing.JPanel {
         jTable1.setBackground(Color.WHITE);
         jTable1.getTableHeader().setBackground(Color.WHITE);
 
-        
-        
         startdate = new DateChooser();
         enddate = new DateChooser();
 
@@ -68,38 +73,73 @@ public class attendanceAdvancedRecord extends javax.swing.JPanel {
 
         enddate.setTextField(datetextfield2);
         enddate.setDateFormat(new SimpleDateFormat("YYYY-MM-dd"));
-        
+
     }
 
-    public void getdatabymID_Date() throws SQLException {
+    public void getdatabymID_Date() throws SQLException, IOException {
         System.out.println("Get Member Data by ID and Date");
         String datefrom = datetextfield1.getText().toString();
         String datetodate = datetextfield2.getText().toString();
         System.out.println(datefrom);
         System.out.println(datetodate);
         String midNO = mno.getText();
-        String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username = "sa";
-        String password = "Dhaval@7869";
+
         String midNOdate = mno.getText();
-        String sql_query_by_mid_date = "select  dbo.Mst_Employee.empname as " + "'Member Name'" + ",dbo.Tran_Attendance.empid as" + "'Member ID'" + ",dbo.Tran_Attendance.DateOFFICE as " + "'Date'" + ",dbo.Tran_Attendance.Punch1 as " + "'IN-Punch'" + ",dbo.Tran_Attendance.Punch2 as " + "'OUT-Punch'" + ",dbo.Tran_Attendance.allpunchs as " + "'All Punch'" + "from dbo.Mst_Employee"
-                + " inner join dbo.Tran_Attendance on dbo.Mst_Employee.EmpId=dbo.Tran_Attendance.EmpId   WHERE dbo.Tran_Attendance.EmpId=" + midNOdate + "and DateOFFICE between '" + datefrom + "' and '" + datetodate + "'";
+        /* String sql_query_by_mid_date = "select  dbo.Mst_Employee.empname as " + "'Member Name'" + ",dbo.Tran_Attendance.empid as" + "'Member ID'" + ",dbo.Tran_Attendance.DateOFFICE as " + "'Date'" + ",dbo.Tran_Attendance.Punch1 as " + "'IN-Punch'" + ",dbo.Tran_Attendance.Punch2 as " + "'OUT-Punch'" + ",dbo.Tran_Attendance.allpunchs as " + "'All Punch'" + "from dbo.Mst_Employee"
+                + " inner join dbo.Tran_Attendance on dbo.Mst_Employee.EmpId=dbo.Tran_Attendance.EmpId   WHERE dbo.Tran_Attendance.EmpId=" + midNOdate + "and DateOFFICE between '" + datefrom + "' and '" + datetodate + "'";*/
+ /*String sql_query_by_mid_date="SELECT dbo.Mst_Employee.empname, " +
+                    "CONVERT(DATE, dbo.Tran_Attendance.DateOFFICE, 104) AS [Date], " +
+                    "CONVERT(CHAR(5), dbo.Tran_Attendance.Punch1, 108) AS [punch1], " +
+                    "CONVERT(CHAR(5), dbo.Tran_Attendance.Punch2, 108) AS [punch2], " +
+                    "dbo.Tran_Attendance.allpunchs " +
+                    "FROM dbo.Mst_Employee " +
+                    "INNER JOIN dbo.Tran_Attendance ON dbo.Mst_Employee.EmpId = dbo.Tran_Attendance.EmpId " +
+                    "WHERE CONVERT(DATE, DateOFFICE, 102) BETWEEN ? AND ? " +
+                    "AND dbo.Mst_Employee.Empid = ? " + 
+                    "ORDER BY DateOFFICE";*/
+
+        String sql_query_by_mid_date = "WITH PunchData AS (\n"
+                + "    SELECT\n"
+                + "        dbo.Mst_Employee.EmpID,\n"
+                + "        dbo.Mst_Employee.EmpName,\n"
+                + "        CONVERT(DATE, dbo.Tran_machinerawpunch.punchdatetime, 104) AS [Date],\n"
+                + "        CONVERT(CHAR(5), dbo.Tran_machinerawpunch.punchdatetime, 108) AS [PunchTime],\n"
+                + "        ROW_NUMBER() OVER (PARTITION BY dbo.Mst_Employee.EmpName, CONVERT(DATE, dbo.Tran_machinerawpunch.punchdatetime, 104) ORDER BY dbo.Tran_machinerawpunch.punchdatetime) AS PunchNumber\n"
+                + "    FROM\n"
+                + "        dbo.Mst_Employee\n"
+                + "    INNER JOIN\n"
+                + "        dbo.Tran_machinerawpunch ON dbo.Mst_Employee.cardno = dbo.Tran_machinerawpunch.cardno where dbo.Mst_Employee.EmpId=" + midNO + " AND CONVERT(DATE, punchdatetime, 102) BETWEEN '" + datefrom + "' AND  '" + datetodate + "' )"
+                + "SELECT\n"
+                + "    EmpID AS ID,\n"
+                + "    EmpName as Name,\n"
+                + "    [Date],\n"
+                + "    MAX(CASE WHEN PunchNumber = 1 THEN PunchTime ELSE NULL END) AS IN_PUNCH,\n"
+                + "    MAX(CASE WHEN PunchNumber = 2 THEN PunchTime ELSE NULL END) AS OUT_PUNCH\n"
+                + "FROM\n"
+                + "    PunchData\n"
+                + "GROUP BY\n"
+                + "    EmpID,EmpName, [Date]\n"
+                + "ORDER BY\n"
+                + "    [Date];";
 
         try {
-            con = DriverManager.getConnection(url, username, password);
+            con = connection.getConnection();
             pst = con.prepareStatement(sql_query_by_mid_date);
             rs = pst.executeQuery();
+
+            jTable1.setUI(flattable);
+            jTable1.setModel(DbUtils.resultSetToTableModel(rs));
+
             System.out.println(startdate);
             System.out.println(enddate);
             /* while (rs.next()) {                
                 System.out.println("Emp Name"+rs.getString("empname"));
                 System.out.println("Emp ID"+rs.getInt("empid"));
             }*/
-            jTable1.setUI(new FlatTableUI());
-            jTable1.setModel(DbUtils.resultSetToTableModel(rs));
-            
+
         } catch (SQLException ex) {
             Logger.getLogger(attendanceAdvancedRecord.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(new JFrame(), "Search Error:Combination Not Found ");
             ex.printStackTrace();
         } finally {
             pst.close();
@@ -109,40 +149,79 @@ public class attendanceAdvancedRecord extends javax.swing.JPanel {
         jLabel4.setText("Records Shown According To Member ID and Date Selected");
     }
 
-    public void getdatabymemberid() throws SQLException {
-        String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username = "sa";
-        String password = "Dhaval@7869";
-        String midNO = mno.getText();
-        String sql_query_by_mid = "select  dbo.Mst_Employee.empname as " + "'Member Name'" + ",dbo.Tran_Attendance.empid as" + "'Member ID'" + ",dbo.Tran_Attendance.DateOFFICE as " + "'Date'" + ",dbo.Tran_Attendance.Punch1 as " + "'IN-Punch'" + ",dbo.Tran_Attendance.Punch2 as " + "'OUT-Punch'" + ",dbo.Tran_Attendance.allpunchs as " + "'All Punch'" + "from dbo.Mst_Employee"
-                + " inner join dbo.Tran_Attendance on dbo.Mst_Employee.EmpId=dbo.Tran_Attendance.EmpId  WHERE  dbo.Tran_Attendance.EmpId=" + midNO;
+    public void getdatabymemberid() throws SQLException, IOException {
 
+        String midNO = mno.getText();
+        /*String sql_query_by_mid = "select  dbo.Mst_Employee.empname as " + "'Member Name'" + ",dbo.Tran_Attendance.empid as" + "'Member ID'" + ",dbo.Tran_Attendance.DateOFFICE as " + "'Date'" + ",dbo.Tran_Attendance.Punch1 as " + "'IN-Punch'" + ",dbo.Tran_Attendance.Punch2 as " + "'OUT-Punch'" + ",dbo.Tran_Attendance.allpunchs as " + "'All Punch'" + "from dbo.Mst_Employee"
+                + " inner join dbo.Tran_Attendance on dbo.Mst_Employee.EmpId=dbo.Tran_Attendance.EmpId  WHERE  dbo.Tran_Attendance.EmpId=" + midNO;*/
+
+ /*String sql_query_by_mid="SELECT dbo.Mst_Employee.empname, " +
+                    "CONVERT(DATE, dbo.Tran_Attendance.DateOFFICE, 104) AS [Date], " +
+                    "CONVERT(CHAR(5), dbo.Tran_Attendance.Punch1, 108) AS [punch1], " +
+                    "CONVERT(CHAR(5), dbo.Tran_Attendance.Punch2, 108) AS [punch2], " +
+                    "dbo.Tran_Attendance.allpunchs " +
+                    "FROM dbo.Mst_Employee " +
+                    "INNER JOIN dbo.Tran_Attendance ON dbo.Mst_Employee.EmpId = dbo.Tran_Attendance.EmpId " +
+                    "WHERE dbo.Tran_Attendance.EmpId=" + midNO +
+                    "ORDER BY DateOFFICE";*/
+        String sql_query_by_mid = "WITH PunchData AS (\n"
+                + "    SELECT\n"
+                + "        dbo.Mst_Employee.EmpID,\n"
+                + "        dbo.Mst_Employee.EmpName,\n"
+                + "        CONVERT(DATE, dbo.Tran_machinerawpunch.punchdatetime, 104) AS [Date],\n"
+                + "        CONVERT(CHAR(5), dbo.Tran_machinerawpunch.punchdatetime, 108) AS [PunchTime],\n"
+                + "        ROW_NUMBER() OVER (PARTITION BY dbo.Mst_Employee.EmpName, CONVERT(DATE, dbo.Tran_machinerawpunch.punchdatetime, 104) ORDER BY dbo.Tran_machinerawpunch.punchdatetime) AS PunchNumber\n"
+                + "    FROM\n"
+                + "        dbo.Mst_Employee\n"
+                + "    INNER JOIN\n"
+                + "        dbo.Tran_machinerawpunch ON dbo.Mst_Employee.cardno = dbo.Tran_machinerawpunch.cardno\n"
+                + "    WHERE\n"
+                + "        dbo.Mst_Employee.EmpId = ?" + " )\n"
+                + "SELECT\n"
+                + "    EmpID AS ID,\n"
+                + "    EmpName as Name,\n"
+                + "    [Date],\n"
+                + "    MAX(CASE WHEN PunchNumber = 1 THEN PunchTime ELSE NULL END) AS IN_PUNCH,\n"
+                + "    MAX(CASE WHEN PunchNumber = 2 THEN PunchTime ELSE NULL END) AS OUT_PUNCH\n"
+                + "FROM\n"
+                + "    PunchData\n"
+                + "GROUP BY\n"
+                + "    EmpID,EmpName, [Date]\n"
+                + "ORDER BY\n"
+                + "    [Date];";
         try {
-            con = DriverManager.getConnection(url, username, password);
+
+            con = connection.getConnection();
             pst = con.prepareStatement(sql_query_by_mid);
+            pst.setString(1, midNO);
             rs = pst.executeQuery();
-            System.out.println(startdate);
-            System.out.println(enddate);
+
+            jTable1.setUI(flattable);
+            jTable1.setModel(DbUtils.resultSetToTableModel(rs));
+
+            jLabel4.setText("Records Shown According to Member ID");
+
+            // System.out.println(rs.next());
+            //System.out.println(startdate);
+            // System.out.println(enddate);
             /* while (rs.next()) {                
                 System.out.println("Emp Name"+rs.getString("empname"));
                 System.out.println("Emp ID"+rs.getInt("empid"));
             }*/
-            jTable1.setUI(new FlatTableUI());
-            jTable1.setModel(DbUtils.resultSetToTableModel(rs));
-
         } catch (SQLException ex) {
             Logger.getLogger(attendanceAdvancedRecord.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(new JFrame(), "Search Error:Member ID Not Found ");
             ex.printStackTrace();
+
         } finally {
-            pst.close();
             rs.close();
             con.close();
 
         }
-        jLabel4.setText("Records Shown According to Member ID");
+
     }
 
-    public void getattendancebydate() throws SQLException, SQLException, ParseException {
+    public void getattendancebydate() throws SQLException, SQLException, ParseException, IOException {
         //table1.addRow(new ModelMember(new ImageIcon(getClass().getResource("/com/gym/general/icon/profile.jpg")), "Jonh", "Male", "Java", 300).toRowTable(eventAction));
         //Get_Data();
         jLabel4.setText("Data Shown According to Date Range");
@@ -159,15 +238,47 @@ public class attendanceAdvancedRecord extends javax.swing.JPanel {
         System.out.println(datefrom);
         System.out.println(datetodate);
 
-        String sqlquerybydate = "select  dbo.Mst_Employee.empname as " + "'Member Name'" + ",dbo.Tran_Attendance.empid as" + "'Member ID'" + ",dbo.Tran_Attendance.DateOFFICE as " + "'Date'" + ",dbo.Tran_Attendance.Punch1 as " + "'IN-Punch'" + ",dbo.Tran_Attendance.Punch2 as " + "'OUT-Punch'" + ",dbo.Tran_Attendance.allpunchs as " + "'All Punch'" + "from dbo.Mst_Employee"
-                + " inner join dbo.Tran_Attendance on dbo.Mst_Employee.EmpId=dbo.Tran_Attendance.EmpId  WHERE  DateOFFICE between '" + datefrom + "' and '" + datetodate + "'";
+        /*String sqlquerybydate = "select  dbo.Mst_Employee.empname as " + "'Member Name'" + ",dbo.Tran_Attendance.empid as" + "'Member ID'" + ",dbo.Tran_Attendance.DateOFFICE as " + "'Date'" + ",dbo.Tran_Attendance.Punch1 as " + "'IN-Punch'" + ",dbo.Tran_Attendance.Punch2 as " + "'OUT-Punch'" + ",dbo.Tran_Attendance.allpunchs as " + "'All Punch'" + "from dbo.Mst_Employee"
+                + " inner join dbo.Tran_Attendance on dbo.Mst_Employee.EmpId=dbo.Tran_Attendance.EmpId  WHERE  DateOFFICE between '" + datefrom + "' and '" + datetodate + "'";*/
+ /*String sqlquerybydate= "SELECT dbo.Mst_Employee.empname, " +
+                    "CONVERT(DATE, dbo.Tran_Attendance.DateOFFICE, 104) AS [Date], " +
+                    "CONVERT(CHAR(5), dbo.Tran_Attendance.Punch1, 108) AS [punch1], " +
+                    "CONVERT(CHAR(5), dbo.Tran_Attendance.Punch2, 108) AS [punch2], " +
+                    "dbo.Tran_Attendance.allpunchs " +
+                    "FROM dbo.Mst_Employee " +
+                    "INNER JOIN dbo.Tran_Attendance ON dbo.Mst_Employee.EmpId = dbo.Tran_Attendance.EmpId " +
+                    "WHERE CONVERT(DATE, DateOFFICE, 102) BETWEEN ? AND ? " +
+                    "ORDER BY DateOFFICE";*/
+        String sqlquerybydate = "WITH PunchData AS (\n"
+                + "    SELECT\n"
+                + "        dbo.Mst_Employee.EmpID,\n"
+                + "        dbo.Mst_Employee.EmpName,\n"
+                + "        CONVERT(DATE, dbo.Tran_machinerawpunch.punchdatetime, 104) AS [Date],\n"
+                + "        CONVERT(CHAR(5), dbo.Tran_machinerawpunch.punchdatetime, 108) AS [PunchTime],\n"
+                + "        ROW_NUMBER() OVER (PARTITION BY dbo.Mst_Employee.EmpName, CONVERT(DATE, dbo.Tran_machinerawpunch.punchdatetime, 104) ORDER BY dbo.Tran_machinerawpunch.punchdatetime) AS PunchNumber\n"
+                + "    FROM\n"
+                + "        dbo.Mst_Employee\n"
+                + "    INNER JOIN\n"
+                + "        dbo.Tran_machinerawpunch ON dbo.Mst_Employee.cardno = dbo.Tran_machinerawpunch.cardno where CONVERT(DATE, punchdatetime, 102) BETWEEN ? AND ? \n"
+                + ")\n"
+                + "SELECT\n"
+                + "    EmpID AS ID,\n"
+                + "    EmpName as Name,\n"
+                + "    [Date],\n"
+                + "    MAX(CASE WHEN PunchNumber = 1 THEN PunchTime ELSE NULL END) AS IN_PUNCH,\n"
+                + "    MAX(CASE WHEN PunchNumber = 2 THEN PunchTime ELSE NULL END) AS OUT_PUNCH\n"
+                + "FROM\n"
+                + "    PunchData\n"
+                + "GROUP BY\n"
+                + "    EmpID,EmpName, [Date]\n"
+                + "ORDER BY\n"
+                + "    [Date];";
 
-        String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username = "sa";
-        String password = "Dhaval@7869";
         try {
-            con = DriverManager.getConnection(url, username, password);
+            con = connection.getConnection();
             pst = con.prepareStatement(sqlquerybydate);
+            pst.setString(1, datefrom);
+            pst.setString(2, datetodate);
             rs = pst.executeQuery();
             System.out.println(startdate);
             System.out.println(enddate);
@@ -180,6 +291,7 @@ public class attendanceAdvancedRecord extends javax.swing.JPanel {
 
         } catch (SQLException ex) {
             Logger.getLogger(attendanceAdvancedRecord.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(new JFrame(), "Search Error:Combination Not Found ");
             ex.printStackTrace();
         } finally {
             pst.close();
@@ -296,7 +408,7 @@ public class attendanceAdvancedRecord extends javax.swing.JPanel {
         area.add(new Area(new Rectangle2D.Double(0, 0, width - roundX / 2, height)));
         area.add(new Area(new Rectangle2D.Double(0, 0, width, height - roundY / 2)));
         return area;
-        
+
     }
 
     @SuppressWarnings("unchecked")
@@ -437,9 +549,16 @@ public class attendanceAdvancedRecord extends javax.swing.JPanel {
             Class[] types = new Class [] {
                 java.lang.String.class, java.lang.Integer.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
             };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false
+            };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
             }
         });
         jTable1.setGridColor(java.awt.Color.white);
@@ -493,6 +612,9 @@ public class attendanceAdvancedRecord extends javax.swing.JPanel {
             Logger.getLogger(attendanceAdvancedRecord.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ParseException ex) {
             Logger.getLogger(attendanceAdvancedRecord.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(attendanceAdvancedRecord.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(new JFrame(), "Connection File Error");
         }
     }//GEN-LAST:event_srchbuttonActionPerformed
 
@@ -510,18 +632,24 @@ public class attendanceAdvancedRecord extends javax.swing.JPanel {
             getdatabymID_Date();
         } catch (SQLException ex) {
             Logger.getLogger(attendanceAdvancedRecord.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(attendanceAdvancedRecord.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(new JFrame(), "Connection File Error");
         }
     }//GEN-LAST:event_m_and_d_sActionPerformed
 
     private void search_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_search_ButtonActionPerformed
         if (mno.getText().isEmpty()) {
             JOptionPane.showMessageDialog(new JFrame(), "Search Error: Please Enter Member ID to Search");
-        }else{
+        } else {
             try {
                 getdatabymemberid();
             } catch (SQLException ex) {
                 Logger.getLogger(attendanceAdvancedRecord.class.getName()).log(Level.SEVERE, null, ex);
                 JOptionPane.showMessageDialog(new JFrame(), "SQL Error");
+            } catch (IOException ex) {
+                Logger.getLogger(attendanceAdvancedRecord.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(new JFrame(), "Connection File Error");
             }
         }
 

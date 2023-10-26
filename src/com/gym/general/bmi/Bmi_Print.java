@@ -12,6 +12,7 @@ import static java.awt.print.Printable.NO_SUCH_PAGE;
 import static java.awt.print.Printable.PAGE_EXISTS;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /**
@@ -25,6 +26,7 @@ public class Bmi_Print extends javax.swing.JFrame implements Printable{
      */
     public Bmi_Print() {
         initComponents();
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }
 
     /**
@@ -285,6 +287,7 @@ public class Bmi_Print extends javax.swing.JFrame implements Printable{
                      }
     }//GEN-LAST:event_printButtonActionPerformed
 
+    
     private void close_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_close_ButtonActionPerformed
         // TODO add your handling code here:
         this.dispose();

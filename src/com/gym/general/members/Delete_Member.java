@@ -33,6 +33,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import net.proteanit.sql.DbUtils;
+import com.gym.connection.connection;
 
 /**
  *
@@ -78,8 +79,9 @@ public class Delete_Member extends javax.swing.JFrame {
          this.setResizable(false);
        
         initComponents();
-        showall_members();
+        
         total_member_count();
+        showall_members();
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         
          searchprompt=new TextPrompt("Search by Name,Mobile No,ID...", searchTextField);
@@ -89,7 +91,7 @@ public class Delete_Member extends javax.swing.JFrame {
        
         
          initializerowsorter();
-        jTable1.setRowSorter(rowSorter);
+       jTable1.setRowSorter(rowSorter);
         searchTextField.getDocument().addDocumentListener(new DocumentListener(){
 
              @Override
@@ -133,14 +135,16 @@ public class Delete_Member extends javax.swing.JFrame {
 
       
      public void showall_members(){
-        String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username = "sa";
-        String password = "Dhaval@7869";
+         
+          initializerowsorter();
+       jTable1.setRowSorter(rowSorter);
+        
+         
       
         String query="select empid as Member_ID,empname as Name,phoneno as Mobile_No from dbo.mst_employee";
         
         try {
-            con=DriverManager.getConnection(url,username,password);
+            con=connection.getConnection();
             st=con.createStatement();
             rs=st.executeQuery(query);
             jTable1.setModel(DbUtils.resultSetToTableModel(rs));
@@ -153,13 +157,11 @@ public class Delete_Member extends javax.swing.JFrame {
         public void total_member_count(){
         
         
-        String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username = "sa";
-        String password = "Dhaval@7869";
+        
         String query="select count(empname) from dbo.Mst_Employee";
         
         try {
-            con=DriverManager.getConnection(url, username, password);
+            con=connection.getConnection();
             st=con.createStatement();
             rs=st.executeQuery(query);
             while (rs.next()) {                
@@ -197,9 +199,7 @@ public class Delete_Member extends javax.swing.JFrame {
        
           public void view_selected_member() throws SQLException{
         
-         String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username = "sa";
-        String password = "Dhaval@7869";
+         
       
         
         int selectedrow= jTable1.getSelectedRow();
@@ -210,7 +210,7 @@ public class Delete_Member extends javax.swing.JFrame {
         
         
         try {
-             con=DriverManager.getConnection(url, username, password);
+             con=connection.getConnection();
              st=con.createStatement();
              rs=st.executeQuery(query);
              if (rs.next()) {                
@@ -320,10 +320,26 @@ public class Delete_Member extends javax.swing.JFrame {
         
     }
   
+          
+            public void reset(){
+        
+        name_TextField.setText("");
+        membership_id_TextField.setText("");
+        biometric_id_TextField.setText("");
+        membership_start_TextField.setText("");
+        membership_end_TextField.setText("");
+        dateofjoin_TextField.setText("");
+        dateofbirth_TextField.setText("");
+        mobileno_TextField.setText("");
+        email_TextField.setText("");
+        fathername_TextField.setText("");
+        id_TextField.setText("");
+        
+        
+    }
+  
+          
   public void delete() throws SQLException{
-        String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username = "sa";
-        String password = "Dhaval@7869";
       
         
         int selectedrow= jTable1.getSelectedRow();
@@ -333,7 +349,7 @@ public class Delete_Member extends javax.swing.JFrame {
         String query="delete from dbo.Mst_Employee where EmpName='"+name+"'";
         
       try {
-          con=DriverManager.getConnection(url, username, password);
+          con=connection.getConnection();
           st=con.createStatement();
             
           int i=st.executeUpdate(query);
@@ -341,6 +357,7 @@ public class Delete_Member extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(new Frame(), "Member Deleted Succesfully");
             showall_members();
             total_member_count();
+            reset();
           }else{
               JOptionPane.showMessageDialog(new Frame(), "Member Deletion Failed");
           }
@@ -408,7 +425,7 @@ public class Delete_Member extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         timimg_ComboBox = new javax.swing.JComboBox<>();
         view_Button = new javax.swing.JButton();
-        back_Button = new javax.swing.JButton();
+        close_Button = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -438,9 +455,16 @@ public class Delete_Member extends javax.swing.JFrame {
             Class[] types = new Class [] {
                 java.lang.String.class, java.lang.String.class, java.lang.Object.class
             };
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
             }
         });
         jScrollPane1.setViewportView(jTable1);
@@ -581,14 +605,14 @@ public class Delete_Member extends javax.swing.JFrame {
             }
         });
 
-        back_Button.setBackground(new java.awt.Color(32, 161, 93));
-        back_Button.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
-        back_Button.setForeground(java.awt.Color.white);
-        back_Button.setText("BACK");
-        back_Button.setBorderPainted(false);
-        back_Button.addActionListener(new java.awt.event.ActionListener() {
+        close_Button.setBackground(new java.awt.Color(32, 161, 93));
+        close_Button.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
+        close_Button.setForeground(java.awt.Color.white);
+        close_Button.setText("CLOSE");
+        close_Button.setBorderPainted(false);
+        close_Button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                back_ButtonActionPerformed(evt);
+                close_ButtonActionPerformed(evt);
             }
         });
 
@@ -653,7 +677,7 @@ public class Delete_Member extends javax.swing.JFrame {
                                     .addComponent(membership_end_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(32, 32, 32)
-                        .addComponent(back_Button)
+                        .addComponent(close_Button)
                         .addGap(18, 18, 18)
                         .addComponent(view_Button)
                         .addGap(18, 18, 18)
@@ -720,7 +744,7 @@ public class Delete_Member extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(delete_Button)
                     .addComponent(view_Button)
-                    .addComponent(back_Button))
+                    .addComponent(close_Button))
                 .addContainerGap(44, Short.MAX_VALUE))
         );
 
@@ -797,10 +821,10 @@ public class Delete_Member extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_view_ButtonActionPerformed
 
-    private void back_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_back_ButtonActionPerformed
+    private void close_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_close_ButtonActionPerformed
         // TODO add your handling code here:
         dispose();
-    }//GEN-LAST:event_back_ButtonActionPerformed
+    }//GEN-LAST:event_close_ButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -839,10 +863,10 @@ public class Delete_Member extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel address;
-    private javax.swing.JButton back_Button;
     private javax.swing.JLabel biometric_id;
     private javax.swing.JTextField biometric_id_TextField;
     private javax.swing.JButton browse;
+    private javax.swing.JButton close_Button;
     private javax.swing.JLabel dateofbirth;
     private javax.swing.JTextField dateofbirth_TextField;
     private javax.swing.JTextField dateofjoin_TextField;

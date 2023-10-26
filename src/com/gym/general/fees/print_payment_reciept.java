@@ -12,6 +12,7 @@ import static java.awt.print.Printable.NO_SUCH_PAGE;
 import static java.awt.print.Printable.PAGE_EXISTS;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /**
@@ -25,6 +26,7 @@ public class print_payment_reciept extends javax.swing.JFrame implements Printab
      */
     public print_payment_reciept() {
         initComponents();
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }
 
     /**

@@ -34,6 +34,7 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import com.gym.connection.connection;
 
 /**
  *
@@ -112,7 +113,8 @@ public class Exisiting_Member extends javax.swing.JFrame {
         namesearchComboBox.setVisible(false);
         idSearchComboBox.setVisible(false);
         mobilenoSearchComboBox.setVisible(false);
-
+        
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }
 
   public boolean check_numericfields(String text,String fieldname){
@@ -193,10 +195,7 @@ public class Exisiting_Member extends javax.swing.JFrame {
         membername_TextField.setEditable(true);
         mobileno_TextField.setEditable(true);
 
-        String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username = "sa";
-        String password = "Dhaval@7869";
-
+        
         String membership_id_rs;
         String dateofjoin_rs;
         String member_name_rs;
@@ -207,7 +206,7 @@ public class Exisiting_Member extends javax.swing.JFrame {
         String query = "select * from dbo.Mst_Employee where EmpName='" + mem_name + "'";
 
         try {
-            con = DriverManager.getConnection(url, username, password);
+            con = connection.getConnection();
             st = con.createStatement();
             rs = st.executeQuery(query);
 
@@ -261,9 +260,6 @@ public class Exisiting_Member extends javax.swing.JFrame {
         membername_TextField.setEditable(true);
         mobileno_TextField.setEditable(true);
 
-        String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username = "sa";
-        String password = "Dhaval@7869";
 
         String membership_id_rs;
         String dateofjoin_rs;
@@ -275,7 +271,7 @@ public class Exisiting_Member extends javax.swing.JFrame {
         String query = "select * from dbo.Mst_Employee where EmpId='" + mem_id + "'";
 
         try {
-            con = DriverManager.getConnection(url, username, password);
+            con = connection.getConnection();
             st = con.createStatement();
             rs = st.executeQuery(query);
 
@@ -330,9 +326,6 @@ public class Exisiting_Member extends javax.swing.JFrame {
         membername_TextField.setEditable(true);
         mobileno_TextField.setEditable(true);
 
-        String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username = "sa";
-        String password = "Dhaval@7869";
 
         String membership_id_rs;
         String dateofjoin_rs;
@@ -344,7 +337,7 @@ public class Exisiting_Member extends javax.swing.JFrame {
         String query = "select * from dbo.Mst_Employee where phoneNo='" + mem_mobileno + "'";
 
         try {
-            con = DriverManager.getConnection(url, username, password);
+            con = connection.getConnection();
             st = con.createStatement();
             rs = st.executeQuery(query);
 
@@ -393,14 +386,11 @@ public class Exisiting_Member extends javax.swing.JFrame {
 
     private List<String> namesearchresult(String prefix) {
 
-        String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username = "sa";
-        String password = "Dhaval@7869";
 
         List<String> list = new ArrayList<>();
         String query = "SELECT empname FROM dbo.mst_employee WHERE empname LIKE ?";
         try {
-            con = DriverManager.getConnection(url, username, password);
+            con = connection.getConnection();
             PreparedStatement pst = con.prepareStatement(query);
             pst.setString(1, prefix + "%");
             ResultSet rs = pst.executeQuery();
@@ -426,14 +416,11 @@ public class Exisiting_Member extends javax.swing.JFrame {
 
     private List<String> idsearchresult(String prefix) {
 
-        String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username = "sa";
-        String password = "Dhaval@7869";
 
         List<String> list = new ArrayList<>();
         String query = "SELECT EmpId FROM dbo.mst_employee WHERE EmpId LIKE ?";
         try {
-            con = DriverManager.getConnection(url, username, password);
+            con = connection.getConnection();
             PreparedStatement pst = con.prepareStatement(query);
             pst.setString(1, prefix + "%");
             ResultSet rs = pst.executeQuery();
@@ -459,14 +446,11 @@ public class Exisiting_Member extends javax.swing.JFrame {
 
     private List<String> mobilesearchresult(String prefix) {
 
-        String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username = "sa";
-        String password = "Dhaval@7869";
 
         List<String> list = new ArrayList<>();
         String query = "SELECT phoneNo FROM dbo.mst_employee WHERE PhoneNo LIKE ?";
         try {
-            con = DriverManager.getConnection(url, username, password);
+            con = connection.getConnection();
             PreparedStatement pst = con.prepareStatement(query);
             pst.setString(1, prefix + "%");
             ResultSet rs = pst.executeQuery();
@@ -491,14 +475,11 @@ public class Exisiting_Member extends javax.swing.JFrame {
     }
 
     public void showall_members() {
-        String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username = "sa";
-        String password = "Dhaval@7869";
-
+        
         String query = "select * from dbo.mst_employee";
 
         try {
-            con = DriverManager.getConnection(url, username, password);
+            con = connection.getConnection();
             pst = con.prepareStatement(query);
             ResultSet rs = pst.executeQuery();
 
@@ -518,7 +499,7 @@ public class Exisiting_Member extends javax.swing.JFrame {
         }
     }
 
-    public void calculate_fees() {
+ /*   public void calculate_fees() {
         String text = duration_TextField.getText();
         for (int i = 0; i < text.length(); i++) {
             if (duration_TextField.getText().length() > 0 && Character.toString(text.charAt(i)).matches("^[0-9]+$")) {
@@ -543,7 +524,74 @@ public class Exisiting_Member extends javax.swing.JFrame {
 
         }
 
-    }
+    }*/
+    
+       public void calculate_fees(){
+      String text=duration_TextField.getText();
+      
+      for(int i=0;i<text.length();i++){
+          if(duration_TextField.getText().length()>0 && Character.toString(text.charAt(i)).matches("^[0-9]+$")){
+          System.out.println("calculate fee method");
+          
+          int dur=Integer.parseInt(duration_TextField.getText());
+          
+      
+        String query="select * from dbo.fees where duration="+dur;
+              try {
+                   con=connection.getConnection();
+                    pst=con.prepareStatement(query);
+                    ResultSet rs=pst.executeQuery();
+                    
+                    if (rs.next()) {
+                        totalamount=rs.getInt("Amount");
+                      
+                  }else{
+                        JOptionPane.showMessageDialog(new JFrame(), "Fees Value Does Not Exist");
+                        totalfee_TextField.setEditable(true);
+                        totalfee_TextField.setText("");
+                        duration_TextField.setText("");
+                    }
+                  
+              } catch (Exception e) {
+                     JOptionPane.showMessageDialog(new JFrame(), "SEARCH ERROR");
+                     e.printStackTrace();
+                  
+              }
+        
+          
+          
+           //totalamount=1200*dur;//to fetch from DB
+          totalfee_TextField.setText(String.valueOf(totalamount));
+          totalfee_TextField.setEditable(false);
+          
+          //int feespaying=Integer.parseInt(currentpayment_TextField.getText());
+          
+            
+          
+          finalamount_TextField.setText(String.valueOf(totalamount));
+          finalamount_TextField.setEditable(false);
+         
+          
+          
+          discount_ComboBox.setEnabled(true);
+             totalamount=Integer.valueOf(totalfee_TextField.getText().toString());
+          System.out.println(totalamount);
+          
+          
+
+          }
+        else{
+            duration_TextField.setText("");
+            totalfee_TextField.setEditable(true);
+            totalfee_TextField.setText("");
+            totalfee_TextField.setEditable(false);
+        }
+        
+        
+      }
+        
+      }
+   
 
     public void set_renew_mem_end_date() {
         if (mem_renewed_start_date_TextField.getText().length() > 0) {
@@ -603,19 +651,16 @@ public class Exisiting_Member extends javax.swing.JFrame {
     }
 
     public void set_new_mem_dates() {
-        String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username = "sa";
-        String password = "Dhaval@7869";
 
         String empid = member_id_TextField.getText();
         String shiftstart = mem_renewed_start_date_TextField.getText();
         String validityenddate = mem_renewed_end_date_TextField.getText();
 
-        String query = "update attendance_manager.dbo.Mst_Employee\n"
+        String query = "update attendance_manager_new.dbo.Mst_Employee\n"
                 + "set ShiftStartDate=?,validityend=? where empid=" + empid;
 
         try {
-            con = DriverManager.getConnection(url, username, password);
+            con = connection.getConnection();
             pst = con.prepareCall(query);
             pst.setString(1, shiftstart);
             pst.setString(2, validityenddate);
@@ -651,9 +696,6 @@ public class Exisiting_Member extends javax.swing.JFrame {
         int final_amount = Integer.parseInt(finalamount_TextField.getText());
         int current_payment = Integer.parseInt(current_payment_TextField.getText());
 
-        String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username = "sa";
-        String password = "Dhaval@7869";
 
         String query = "INSERT INTO [dbo].[payments]\n"
                 + "           ([member_id]\n"
@@ -679,7 +721,7 @@ public class Exisiting_Member extends javax.swing.JFrame {
         int memid = (Integer.parseInt(member_id_TextField.getText()));
 
         try {
-            con = DriverManager.getConnection(url, username, password);
+            con = connection.getConnection();
             pst = con.prepareStatement(query);
             pst.setInt(1, memberid);
             pst.setInt(2, duration);

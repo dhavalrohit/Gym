@@ -5,7 +5,7 @@
 package com.gym.general.bmi;
 
 import com.formdev.flatlaf.FlatIntelliJLaf;
-import com.gym.buiseness.PrintBMIReport;
+
 import java.text.DecimalFormat;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -32,11 +32,12 @@ public class bmi_main extends javax.swing.JFrame {
 
     
     
-    public void calculateBMI()
+   /* public void calculateBMI()
     {
         
         double hieght_feet=Double.parseDouble(feet_TextField.getText());
         double hieght_in=Double.parseDouble(inches_TextField.getText());
+
 //      float hieght_cm=Float.parseFloat(hieght_cm_TextField.getText());
       
         Double wieght=Double.parseDouble(wieght_TextField.getText());
@@ -93,7 +94,48 @@ public class bmi_main extends javax.swing.JFrame {
         
              
              
-     }
+     }*/
+    
+    public void calculateBMI() {
+    double weight = Double.parseDouble(wieght_TextField.getText());
+    double height_meters;
+
+    if (feet_TextField.getText().isEmpty() || inches_TextField.getText().isEmpty()) {
+        
+        double height_cm = Double.parseDouble(hieght_cm_TextField.getText());
+        height_meters = height_cm / 100.0; 
+    } else {
+        
+        double height_feet = Double.parseDouble(feet_TextField.getText());
+        double height_inches = Double.parseDouble(inches_TextField.getText());
+        height_meters = ((height_feet * 12 + height_inches) * 0.0254);
+    }
+
+    double height_square = height_meters * height_meters;
+    double bmi = weight / height_square;
+    DecimalFormat dformat = new DecimalFormat("0.00");
+
+    if (bmi >= 18.5 && bmi <= 24.9) {
+        bmi_result_TextField.setEnabled(true);
+        bmi_result_TextField.setText(dformat.format(bmi));
+        JOptionPane.showMessageDialog(rootPane, "You are under Normal weight", "BMI Chart Message", JOptionPane.INFORMATION_MESSAGE);
+    } else if (bmi > 24.9) {
+        if (bmi > 29.9) {
+            bmi_result_TextField.setEnabled(true);
+            bmi_result_TextField.setText(dformat.format(bmi));
+            JOptionPane.showMessageDialog(rootPane, "Obese", "BMI Chart Message", JOptionPane.ERROR_MESSAGE);
+        } else {
+            bmi_result_TextField.setEnabled(true);
+            bmi_result_TextField.setText(dformat.format(bmi));
+            JOptionPane.showMessageDialog(rootPane, "Overweight", "BMI Chart Message", JOptionPane.ERROR_MESSAGE);
+        }
+    } else if (bmi < 18.5) {
+        bmi_result_TextField.setEnabled(true);
+        bmi_result_TextField.setText(dformat.format(bmi));
+        JOptionPane.showMessageDialog(rootPane, "Underweight", "BMI Chart Message", JOptionPane.ERROR_MESSAGE);
+    }
+}
+
     
     public boolean check_name_field(String text){
          boolean result=true;
@@ -517,36 +559,6 @@ public boolean checkAllFields(boolean[] fields) {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel11)
-                            .addComponent(jLabel15, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(waist_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(3, 3, 3)
-                                .addComponent(jLabel13)
-                                .addGap(18, 18, 18)
-                                .addComponent(jLabel12)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(wrist_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel14))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(fat_result_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(forearm_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jLabel16)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(jLabel17)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(hips_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel18)))
-                        .addGap(34, 34, 34))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel2)
                                 .addGap(64, 64, 64)
@@ -580,13 +592,47 @@ public boolean checkAllFields(boolean[] fields) {
                                 .addGap(18, 18, 18)
                                 .addComponent(femaleRadioButton)))
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(Fat_Perc_ResultLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(bmi_result_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(BMI_ResultLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(115, 115, 115))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel15, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel11)
+                                    .addComponent(Fat_Perc_ResultLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(waist_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(3, 3, 3)
+                                        .addComponent(jLabel13)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(jLabel12)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(wrist_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jLabel14))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(fat_result_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                                .addComponent(forearm_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(jLabel16)
+                                                .addGap(18, 18, 18)
+                                                .addComponent(jLabel17)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(hips_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jLabel18)))
+                                .addGap(34, 34, 34))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addComponent(bmi_result_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(BMI_ResultLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(115, 115, 115))))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -725,6 +771,7 @@ public boolean checkAllFields(boolean[] fields) {
         String wieght=wieght_TextField.getText();
         String hieght_feet=feet_TextField.getText();
         String hieght_inches=inches_TextField.getText();
+        String hieght_cm=hieght_cm_TextField.getText();
         String hips=hips_TextField.getText();
         String waist=waist_TextField.getText();
         String forearm=forearm_TextField.getText();
@@ -734,14 +781,25 @@ public boolean checkAllFields(boolean[] fields) {
         
        boolean name_check = check_name_field(name);
        boolean wieght_check=check_wieght_textfield(wieght);
-       boolean hieght_check_feet=check_hieght_textfield(hieght_feet);
-       boolean hieght_check_inches=check_hieght_textfield(hieght_inches);
+        boolean hieght_check_feet=false;
+       boolean hieght_check_inches=false;
+      boolean hieght_cm_check=false;
+        if (hieght_cm_TextField.getText().isEmpty()) {
+            hieght_check_feet=check_hieght_textfield(hieght_feet);
+            hieght_check_inches=check_hieght_textfield(hieght_inches);
+            hieght_cm_check=true;
+        }else{
+            hieght_cm_check=check_hieght_textfield(hieght_cm);
+            hieght_check_feet=true;
+            hieght_check_inches=true;
+        }
+       
       // boolean hips_check=check_hips_textfield(hips);
        //boolean wrist_check=check_wrist_textfield(wrist);
        //boolean forearm_check=check_forearm_textfield(forearm);
        //boolean waist_check=check_waist_textfield(waist);
        
-       boolean[] checkallfields_for_bmi={name_check,wieght_check,hieght_check_feet,hieght_check_inches};
+       boolean[] checkallfields_for_bmi={name_check,wieght_check,hieght_check_feet,hieght_check_inches,hieght_cm_check};
        
        boolean check_constraints=checkAllFields(checkallfields_for_bmi);
        
@@ -782,11 +840,11 @@ public boolean checkAllFields(boolean[] fields) {
         
         boolean name_check = check_name_field(name);
        boolean wieght_check=check_wieght_textfield(wieght);
-       boolean hieght_check_feet=check_hieght_textfield(hieght_feet);
-       boolean hieght_check_inches=check_hieght_textfield(hieght_inches);
+       //boolean hieght_check_feet=check_hieght_textfield(hieght_feet);
+       //boolean hieght_check_inches=check_hieght_textfield(hieght_inches);
        boolean waist_check=check_waist_textfield(waist);
        
-       boolean[] checkallfields_for_fat_man={name_check,wieght_check,hieght_check_feet,hieght_check_inches,waist_check};
+       boolean[] checkallfields_for_fat_man={name_check,wieght_check,waist_check};
        
        boolean check_constraints=checkAllFields(checkallfields_for_fat_man);
                 if (check_constraints==true) {
@@ -810,14 +868,14 @@ public boolean checkAllFields(boolean[] fields) {
         
         boolean name_check = check_name_field(name);
        boolean wieght_check=check_wieght_textfield(wieght);
-       boolean hieght_check_feet=check_hieght_textfield(hieght_feet);
-       boolean hieght_check_inches=check_hieght_textfield(hieght_inches);
+       //boolean hieght_check_feet=check_hieght_textfield(hieght_feet);
+       //boolean hieght_check_inches=check_hieght_textfield(hieght_inches);
        boolean hips_check=check_hips_textfield(hips);
        boolean wrist_check=check_wrist_textfield(wrist);
        boolean forearm_check=check_forearm_textfield(forearm);
        boolean waist_check=check_waist_textfield(waist);
        
-       boolean[] checkallfields_for_bmi={name_check,wieght_check,hieght_check_feet,hieght_check_inches,waist_check,wrist_check,hips_check,forearm_check};
+       boolean[] checkallfields_for_bmi={name_check,wieght_check,waist_check,wrist_check,hips_check,forearm_check};
        
        boolean check_constraints=checkAllFields(checkallfields_for_bmi);
                      if (check_constraints==true) {

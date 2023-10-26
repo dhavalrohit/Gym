@@ -1,6 +1,5 @@
 package com.gym.general.attendance;
 
-
 import com.gym.general.attendance.month.*;
 import com.gym.general.attendance.threemonth.*;
 import com.gym.general.attendance.week.*;
@@ -27,19 +26,21 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import net.proteanit.sql.DbUtils;
+import com.gym.connection.connection;
+import java.io.IOException;
+import javax.swing.JFrame;
 
 public class AttendanceForm extends javax.swing.JPanel {
 
-     double daily_attendance_count;
+    double daily_attendance_count;
     double total_members_count;
     double percentage;
-    Connection con=null;
-    ResultSet rs=null;
-    PreparedStatement pst=null;
+    Connection con = null;
+    ResultSet rs = null;
+    PreparedStatement pst = null;
     int count;
-   
-    
-    public AttendanceForm() throws SQLException {
+
+    public AttendanceForm() throws SQLException, IOException {
         initComponents();
         table1.fixTable(jScrollPane1);
         setOpaque(false);
@@ -50,42 +51,43 @@ public class AttendanceForm extends javax.swing.JPanel {
 
     private void initData() throws SQLException {
         initCardData();
-         //   initNoticeBoard();
-       // initTableData();
+        //   initNoticeBoard();
+        // initTableData();
     }
-   
-        
-    
-      public void Get_Daily_Attendance() throws SQLException{
-        String sql="select cardNo , punchdatetime from dbo.Tran_MachineRawPunch";
-       
+
+    public void Get_Daily_Attendance() throws SQLException {
+        String sql = "select cardNo , punchdatetime from dbo.Tran_MachineRawPunch";
+
         /*String sql_query_join="select dbo.mst_employee.EmpName,dbo.mst_employee.Empcode, dbo.tran_machinerawpunch.cardno,\n" +
 "dbo.tran_machinerawpunch.punchdatetime from dbo.mst_employee \n" +
 "INNER JOIN dbo.tran_machinerawpunch on dbo.mst_employee.cardno=dbo.tran_machinerawpunch.cardno order by punchdatetime";*/
-       
-        String sql_query_join="select dbo.Mst_Employee.empname ,dbo.Tran_Attendance.empid,dbo.Tran_Attendance.DateOFFICE,dbo.Tran_Attendance.Punch1,dbo.Tran_Attendance.Punch2,dbo.Tran_Attendance.allpunchs from dbo.Mst_Employee\n" +
-"inner join dbo.Tran_Attendance on dbo.Mst_Employee.EmpId=dbo.Tran_Attendance.EmpId order by DateOFFICE";
+ /* String sql_query_join="select dbo.Mst_Employee.empname ,dbo.Tran_Attendance.empid,dbo.Tran_Attendance.DateOFFICE,dbo.Tran_Attendance.Punch1,dbo.Tran_Attendance.Punch2,dbo.Tran_Attendance.allpunchs from dbo.Mst_Employee\n" +
+"inner join dbo.Tran_Attendance on dbo.Mst_Employee.EmpId=dbo.Tran_Attendance.EmpId order by DateOFFICE";*/
+ String sql_query_join="select dbo.Mst_Employee.empname ,"
+          + "convert(date,dbo.Tran_Attendance.DateOFFICE,104)[Date],convert(char(5), dbo.Tran_Attendance.Punch1 , 108) [punch1] ,convert(char(5), dbo.Tran_Attendance.Punch2 , 108) [punch2],dbo.Tran_Attendance.allpunchs from dbo.Mst_Employee \n" +
+"inner join dbo.Tran_Attendance on dbo.Mst_Employee.EmpId=dbo.Tran_Attendance.EmpId where convert(varchar(10), DateOFFICE, 102) \n" +
+"    = convert(varchar(10), getdate(), 102) order by DateOFFICE";
+      
         
-        String url="jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username="sa";
-        String password="Dhaval@7869";
         try {
-            con=DriverManager.getConnection(url, username, password);
-            pst=con.prepareStatement(sql_query_join);
-            rs=pst.executeQuery();
+            con = connection.getConnection();
+            pst = con.prepareStatement(sql_query_join);
+            rs = pst.executeQuery();
             table1.setModel(DbUtils.resultSetToTableModel(rs));
         } catch (SQLException ex) {
             Logger.getLogger(AttendanceForm.class.getName()).log(Level.SEVERE, null, ex);
             ex.printStackTrace();
-        }
-        finally{
+        } catch (IOException ex) {
+            Logger.getLogger(AttendanceForm.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(new JFrame(), "Connection File Error");
+        } finally {
             pst.close();
             rs.close();
             con.close();
         }
     }
-    
-  /*  public void Get_Daily_Attendance(){
+
+    /*  public void Get_Daily_Attendance(){
         String sql="Select * From RawPunchDetail";
         try{
         	con=Connect.connectDb();
@@ -114,96 +116,76 @@ public class AttendanceForm extends javax.swing.JPanel {
         	}
         }
     }*/
-    
-    
-    public void get_daily_attendance_count(){
-        String sql="select count(*) from dbo.tran_machinerawpunch where punchdatetime=getdate()";
-        String url="jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username="sa";
-        String password="Dhaval@7869";
+    public void get_daily_attendance_count() {
+        String sql = "select count(*) from dbo.tran_machinerawpunch where punchdatetime=getdate()";
         
-        try{
-        	con=DriverManager.getConnection(url , username, password);
-            pst=con.prepareStatement(sql);
-            rs=pst.executeQuery();
-          //  rs.next()
-            while (rs.next()) {                
-                daily_attendance_count=rs.getInt(1);
+        try {
+            con = connection.getConnection();
+            pst = con.prepareStatement(sql);
+            rs = pst.executeQuery();
+            //  rs.next()
+            while (rs.next()) {
+                daily_attendance_count = rs.getInt(1);
             }
             System.out.println(daily_attendance_count);
             table1.setModel(DbUtils.resultSetToTableModel(rs));
-            
+
             pst.close();
- 		    rs.close();
- 		    con.close();
-                   
-            
+            rs.close();
+            con.close();
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        } finally {
+            try {
+                pst.close();
+                rs.close();
+                con.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-        catch(Exception e)
-        {
-            JOptionPane.showMessageDialog(null,e);
-        }
-       finally{
-    	   try {
-    		   pst.close();
-    		   rs.close();
-    		   con.close();
-    	   }
-        	catch(Exception e){
-        		e.printStackTrace();
-        	}
-        }
-       
+
     }
-    
-    public void get_total_members_count(){
-         String sql="select count(*) from dbo.mst_employee";
-      String url="jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username="sa";
-        String password="Dhaval@7869";
+
+    public void get_total_members_count() {
+        String sql = "select count(*) from dbo.mst_employee";
         
-         try{
-        	con=DriverManager.getConnection(url, username, password);
-            pst=con.prepareStatement(sql);
-            rs=pst.executeQuery();
-          //  rs.next()
-            while (rs.next()) {                
-                total_members_count=rs.getInt(1);
+        try {
+            con = connection.getConnection();
+            pst = con.prepareStatement(sql);
+            rs = pst.executeQuery();
+            //  rs.next()
+            while (rs.next()) {
+                total_members_count = rs.getInt(1);
             }
             System.out.println(total_members_count);
             table1.setModel(DbUtils.resultSetToTableModel(rs));
-            
+
             pst.close();
- 		    rs.close();
- 		    con.close();
-                   
-            
+            rs.close();
+            con.close();
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        } finally {
+            try {
+                pst.close();
+                rs.close();
+                con.close();
+            } catch (Exception e) {
+
+            }
         }
-        catch(Exception e)
-        {
-            JOptionPane.showMessageDialog(null,e);
-        }
-       finally{
-    	   try {
-    		   pst.close();
-    		   rs.close();
-    		   con.close();
-    	   }
-        	catch(Exception e){
-        		
-        	}
-        }
-       
+
     }
-    
-     public void get_attendance_percentage(double total_members,double daily_attendance){
-        percentage =(daily_attendance/total_members)*100;
-        int perc=(int) percentage;
+
+    public void get_attendance_percentage(double total_members, double daily_attendance) {
+        percentage = (daily_attendance / total_members) * 100;
+        int perc = (int) percentage;
         System.out.println(perc);
     }
-     
-     
-    
+
     /*
     method to show all members data
     public void Get_Data(){
@@ -234,9 +216,7 @@ public class AttendanceForm extends javax.swing.JPanel {
         	}
         }
     }*/
-
-
-    private void initTableData() throws SQLException {
+    private void initTableData() throws SQLException, IOException {
         EventAction eventAction = new EventAction() {
             @Override
             public void delete(ModelMember student) {
@@ -256,55 +236,80 @@ public class AttendanceForm extends javax.swing.JPanel {
                 }
             }
         };
-         String sql="select cardNo , punchdatetime from dbo.Tran_MachineRawPunch";
+        String sql = "select cardNo , punchdatetime from dbo.Tran_MachineRawPunch";
         System.out.println("Get Daily Attendance Method ");
         /*String sql_query_join="select dbo.mst_employee.EmpName,dbo.mst_employee.Empcode, dbo.tran_machinerawpunch.cardno,\n" +
 "dbo.tran_machinerawpunch.punchdatetime from dbo.mst_employee \n" +
 "INNER JOIN dbo.tran_machinerawpunch on dbo.mst_employee.cardno=dbo.tran_machinerawpunch.cardno order by punchdatetime";*/
-       
-        String sql_query_join="select dbo.Mst_Employee.empname ,dbo.Tran_Attendance.empid,dbo.Tran_Attendance.DateOFFICE,dbo.Tran_Attendance.Punch1,dbo.Tran_Attendance.Punch2,dbo.Tran_Attendance.allpunchs from dbo.Mst_Employee\n" +
-"inner join dbo.Tran_Attendance on dbo.Mst_Employee.EmpId=dbo.Tran_Attendance.EmpId order by DateOFFICE";
+
+ /*String sql_query_join="select dbo.Mst_Employee.empname ,dbo.Tran_Attendance.empid,dbo.Tran_Attendance.DateOFFICE,dbo.Tran_Attendance.Punch1,dbo.Tran_Attendance.Punch2,dbo.Tran_Attendance.allpunchs from dbo.Mst_Employee\n" +
+"inner join dbo.Tran_Attendance on dbo.Mst_Employee.EmpId=dbo.Tran_Attendance.EmpId order by DateOFFICE";*/
+        /*String sql_query_join = "select dbo.Mst_Employee.empname ,"
+                + "convert(date,dbo.Tran_Attendance.DateOFFICE,104)[Date],convert(char(5), dbo.Tran_Attendance.Punch1 , 108) [punch1] ,convert(char(5), dbo.Tran_Attendance.Punch2 , 108) [punch2],dbo.Tran_Attendance.allpunchs from dbo.Mst_Employee \n"
+                + "inner join dbo.Tran_Attendance on dbo.Mst_Employee.EmpId=dbo.Tran_Attendance.EmpId where convert(varchar(10), DateOFFICE, 102) \n"
+                + "    = convert(varchar(10), getdate(), 102) order by DateOFFICE";*/
         
-        String url="jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username="sa";
-        String password="Dhaval@7869";
+          String sql_query_join = "WITH PunchData AS (\n" +
+"    SELECT\n" +
+"        dbo.Mst_Employee.EmpID,\n" +
+"        dbo.Mst_Employee.EmpName,\n" +
+"        CONVERT(DATE, dbo.Tran_machinerawpunch.punchdatetime, 104) AS [Date],\n" +
+"        CONVERT(CHAR(5), dbo.Tran_machinerawpunch.punchdatetime, 108) AS [PunchTime],\n" +
+"        ROW_NUMBER() OVER (PARTITION BY dbo.Mst_Employee.EmpName, CONVERT(DATE, dbo.Tran_machinerawpunch.punchdatetime, 104) ORDER BY dbo.Tran_machinerawpunch.punchdatetime) AS PunchNumber\n" +
+"    FROM\n" +
+"        dbo.Mst_Employee\n" +
+"    INNER JOIN\n" +
+"        dbo.Tran_machinerawpunch ON dbo.Mst_Employee.cardno = dbo.Tran_machinerawpunch.cardno\n" +
+"    WHERE\n" +
+"        CONVERT(DATE, punchdatetime, 102) = CONVERT(DATE, GETDATE(), 102)\n" +
+")\n" +
+"\n" +
+"SELECT\n" +
+"    EmpID AS ID,\n" +
+"    EmpName AS Name,\n" +
+"    [Date],\n" +
+"    MAX(CASE WHEN PunchNumber = 1 THEN PunchTime ELSE NULL END) AS IN_PUNCH,\n" +
+"    MAX(CASE WHEN PunchNumber = 2 THEN PunchTime ELSE NULL END) AS OUT_PUNCH\n" +
+"FROM\n" +
+"    PunchData\n" +
+"GROUP BY\n" +
+"    Empid,EmpName, [Date]\n" +
+"ORDER BY\n" +
+"    [Date];";
+
+        
         try {
-            con=DriverManager.getConnection(url, username, password);
-            pst=con.prepareStatement(sql_query_join);
-            rs=pst.executeQuery();
-            
-           /* while (rs.next()) {                
+            con = connection.getConnection();
+            pst = con.prepareStatement(sql_query_join);
+            rs = pst.executeQuery();
+
+            /* while (rs.next()) {                
                 System.out.println("Emp Name"+rs.getString("empname"));
                 System.out.println("Emp ID"+rs.getInt("empid"));
             }*/
             table1.setModel(DbUtils.resultSetToTableModel(rs));
-             
-            
-        }   catch (SQLException ex) {
+
+        } catch (SQLException ex) {
             Logger.getLogger(Form_Home.class.getName()).log(Level.SEVERE, null, ex);
             ex.printStackTrace();
-        }
-        finally{
+        } finally {
             pst.close();
             rs.close();
             con.close();
         }
-       
-       
-        
-       
+
     }
 
     private void initCardData() {
-             get_total_members_count();
-       get_daily_attendance_count();
-      
-       get_attendance_percentage(total_members_count, daily_attendance_count);
-         
+        get_total_members_count();
+        get_daily_attendance_count();
+
+        get_attendance_percentage(total_members_count, daily_attendance_count);
+
         Icon icon1 = IconFontSwing.buildIcon(GoogleMaterialDesignIcons.PEOPLE, 60, new Color(255, 255, 255, 100), new Color(255, 255, 255, 15));
         card1.setData(new ModelCard("Total Members", total_members_count, 20, icon1));
         Icon icon2 = IconFontSwing.buildIcon(GoogleMaterialDesignIcons.MONETIZATION_ON, 60, new Color(255, 255, 255, 100), new Color(255, 255, 255, 15));
-        card2.setData(new ModelCard("Daily Attendance", daily_attendance_count, (int)percentage, icon2));
+        card2.setData(new ModelCard("Daily Attendance", daily_attendance_count, (int) percentage, icon2));
         Icon icon3 = IconFontSwing.buildIcon(GoogleMaterialDesignIcons.SHOPPING_BASKET, 60, new Color(255, 255, 255, 100), new Color(255, 255, 255, 15));
         card3.setData(new ModelCard("Active Members", 800, 80, icon3));
         Icon icon4 = IconFontSwing.buildIcon(GoogleMaterialDesignIcons.BUSINESS_CENTER, 60, new Color(255, 255, 255, 100), new Color(255, 255, 255, 15));
@@ -399,7 +404,7 @@ public class AttendanceForm extends javax.swing.JPanel {
 
         jLabel5.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(76, 76, 76));
-        jLabel5.setText("Attendance Record");
+        jLabel5.setText("Today's Attendance Record");
         jLabel5.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 10, 1, 1));
 
         table1.setModel(new javax.swing.table.DefaultTableModel(
@@ -411,7 +416,7 @@ public class AttendanceForm extends javax.swing.JPanel {
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, true
+                false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {

@@ -16,7 +16,11 @@ import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.plaf.ButtonUI;
 import net.proteanit.sql.DbUtils;
-
+import com.gym.connection.connection;
+import java.awt.event.ActionEvent;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Fee_Details extends javax.swing.JFrame {
 
@@ -49,9 +53,6 @@ public class Fee_Details extends javax.swing.JFrame {
     
     public void showFeesDetails(){
     
-          String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username = "sa";
-        String password = "Dhaval@7869";
       
         
          selectedrow= jTable1.getSelectedRow();
@@ -71,6 +72,7 @@ public class Fee_Details extends javax.swing.JFrame {
         new_Button = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
+        refersh_Button = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Fee Managment");
@@ -117,7 +119,7 @@ public class Fee_Details extends javax.swing.JFrame {
                 java.lang.String.class, java.lang.String.class, java.lang.Integer.class
             };
             boolean[] canEdit = new boolean [] {
-                true, false, true
+                false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -130,6 +132,17 @@ public class Fee_Details extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(jTable1);
 
+        refersh_Button.setBackground(new java.awt.Color(32, 161, 93));
+        refersh_Button.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
+        refersh_Button.setForeground(java.awt.Color.white);
+        refersh_Button.setText("REFERSH");
+        refersh_Button.setBorderPainted(false);
+        refersh_Button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                refersh_ButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -139,8 +152,10 @@ public class Fee_Details extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(new_Button)
-                        .addGap(18, 18, 18)
-                        .addComponent(update_Button))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(update_Button)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(refersh_Button))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
@@ -150,7 +165,8 @@ public class Fee_Details extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(new_Button)
-                    .addComponent(update_Button))
+                    .addComponent(update_Button)
+                    .addComponent(refersh_Button))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE)
                 .addContainerGap())
@@ -179,8 +195,13 @@ public class Fee_Details extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void new_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_new_ButtonActionPerformed
-        // TODO add your handling code here:
-        new add_new_fees().setVisible(true);
+        try {
+            // TODO add your handling code here:
+            new add_new_fees().setVisible(true);
+        } catch (IOException ex) {
+            Logger.getLogger(Fee_Details.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(new JFrame(), "Connection File Error");
+        }
         
         
         
@@ -205,15 +226,23 @@ public class Fee_Details extends javax.swing.JFrame {
         
     }//GEN-LAST:event_update_ButtonActionPerformed
 
+    private void refersh_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refersh_ButtonActionPerformed
+        // TODO add your handling code here:
+        view_added_fees();
+       
+    }//GEN-LAST:event_refersh_ButtonActionPerformed
+
+    
+    public void refersh(){
+        view_added_fees();
+    }
+    
     public void view_added_fees(){
-          String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username = "sa";
-        String password = "Dhaval@7869";
       
          String query="select feeid as FEE_ID,duration as DURATION_MONTHS,amount as AMOUNT from dbo.fees";
          
          try {
-            con=DriverManager.getConnection(url, username, password);
+            con=connection.getConnection();
             st=con.createStatement();
             rs=st.executeQuery(query);
             jTable1.setModel(DbUtils.resultSetToTableModel(rs));
@@ -263,6 +292,7 @@ public class Fee_Details extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JButton new_Button;
+    private javax.swing.JButton refersh_Button;
     private javax.swing.JButton update_Button;
     // End of variables declaration//GEN-END:variables
 }

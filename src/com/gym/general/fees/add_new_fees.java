@@ -15,6 +15,8 @@ import java.util.logging.Logger;
 import java.sql.DriverManager;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import com.gym.connection.connection;
+import java.io.IOException;
 
 /**
  *
@@ -31,7 +33,7 @@ public class add_new_fees extends javax.swing.JFrame {
      
       int total=0;
     
-    public add_new_fees() {
+    public add_new_fees() throws IOException {
         FlatIntelliJLaf.registerCustomDefaultsSource("Flatlab.propeties");
         FlatIntelliJLaf.setup();
         
@@ -42,14 +44,11 @@ public class add_new_fees extends javax.swing.JFrame {
         
     }
 
-    public void get_fee_id(){
-         String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username = "sa";
-        String password = "Dhaval@7869";
+    public void get_fee_id() throws IOException{
       
-         String query="select feeid from attendance_manager.dbo.fees ";
+         String query="select feeid from attendance_manager_new.dbo.fees ";
         try {
-            con=DriverManager.getConnection(url, username, password);
+            con=connection.getConnection();
             st=con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
             rs=st.executeQuery(query);
             if(rs.last()){
@@ -120,10 +119,7 @@ public class add_new_fees extends javax.swing.JFrame {
    }
       
       
-    public void add_fee(){
-           String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username = "sa";
-        String password = "Dhaval@7869";
+    public void add_fee() throws IOException{
       
         String query="insert into fees values(?,?)";
         
@@ -134,12 +130,12 @@ public class add_new_fees extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(new JFrame(), "Amount/Duration fields empty");
         }
         else{
-            System.out.println("not emplty");
+            System.out.println("not empty");
             int duration=Integer.parseInt(duration_TextField.getText());
             int amount=Integer.parseInt(amount_TextField.getText());
             try{
             
-            con=DriverManager.getConnection(url, username, password);
+            con=connection.getConnection();
             pst=con.prepareStatement(query);
             pst.setInt(1, duration);
             pst.setInt(2, amount);
@@ -177,9 +173,9 @@ public class add_new_fees extends javax.swing.JFrame {
         amount_TextField = new javax.swing.JTextField();
         fee_id_TextField = new javax.swing.JTextField();
         duration_TextField = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        add_Button = new javax.swing.JButton();
+        clear_Button = new javax.swing.JButton();
+        close_Button = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -222,16 +218,38 @@ public class add_new_fees extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setText("ADD");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        add_Button.setBackground(new java.awt.Color(32, 161, 93));
+        add_Button.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
+        add_Button.setForeground(new java.awt.Color(255, 255, 255));
+        add_Button.setText("ADD");
+        add_Button.setBorderPainted(false);
+        add_Button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                add_ButtonActionPerformed(evt);
             }
         });
 
-        jButton2.setText("CLEAR");
+        clear_Button.setBackground(new java.awt.Color(32, 161, 93));
+        clear_Button.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
+        clear_Button.setForeground(new java.awt.Color(255, 255, 255));
+        clear_Button.setText("CLEAR");
+        clear_Button.setBorderPainted(false);
+        clear_Button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                clear_ButtonActionPerformed(evt);
+            }
+        });
 
-        jButton3.setText("CANCEL");
+        close_Button.setBackground(new java.awt.Color(32, 161, 93));
+        close_Button.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
+        close_Button.setForeground(new java.awt.Color(255, 255, 255));
+        close_Button.setText("CLOSE");
+        close_Button.setBorderPainted(false);
+        close_Button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                close_ButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -245,12 +263,12 @@ public class add_new_fees extends javax.swing.JFrame {
                         .addGap(28, 28, 28)
                         .addComponent(amount_TextField))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButton1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton3)
-                        .addGap(0, 21, Short.MAX_VALUE))
+                        .addComponent(add_Button)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(clear_Button)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(close_Button)
+                        .addGap(0, 15, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel3)
@@ -279,9 +297,9 @@ public class add_new_fees extends javax.swing.JFrame {
                             .addComponent(jLabel4))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3))
+                    .addComponent(add_Button)
+                    .addComponent(clear_Button)
+                    .addComponent(close_Button))
                 .addContainerGap(17, Short.MAX_VALUE))
         );
 
@@ -315,7 +333,7 @@ public class add_new_fees extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_duration_TextFieldActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void add_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_add_ButtonActionPerformed
         // TODO add your handling code here:
          boolean checkdur=check_numericfields(duration_TextField.getText(),"Dration");
          boolean checkamount=check_numericfields(amount_TextField.getText(),"Amount");
@@ -324,13 +342,18 @@ public class add_new_fees extends javax.swing.JFrame {
         boolean[] fields={checkdur,checkamount};
         boolean finalres=checkallfields(fields);
          if (finalres==true) {
-            add_fee();
+             try {
+                 add_fee();
+             } catch (IOException ex) {
+                 Logger.getLogger(add_new_fees.class.getName()).log(Level.SEVERE, null, ex);
+                 JOptionPane.showMessageDialog(new JFrame(), "Connection File Error");
+             }
         }
          else{
              JOptionPane.showMessageDialog(new JFrame(), "Constraint Error");
          }
          
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_add_ButtonActionPerformed
 
    
     
@@ -373,6 +396,17 @@ public class add_new_fees extends javax.swing.JFrame {
     } 
     }//GEN-LAST:event_amount_TextFieldKeyReleased
 
+    private void clear_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clear_ButtonActionPerformed
+        // TODO add your handling code here:
+        duration_TextField.setText("");
+        amount_TextField.setText("");
+    }//GEN-LAST:event_clear_ButtonActionPerformed
+
+    private void close_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_close_ButtonActionPerformed
+        // TODO add your handling code here:
+        dispose();
+    }//GEN-LAST:event_close_ButtonActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -403,18 +437,23 @@ public class add_new_fees extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new add_new_fees().setVisible(true);
+                try {
+                    new add_new_fees().setVisible(true);
+                } catch (IOException ex) {
+                    Logger.getLogger(add_new_fees.class.getName()).log(Level.SEVERE, null, ex);
+                    JOptionPane.showMessageDialog(new JFrame(), "Connection File Error");
+                }
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton add_Button;
     private javax.swing.JTextField amount_TextField;
+    private javax.swing.JButton clear_Button;
+    private javax.swing.JButton close_Button;
     private javax.swing.JTextField duration_TextField;
     private javax.swing.JTextField fee_id_TextField;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

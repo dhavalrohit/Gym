@@ -21,6 +21,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import net.proteanit.sql.DbUtils;
+import com.gym.connection.connection;
+import java.io.IOException;
 
 public class attendanceWeekRecord extends javax.swing.JPanel {
 
@@ -33,7 +35,7 @@ public class attendanceWeekRecord extends javax.swing.JPanel {
     int count;
    
     
-    public attendanceWeekRecord() throws SQLException {
+    public attendanceWeekRecord() throws SQLException, IOException {
         initComponents();
         table1.fixTable(jScrollPane1);
         setOpaque(false);
@@ -48,7 +50,7 @@ public class attendanceWeekRecord extends javax.swing.JPanel {
         initTableData();
     }
    
-        public void getweekRecord() throws SQLException{
+        public void getweekRecord() throws SQLException, IOException{
           
         //table1.addRow(new ModelMember(new ImageIcon(getClass().getResource("/com/gym/general/icon/profile.jpg")), "Jonh", "Male", "Java", 300).toRowTable(eventAction));
        //Get_Data();
@@ -60,16 +62,52 @@ public class attendanceWeekRecord extends javax.swing.JPanel {
 "INNER JOIN dbo.tran_machinerawpunch on dbo.mst_employee.cardno=dbo.tran_machinerawpunch.cardno order by punchdatetime";*/
        
         String sql_query_join="select dbo.Mst_Employee.empname ,dbo.Tran_Attendance.empid,dbo.Tran_Attendance.DateOFFICE,dbo.Tran_Attendance.Punch1,dbo.Tran_Attendance.Punch2,dbo.Tran_Attendance.allpunchs from dbo.Mst_Employee\n" +
-"inner join dbo.Tran_Attendance on dbo.Mst_Employee.EmpId=dbo.Tran_Attendance.EmpId order by DateOFFICE";
+        "inner join dbo.Tran_Attendance on dbo.Mst_Employee.EmpId=dbo.Tran_Attendance.EmpId order by DateOFFICE";
         
-        String sqlqueryweek="select dbo.Mst_Employee.empname ,dbo.Tran_Attendance.empid,dbo.Tran_Attendance.DateOFFICE,dbo.Tran_Attendance.Punch1,dbo.Tran_Attendance.Punch2,dbo.Tran_Attendance.allpunchs from dbo.Mst_Employee\n" +
-"inner join dbo.Tran_Attendance on dbo.Mst_Employee.EmpId=dbo.Tran_Attendance.EmpId WHERE  DateOFFICE BETWEEN GETDATE()-7 AND GETDATE()";
+        /*String sqlqueryweek="select dbo.Mst_Employee.empname ,dbo.Tran_Attendance.empid,dbo.Tran_Attendance.DateOFFICE,dbo.Tran_Attendance.Punch1,dbo.Tran_Attendance.Punch2,dbo.Tran_Attendance.allpunchs from dbo.Mst_Employee\n" +
+        "inner join dbo.Tran_Attendance on dbo.Mst_Employee.EmpId=dbo.Tran_Attendance.EmpId WHERE  DateOFFICE BETWEEN GETDATE()-7 AND GETDATE()";*/
         
-        String url="jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username="sa";
-        String password="Dhaval@7869";
+       /* String sqlqueryweek="SELECT dbo.Mst_Employee.empname,\n" +
+"       CONVERT(DATE, dbo.Tran_Attendance.DateOFFICE, 104) AS [Date],\n" +
+"       CONVERT(CHAR(5), dbo.Tran_Attendance.Punch1, 108) AS [punch1],\n" +
+"       CONVERT(CHAR(5), dbo.Tran_Attendance.Punch2, 108) AS [punch2],\n" +
+"       dbo.Tran_Attendance.allpunchs\n" +
+"FROM dbo.Mst_Employee\n" +
+"INNER JOIN dbo.Tran_Attendance ON dbo.Mst_Employee.EmpId = dbo.Tran_Attendance.EmpId\n" +
+"WHERE CONVERT(DATE, DateOFFICE, 102) >= CONVERT(DATE, DATEADD(DAY, -7, GETDATE()), 102)\n" +
+"      AND CONVERT(DATE, DateOFFICE, 102) <= CONVERT(DATE, GETDATE(), 102)\n" +
+"ORDER BY DateOFFICE;";*/
+       
+       String sqlqueryweek="WITH PunchData AS (\n" +
+"    SELECT\n" +
+"        dbo.Mst_Employee.EmpID,\n" +               
+"        dbo.Mst_Employee.EmpName,\n" +
+"        CONVERT(DATE, dbo.Tran_machinerawpunch.punchdatetime, 104) AS [Date],\n" +
+"        CONVERT(CHAR(5), dbo.Tran_machinerawpunch.punchdatetime, 108) AS [PunchTime],\n" +
+"        ROW_NUMBER() OVER (PARTITION BY dbo.Mst_Employee.EmpName, CONVERT(DATE, dbo.Tran_machinerawpunch.punchdatetime, 104) ORDER BY dbo.Tran_machinerawpunch.punchdatetime) AS PunchNumber\n" +
+"    FROM\n" +
+"        dbo.Mst_Employee\n" +
+"    INNER JOIN\n" +
+"        dbo.Tran_machinerawpunch ON dbo.Mst_Employee.cardno = dbo.Tran_machinerawpunch.cardno\n" +
+"    WHERE\n" +
+"        CONVERT(DATE, punchdatetime, 102) BETWEEN DATEADD(DAY, -7, CONVERT(DATE, GETDATE())) AND CONVERT(DATE, GETDATE(), 102)\n" +
+")\n" +
+"SELECT\n" +
+"    EmpID AS ID,\n" +               
+"    EmpName as Name,\n" +
+"    [Date],\n" +
+"    MAX(CASE WHEN PunchNumber = 1 THEN PunchTime ELSE NULL END) AS IN_PUNCH,\n" +
+"    MAX(CASE WHEN PunchNumber = 2 THEN PunchTime ELSE NULL END) AS OUT_PUNCH\n" +
+"FROM\n" +
+"    PunchData\n" +
+"GROUP BY\n" +
+"    EmpID,EmpName, [Date]\n" +
+"ORDER BY\n" +
+"    [Date];";
+        
+        
         try {
-            con=DriverManager.getConnection(url, username, password);
+            con=connection.getConnection();
             pst=con.prepareStatement(sqlqueryweek);
             rs=pst.executeQuery();
             
@@ -92,21 +130,23 @@ public class attendanceWeekRecord extends javax.swing.JPanel {
      }
     
     
-      public void Get_Daily_Attendance() throws SQLException{
+      public void Get_Daily_Attendance() throws SQLException, IOException{
         String sql="select cardNo , punchdatetime from dbo.Tran_MachineRawPunch";
        
         /*String sql_query_join="select dbo.mst_employee.EmpName,dbo.mst_employee.Empcode, dbo.tran_machinerawpunch.cardno,\n" +
 "dbo.tran_machinerawpunch.punchdatetime from dbo.mst_employee \n" +
 "INNER JOIN dbo.tran_machinerawpunch on dbo.mst_employee.cardno=dbo.tran_machinerawpunch.cardno order by punchdatetime";*/
        
-        String sql_query_join="select dbo.Mst_Employee.empname ,dbo.Tran_Attendance.empid,dbo.Tran_Attendance.DateOFFICE,dbo.Tran_Attendance.Punch1,dbo.Tran_Attendance.Punch2,dbo.Tran_Attendance.allpunchs from dbo.Mst_Employee\n" +
-"inner join dbo.Tran_Attendance on dbo.Mst_Employee.EmpId=dbo.Tran_Attendance.EmpId order by DateOFFICE";
+       /* String sql_query_join="select dbo.Mst_Employee.empname ,dbo.Tran_Attendance.empid,dbo.Tran_Attendance.DateOFFICE,dbo.Tran_Attendance.Punch1,dbo.Tran_Attendance.Punch2,dbo.Tran_Attendance.allpunchs from dbo.Mst_Employee\n" +
+"inner join dbo.Tran_Attendance on dbo.Mst_Employee.EmpId=dbo.Tran_Attendance.EmpId order by DateOFFICE";*/
+               String sql_query_join="select dbo.Mst_Employee.empname ,convert(date,dbo.Tran_Attendance.DateOFFICE,104)[Date],convert(char(5), dbo.Tran_Attendance.Punch1 , 108) [punch1] ,convert(char(5), dbo.Tran_Attendance.Punch2 , 108) [punch2],dbo.Tran_Attendance.allpunchs from dbo.Mst_Employee \n" +
+"inner join dbo.Tran_Attendance on dbo.Mst_Employee.EmpId=dbo.Tran_Attendance.EmpId where convert(varchar(10), DateOFFICE, 102) \n" +
+"    = convert(varchar(10), getdate(), 102) order by DateOFFICE";
+       
         
-        String url="jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username="sa";
-        String password="Dhaval@7869";
+        
         try {
-            con=DriverManager.getConnection(url, username, password);
+            con=connection.getConnection();
             pst=con.prepareStatement(sql_query_join);
             rs=pst.executeQuery();
             table1.setModel(DbUtils.resultSetToTableModel(rs));
@@ -154,12 +194,10 @@ public class attendanceWeekRecord extends javax.swing.JPanel {
     
     public void get_daily_attendance_count(){
         String sql="select count(*) from dbo.tran_machinerawpunch where punchdatetime=getdate()";
-        String url="jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username="sa";
-        String password="Dhaval@7869";
+        
         
         try{
-        	con=DriverManager.getConnection(url , username, password);
+        	con=connection.getConnection();
             pst=con.prepareStatement(sql);
             rs=pst.executeQuery();
           //  rs.next()
@@ -194,12 +232,9 @@ public class attendanceWeekRecord extends javax.swing.JPanel {
     
     public void get_total_members_count(){
          String sql="select count(*) from dbo.mst_employee";
-      String url="jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username="sa";
-        String password="Dhaval@7869";
-        
+      
          try{
-        	con=DriverManager.getConnection(url, username, password);
+        	con=connection.getConnection();
             pst=con.prepareStatement(sql);
             rs=pst.executeQuery();
           //  rs.next()

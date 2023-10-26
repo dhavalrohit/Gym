@@ -22,6 +22,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import net.proteanit.sql.DbUtils;
+import com.gym.connection.connection;
+import java.io.IOException;
 
 public class attendanceMonthRecord extends javax.swing.JPanel {
 
@@ -34,7 +36,7 @@ public class attendanceMonthRecord extends javax.swing.JPanel {
     int count;
    
     
-    public attendanceMonthRecord() throws SQLException {
+    public attendanceMonthRecord() throws SQLException, IOException {
         initComponents();
         table1.fixTable(jScrollPane1);
         setOpaque(false);
@@ -49,7 +51,7 @@ public class attendanceMonthRecord extends javax.swing.JPanel {
         initTableData();
     }
    
-      public void getmonthRecord() throws SQLException{
+      public void getmonthRecord() throws SQLException, IOException{
           
         //table1.addRow(new ModelMember(new ImageIcon(getClass().getResource("/com/gym/general/icon/profile.jpg")), "Jonh", "Male", "Java", 300).toRowTable(eventAction));
        //Get_Data();
@@ -63,14 +65,50 @@ public class attendanceMonthRecord extends javax.swing.JPanel {
         String sql_query_join="select dbo.Mst_Employee.empname ,dbo.Tran_Attendance.empid,dbo.Tran_Attendance.DateOFFICE,dbo.Tran_Attendance.Punch1,dbo.Tran_Attendance.Punch2,dbo.Tran_Attendance.allpunchs from dbo.Mst_Employee\n" +
 "inner join dbo.Tran_Attendance on dbo.Mst_Employee.EmpId=dbo.Tran_Attendance.EmpId order by DateOFFICE";
         
-        String sqlquerymonth="select dbo.Mst_Employee.empname ,dbo.Tran_Attendance.empid,dbo.Tran_Attendance.DateOFFICE,dbo.Tran_Attendance.Punch1,dbo.Tran_Attendance.Punch2,dbo.Tran_Attendance.allpunchs from dbo.Mst_Employee\n" +
-"inner join dbo.Tran_Attendance on dbo.Mst_Employee.EmpId=dbo.Tran_Attendance.EmpId  WHERE  DATEPART(m, dbo.Tran_Attendance.DateOFFICE) = DATEPART(m, DATEADD(m, -1, getdate())) AND DATEPART(yy, dbo.Tran_Attendance.DateOFFICE) = DATEPART(yy, DATEADD(m, -1, getdate()))";
+       /* String sqlquerymonth="select dbo.Mst_Employee.empname ,dbo.Tran_Attendance.empid,dbo.Tran_Attendance.DateOFFICE,dbo.Tran_Attendance.Punch1,dbo.Tran_Attendance.Punch2,dbo.Tran_Attendance.allpunchs from dbo.Mst_Employee\n" +
+"inner join dbo.Tran_Attendance on dbo.Mst_Employee.EmpId=dbo.Tran_Attendance.EmpId  WHERE  DATEPART(m, dbo.Tran_Attendance.DateOFFICE) = DATEPART(m, DATEADD(m, -1, getdate())) AND DATEPART(yy, dbo.Tran_Attendance.DateOFFICE) = DATEPART(yy, DATEADD(m, -1, getdate()))";*/
+      
+      /* String sqlquerymonth="SELECT dbo.Mst_Employee.empname,\n" +
+"       CONVERT(DATE, dbo.Tran_Attendance.DateOFFICE, 104) AS [Date],\n" +
+"       CONVERT(CHAR(5), dbo.Tran_Attendance.Punch1, 108) AS [punch1],\n" +
+"       CONVERT(CHAR(5), dbo.Tran_Attendance.Punch2, 108) AS [punch2],\n" +
+"       dbo.Tran_Attendance.allpunchs\n" +
+"FROM dbo.Mst_Employee\n" +
+"INNER JOIN dbo.Tran_Attendance ON dbo.Mst_Employee.EmpId = dbo.Tran_Attendance.EmpId\n" +
+"WHERE CONVERT(DATE, DateOFFICE, 102) >= CONVERT(DATE, DATEADD(MONTH, DATEDIFF(MONTH, 0, GETDATE()) - 1, 0), 102)\n" +
+"      AND CONVERT(DATE, DateOFFICE, 102) < CONVERT(DATE, DATEADD(MONTH, DATEDIFF(MONTH, 0, GETDATE()), 0), 102)\n" +
+"ORDER BY DateOFFICE;";*/
+      
+      String sqlquerymonth="WITH PunchData AS (\n" +
+"    SELECT\n" +
+"        dbo.Mst_Employee.EmpID,\n" +              
+"        dbo.Mst_Employee.EmpName,\n" +
+"        CONVERT(DATE, dbo.Tran_machinerawpunch.punchdatetime, 104) AS [Date],\n" +
+"        CONVERT(CHAR(5), dbo.Tran_machinerawpunch.punchdatetime, 108) AS [PunchTime],\n" +
+"        ROW_NUMBER() OVER (PARTITION BY dbo.Mst_Employee.EmpName, CONVERT(DATE, dbo.Tran_machinerawpunch.punchdatetime, 104) ORDER BY dbo.Tran_machinerawpunch.punchdatetime) AS PunchNumber\n" +
+"    FROM\n" +
+"        dbo.Mst_Employee\n" +
+"    INNER JOIN\n" +
+"        dbo.Tran_machinerawpunch ON dbo.Mst_Employee.cardno = dbo.Tran_machinerawpunch.cardno\n" +
+"    WHERE\n" +
+"        CONVERT(DATE, punchdatetime, 102) BETWEEN DATEADD(MONTH, -1, CONVERT(DATE, GETDATE())) AND CONVERT(DATE, GETDATE(), 102)\n" +
+")\n" +
+"SELECT\n" +
+"    EmpID AS ID,\n" +              
+"    EmpName as Name,\n" +
+"    [Date],\n" +
+"    MAX(CASE WHEN PunchNumber = 1 THEN PunchTime ELSE NULL END) AS IN_PUNCH,\n" +
+"    MAX(CASE WHEN PunchNumber = 2 THEN PunchTime ELSE NULL END) AS OUT_PUNCH\n" +
+"FROM\n" +
+"    PunchData\n" +
+"GROUP BY\n" +
+"    EmpID,EmpName, [Date]\n" +
+"ORDER BY\n" +
+"    [Date];";
         
-        String url="jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username="sa";
-        String password="Dhaval@7869";
+        
         try {
-            con=DriverManager.getConnection(url, username, password);
+            con=connection.getConnection();
             pst=con.prepareStatement(sqlquerymonth);
             rs=pst.executeQuery();
             
@@ -93,7 +131,7 @@ public class attendanceMonthRecord extends javax.swing.JPanel {
      }
         
     
-      public void Get_Daily_Attendance() throws SQLException{
+      public void Get_Daily_Attendance() throws SQLException, IOException{
         String sql="select cardNo , punchdatetime from dbo.Tran_MachineRawPunch";
        
         /*String sql_query_join="select dbo.mst_employee.EmpName,dbo.mst_employee.Empcode, dbo.tran_machinerawpunch.cardno,\n" +
@@ -103,11 +141,9 @@ public class attendanceMonthRecord extends javax.swing.JPanel {
         String sql_query_join="select dbo.Mst_Employee.empname ,dbo.Tran_Attendance.empid,dbo.Tran_Attendance.DateOFFICE,dbo.Tran_Attendance.Punch1,dbo.Tran_Attendance.Punch2,dbo.Tran_Attendance.allpunchs from dbo.Mst_Employee\n" +
 "inner join dbo.Tran_Attendance on dbo.Mst_Employee.EmpId=dbo.Tran_Attendance.EmpId order by DateOFFICE";
         
-        String url="jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username="sa";
-        String password="Dhaval@7869";
+        
         try {
-            con=DriverManager.getConnection(url, username, password);
+            con=connection.getConnection();
             pst=con.prepareStatement(sql_query_join);
             rs=pst.executeQuery();
             table1.setModel(DbUtils.resultSetToTableModel(rs));
@@ -155,12 +191,10 @@ public class attendanceMonthRecord extends javax.swing.JPanel {
     
     public void get_daily_attendance_count(){
         String sql="select count(*) from dbo.tran_machinerawpunch where punchdatetime=getdate()";
-        String url="jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username="sa";
-        String password="Dhaval@7869";
+        
         
         try{
-        	con=DriverManager.getConnection(url , username, password);
+        	con=connection.getConnection();
             pst=con.prepareStatement(sql);
             rs=pst.executeQuery();
           //  rs.next()
@@ -195,12 +229,10 @@ public class attendanceMonthRecord extends javax.swing.JPanel {
     
     public void get_total_members_count(){
          String sql="select count(*) from dbo.mst_employee";
-      String url="jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username="sa";
-        String password="Dhaval@7869";
+      
         
          try{
-        	con=DriverManager.getConnection(url, username, password);
+        	con=connection.getConnection();
             pst=con.prepareStatement(sql);
             rs=pst.executeQuery();
           //  rs.next()
@@ -412,7 +444,7 @@ public class attendanceMonthRecord extends javax.swing.JPanel {
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, true
+                false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {

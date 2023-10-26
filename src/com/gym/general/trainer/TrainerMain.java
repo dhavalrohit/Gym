@@ -1,7 +1,7 @@
 package com.gym.general.trainer;
 
 import com.gym.general.main.*;
-import com.gym.controller.Add_Fees;
+
 import com.gym.general.attendance.AttendanceNew;
 import com.gym.general.bmi.Body_Measurment_Card;
 import com.gym.general.bmi.bmi_main;
@@ -37,6 +37,9 @@ import com.gym.general.members.Edit_Update_Member;
 import com.gym.general.members.View_Member;
 import com.gym.general.workout.Workout_Creator;
 import com.gym.general.workout.added_workouts;
+import java.io.IOException;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import net.miginfocom.swing.MigLayout;
 import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTarget;
@@ -51,14 +54,14 @@ public class TrainerMain extends javax.swing.JFrame {
     private Animator animator;
     private static TrainerMain main_obj;
     
-    public TrainerMain() {
+    public TrainerMain() throws IOException {
         initComponents();
         init();
     }
     
   
 
-    private void init() {
+    private void init() throws IOException {
         layout = new MigLayout("fill", "0[]0[100%, fill]0", "0[fill, top]0");
         bg.setLayout(layout);
         menu = new TrainerMenu();
@@ -294,8 +297,13 @@ public class TrainerMain extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-               // new Main().setVisible(true);
-               main_obj=new TrainerMain();
+                try {
+                    // new Main().setVisible(true);
+                    main_obj=new TrainerMain();
+                } catch (IOException ex) {
+                    java.util.logging.Logger.getLogger(TrainerMain.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+                    JOptionPane.showMessageDialog(new JFrame(), "Connection File Error");
+                }
                main_obj.setVisible(true);
                
             }

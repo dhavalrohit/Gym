@@ -18,6 +18,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import net.proteanit.sql.DbUtils;
+import com.gym.connection.connection;
 
 
 public class inquiry_history extends javax.swing.JFrame {
@@ -123,9 +124,16 @@ public class inquiry_history extends javax.swing.JFrame {
             Class[] types = new Class [] {
                 java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
             }
         });
         jScrollPane1.setViewportView(jTable1);
@@ -174,13 +182,11 @@ public class inquiry_history extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     public void show_inquiry_history(){
-         String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username = "sa";
-        String password = "Dhaval@7869";
+        
         String query="select date as Date,Name as Name,Address as Address,phone_no as Mobile_No,Inquiry_for as Inquiry_for from dbo.inquiry";
         
         try {
-            con=DriverManager.getConnection(url, username, password);
+            con=connection.getConnection();
             st=con.createStatement();
             rs=st.executeQuery(query);
             

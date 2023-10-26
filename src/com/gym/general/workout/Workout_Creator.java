@@ -15,6 +15,7 @@ import java.sql.Statement;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import com.gym.connection.connection;
 
 
 public class Workout_Creator extends javax.swing.JFrame {
@@ -64,10 +65,7 @@ public class Workout_Creator extends javax.swing.JFrame {
       int rest=Integer.valueOf(rest_TextField.getText());
       
       try {
-           String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-          String username = "sa";
-          String password = "Dhaval@7869";
-       
+           
           String query="INSERT INTO [dbo].[workout]\n" +
 "           ([Day]\n" +
 "           ,[Body_Part]\n" +
@@ -80,7 +78,7 @@ public class Workout_Creator extends javax.swing.JFrame {
 "     VALUES\n" +
 "           (?,?,?,?,?,?,?,?)";
           
-          con=DriverManager.getConnection(url, username, password);
+          con=connection.getConnection();
           pst=con.prepareStatement(query);
           pst.setString(1, day);
           pst.setString(2, bodypart);
@@ -314,7 +312,7 @@ public class Workout_Creator extends javax.swing.JFrame {
         jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel9.setText("DAY");
 
-        dayComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Monday", "Tuesday", "Wednesday", "Friday", "Saturday" }));
+        dayComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" }));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);

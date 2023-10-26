@@ -35,7 +35,16 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import net.proteanit.sql.DbUtils;
 import javax.swing.JOptionPane;
-
+import com.gym.connection.connection;
+import com.gym.general.fees.TextPrompt;
+import java.awt.Color;
+import static java.awt.Component.LEFT_ALIGNMENT;
+import java.awt.Font;
+import javax.swing.RowFilter;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 /*changes made on 26-08-2023
 1.created method to fetch memeber id and autoincrement member id
@@ -65,6 +74,11 @@ public class Add_Member extends javax.swing.JFrame {
       ImageIcon profileimg;
       int memberid=0;
       String biometricid="";
+      
+         private TableRowSorter<TableModel> rowSorter;
+
+    TextPrompt searchprompt;
+  
     
     public Add_Member() {
         FlatIntelliJLaf.registerCustomDefaultsSource("Flatlab.propeties");
@@ -89,19 +103,67 @@ public class Add_Member extends javax.swing.JFrame {
         add_new_member_Button.setVisible(false);
         get_biometric_id();
         get_member_id();
+        showall_members();
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        
+          searchprompt=new TextPrompt("Search by Name,Mobile No,ID...", searchtextfield);
+          searchprompt.setForeground(Color.GRAY);
+        searchprompt.setHorizontalAlignment((int) LEFT_ALIGNMENT);
+        searchprompt.changeStyle(Font.BOLD+Font.ITALIC);
+            
+          
+          initializerowsorter();
+          
+        jTable1.setRowSorter(rowSorter);
+        searchtextfield.getDocument().addDocumentListener(new DocumentListener(){
+
+             @Override
+            public void insertUpdate(DocumentEvent e) {
+                String text = searchtextfield.getText();
+
+                if (text.trim().length() == 0) {
+                    rowSorter.setRowFilter(null);
+                } else {
+                    rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + text));
+                }
+            }
+
+             @Override
+            public void removeUpdate(DocumentEvent e) {
+                String text = searchtextfield.getText();
+
+                if (text.trim().length() == 0) {
+                    rowSorter.setRowFilter(null);
+                } else {
+                    rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + text));
+                }
+            }
+
+             @Override
+            public void changedUpdate(DocumentEvent e) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+             
+
+        });
+
+       
+       
+    }
+    
+           public void initializerowsorter() {
+        rowSorter = new TableRowSorter<TableModel>(jTable1.getModel());
+
     }
     
     public void total_member_count(){
         
         
-        String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username = "sa";
-        String password = "Dhaval@7869";
         String query="select count(empname) from dbo.Mst_Employee";
         
         try {
-            con=DriverManager.getConnection(url, username, password);
+            con=connection.getConnection();
             st=con.createStatement();
             rs=st.executeQuery(query);
             while (rs.next()) {                
@@ -121,12 +183,10 @@ public class Add_Member extends javax.swing.JFrame {
     public  void get_biometric_id() {
         
         String query="SELECT TOP 1 cardno FROM dbo.Mst_Employee ORDER BY empid DESC";
-        String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username = "sa";
-        String password = "Dhaval@7869";
+        
            
           try {
-            con=DriverManager.getConnection(url, username, password);
+            con=connection.getConnection();
             st=con.createStatement();
             rs=st.executeQuery(query);
             if (rs.next()) {
@@ -226,9 +286,7 @@ public class Add_Member extends javax.swing.JFrame {
     
     public void view_selected_member() throws SQLException{
         
-         String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username = "sa";
-        String password = "Dhaval@7869";
+        
         int selectedrow= jTable1.getSelectedRow();
         String name= (String) jTable1.getModel().getValueAt(selectedrow, 1);
         System.out.println(selectedrow+" "+name);
@@ -237,7 +295,7 @@ public class Add_Member extends javax.swing.JFrame {
         
         try {
             
-             con=DriverManager.getConnection(url, username, password);
+             con=connection.getConnection();
              st=con.createStatement();
              rs=st.executeQuery(query);
              if (rs.next()) {                
@@ -253,6 +311,7 @@ public class Add_Member extends javax.swing.JFrame {
                 String timing_rs=rs.getString("ShiftCode");
                 String membership_start_date_rs=rs.getDate("ShiftStartDate").toString();
                 String membership_end_date_rs=rs.getString("validityend");
+                String id_rs=rs.getString("Bank_Ifsc_Code");
                 
                  try {
                      Blob blobdata=rs.getBlob("profilepic");
@@ -330,6 +389,8 @@ public class Add_Member extends javax.swing.JFrame {
                  membership_end_TextField.setText(membership_end_date_rs);
                  membership_end_TextField.setEditable(false);
                  
+                 id_TextField.setText(id_rs);
+                 id_TextField.setEditable(false);
                  
 
             }
@@ -350,13 +411,11 @@ public class Add_Member extends javax.swing.JFrame {
     }
     
       public  void get_member_id(){
-            String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-           String username = "sa";
-           String password = "Dhaval@7869";
+           
            String query="select IDENT_CURRENT('Mst_Employee')";
 
         try {
-            con=DriverManager.getConnection(url, username, password);
+            con=connection.getConnection();
             st=con.createStatement();
             rs=st.executeQuery(query);
             if (rs.next()) {
@@ -420,9 +479,6 @@ public class Add_Member extends javax.swing.JFrame {
         
         if (profile_pic_path==null) {
             
-             String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-             String username = "sa";
-             String password = "Dhaval@7869";
       
             
         String query="INSERT INTO [dbo].[Mst_Employee]\n" +
@@ -449,7 +505,7 @@ public class Add_Member extends javax.swing.JFrame {
         
         
             try {
-                con=DriverManager.getConnection(url, username, password);
+                con=connection.getConnection();
             pst=con.prepareStatement(query);
             pst.setString(1, name);
             pst.setString(2, fathername);
@@ -482,6 +538,8 @@ public class Add_Member extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(new Frame(), "Member Added Succesfully");
                 System.out.println("Member Inserted Succesfully");
                 JOptionPane.showMessageDialog(new Frame(), "Profile Pic Insertion Pending");
+                Thread.sleep(500);
+                initializerowsorter();
                 showall_members();
                 total_member_count();
                 reset();
@@ -538,12 +596,10 @@ public class Add_Member extends javax.swing.JFrame {
 "			(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         
         
-        String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username = "sa";
-        String password = "Dhaval@7869";
+        
       
         try {
-            con=DriverManager.getConnection(url, username, password);
+            con=connection.getConnection();
             pst=con.prepareStatement(query);
             pst.setString(1, name);
             pst.setString(2, fathername);
@@ -593,50 +649,20 @@ public class Add_Member extends javax.swing.JFrame {
         }
         }
         
-        /*System.out.println(name);
-        System.out.println(address);
-        System.out.println(gender);
-        System.out.println(dateofbirth);*/
-        
-              /*  USE [attendance_manager]
-GO
-
-INSERT INTO [dbo].[Mst_Employee]
-           ([EmpName],
-		   [FatherName]
-		   ,[CompanyId]
-		   ,[DeptId],
-		   [DesigId]
-		   ,[BranchId]
-		   ,[OTimePoliceId]
-		   ,[ReginDate]
-		   ,[CorpPolicyid]
-            ,[EmpCode]
-           ,[CardNo]
-           ,[DateofJoin]
-           ,[ShiftType]
-           ,[EmailAddress]
-           ,[PhoneNo]
-           ,[DateofBirth])
-     
-	 VALUES  
-            
-			('Raj','',1,1,1,1,1,0,1,05,005,'2023-01-01 00:00:00','Fixed','aa','1234','2018-12-02 00:00:00.000')
-           GO
-                   */
-
 
     }
     
     public void showall_members(){
-        String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username = "sa";
-        String password = "Dhaval@7869";
+         initializerowsorter();
+          
+        jTable1.setRowSorter(rowSorter);
+        
+        
       
         String query="select empid as Member_ID,empname as Name,phoneno as Mobile_No from dbo.mst_employee";
         
         try {
-            con=DriverManager.getConnection(url,username,password);
+            con=connection.getConnection();
             st=con.createStatement();
             rs=st.executeQuery(query);
             jTable1.setModel(DbUtils.resultSetToTableModel(rs));
@@ -676,7 +702,6 @@ INSERT INTO [dbo].[Mst_Employee]
         fathername = new javax.swing.JLabel();
         fathername_TextField = new javax.swing.JTextField();
         add_Button = new javax.swing.JButton();
-        edit_Button = new javax.swing.JButton();
         reset_Button = new javax.swing.JButton();
         jLabel7 = new javax.swing.JLabel();
         dateofjoin_TextField = new javax.swing.JTextField();
@@ -691,8 +716,7 @@ INSERT INTO [dbo].[Mst_Employee]
         jPanel4 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
-        jTextField1 = new javax.swing.JTextField();
-        jButton2 = new javax.swing.JButton();
+        searchtextfield = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jLabel10 = new javax.swing.JLabel();
@@ -780,17 +804,6 @@ INSERT INTO [dbo].[Mst_Employee]
         add_Button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 add_ButtonActionPerformed(evt);
-            }
-        });
-
-        edit_Button.setBackground(new java.awt.Color(32, 161, 93));
-        edit_Button.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
-        edit_Button.setForeground(java.awt.Color.white);
-        edit_Button.setText("EDIT");
-        edit_Button.setBorderPainted(false);
-        edit_Button.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                edit_ButtonActionPerformed(evt);
             }
         });
 
@@ -916,11 +929,9 @@ INSERT INTO [dbo].[Mst_Employee]
                         .addComponent(add_new_member_Button)
                         .addGap(44, 44, 44)
                         .addComponent(view_Button)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(edit_Button)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGap(18, 18, 18)
                         .addComponent(reset_Button)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGap(18, 18, 18)
                         .addComponent(add_Button)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addGap(35, 35, 35))
@@ -984,7 +995,6 @@ INSERT INTO [dbo].[Mst_Employee]
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(add_Button)
-                        .addComponent(edit_Button)
                         .addComponent(reset_Button)
                         .addComponent(view_Button))
                     .addComponent(add_new_member_Button))
@@ -999,8 +1009,6 @@ INSERT INTO [dbo].[Mst_Employee]
             }
         });
 
-        jButton2.setIcon(new javax.swing.ImageIcon("C:\\Users\\DELL\\Downloads\\search.png")); // NOI18N
-
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -1012,9 +1020,16 @@ INSERT INTO [dbo].[Mst_Employee]
             Class[] types = new Class [] {
                 java.lang.String.class, java.lang.String.class, java.lang.Object.class
             };
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
             }
         });
         jScrollPane1.setViewportView(jTable1);
@@ -1034,9 +1049,7 @@ INSERT INTO [dbo].[Mst_Employee]
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(searchtextfield))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 431, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -1050,12 +1063,10 @@ INSERT INTO [dbo].[Mst_Employee]
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jButton1)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jButton2))
+                .addGap(15, 15, 15)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1)
+                    .addComponent(searchtextfield, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel10)
@@ -1141,10 +1152,6 @@ INSERT INTO [dbo].[Mst_Employee]
         
     }//GEN-LAST:event_reset_ButtonActionPerformed
 
-    private void edit_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_edit_ButtonActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_edit_ButtonActionPerformed
-
     private void add_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_add_ButtonActionPerformed
         boolean membername=check_alphabetic_fields(name_TextField.getText(),"Member Name");
         boolean fathername=check_alphabetic_fields(fathername_TextField.getText(),"Father Name");
@@ -1168,7 +1175,7 @@ INSERT INTO [dbo].[Mst_Employee]
         }
         else{
             System.out.println("Invalid Fields");
-            JOptionPane.showMessageDialog(new JFrame(), "Error:Fields are Empty or Invalid","Add Payment Error",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(new JFrame(), "Error:Fields are Empty or Invalid","Add Member Error",JOptionPane.ERROR_MESSAGE);
         }
          
          
@@ -1390,14 +1397,12 @@ INSERT INTO [dbo].[Mst_Employee]
     private javax.swing.JLabel dateofbirth;
     private javax.swing.JTextField dateofbirth_TextField;
     private javax.swing.JTextField dateofjoin_TextField;
-    private javax.swing.JButton edit_Button;
     private javax.swing.JTextField email_TextField;
     private javax.swing.JLabel fathername;
     private javax.swing.JTextField fathername_TextField;
     private javax.swing.JTextField id_TextField;
     private javax.swing.JLabel id_aadhar;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
@@ -1409,7 +1414,6 @@ INSERT INTO [dbo].[Mst_Employee]
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JLabel memberscount_Label;
     private javax.swing.JTextField membership_end_TextField;
     private javax.swing.JLabel membership_id;
@@ -1421,6 +1425,7 @@ INSERT INTO [dbo].[Mst_Employee]
     private javax.swing.JTextField name_TextField;
     private javax.swing.JLabel profilepic;
     private javax.swing.JButton reset_Button;
+    private javax.swing.JTextField searchtextfield;
     private javax.swing.JComboBox<String> timimg_ComboBox;
     private javax.swing.JButton view_Button;
     // End of variables declaration//GEN-END:variables

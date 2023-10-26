@@ -54,7 +54,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
-
+import  com.gym.connection.connection;
 
 import net.proteanit.sql.DbUtils;
 
@@ -87,6 +87,7 @@ public class Add_Payment extends javax.swing.JFrame {
         FlatIntelliJLaf.setup();
         //total_member_count();
         this.setResizable(false);
+        
         this.setTitle("Add Payment");
                paymentdate=new DateChooser();
          paymentdate.setDateFormat(new SimpleDateFormat("dd/MM/YYYY"));
@@ -140,6 +141,8 @@ public class Add_Payment extends javax.swing.JFrame {
             pendingamount_TextField.setEditable(false);
           
             get_payment_id();
+            
+            this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         
     }
 
@@ -148,13 +151,11 @@ public class Add_Payment extends javax.swing.JFrame {
 
     
       public  void get_payment_id(){
-            String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-           String username = "sa";
-           String password = "Dhaval@7869";
+           
            String query="select IDENT_CURRENT('payments')";
 
         try {
-            con=DriverManager.getConnection(url, username, password);
+            con=connection.getConnection();
             st=con.createStatement();
             rs=st.executeQuery(query);
             if (rs.next()) {
@@ -183,9 +184,6 @@ public class Add_Payment extends javax.swing.JFrame {
         membername_TextField.setEditable(true);
         mobileno_TextField.setEditable(true);
         
-        String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username = "sa";
-        String password = "Dhaval@7869";
       
         String membership_id_rs;
         String dateofjoin_rs;
@@ -197,7 +195,7 @@ public class Add_Payment extends javax.swing.JFrame {
         String query="select * from dbo.Mst_Employee where EmpName='"+mem_name+"'";
         
         try {
-             con=DriverManager.getConnection(url, username, password);
+             con=connection.getConnection();
              st=con.createStatement();
              rs=st.executeQuery(query);
              
@@ -257,9 +255,6 @@ public class Add_Payment extends javax.swing.JFrame {
         membername_TextField.setEditable(true);
         mobileno_TextField.setEditable(true);
         
-        String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username = "sa";
-        String password = "Dhaval@7869";
       
         String membership_id_rs;
         String dateofjoin_rs;
@@ -271,7 +266,7 @@ public class Add_Payment extends javax.swing.JFrame {
         String query="select * from dbo.Mst_Employee where Empid='"+mem_id+"'";
         
         try {
-             con=DriverManager.getConnection(url, username, password);
+             con=connection.getConnection();
              st=con.createStatement();
              rs=st.executeQuery(query);
              
@@ -330,9 +325,6 @@ public class Add_Payment extends javax.swing.JFrame {
         membername_TextField.setEditable(true);
         mobileno_TextField.setEditable(true);
         
-        String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username = "sa";
-        String password = "Dhaval@7869";
       
         String membership_id_rs;
         String dateofjoin_rs;
@@ -344,7 +336,7 @@ public class Add_Payment extends javax.swing.JFrame {
         String query="select * from dbo.Mst_Employee where phoneNo='"+mem_mobileno+"'";
         
         try {
-             con=DriverManager.getConnection(url, username, password);
+             con=connection.getConnection();
              st=con.createStatement();
              rs=st.executeQuery(query);
              
@@ -398,14 +390,11 @@ public class Add_Payment extends javax.swing.JFrame {
     
     private List<String> namesearchresult(String prefix) {
    
-          String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username = "sa";
-        String password = "Dhaval@7869";
       
         List<String> list = new ArrayList<>();
     String query = "SELECT empname FROM dbo.mst_employee WHERE empname LIKE ?";
     try {
-       con=DriverManager.getConnection(url,username,password);
+       con=connection.getConnection();
         PreparedStatement pst = con.prepareStatement(query);
         pst.setString(1, prefix + "%");  
         ResultSet rs = pst.executeQuery();
@@ -435,14 +424,11 @@ public class Add_Payment extends javax.swing.JFrame {
     
     private List<String> idsearchresult(String prefix) {
    
-          String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username = "sa";
-        String password = "Dhaval@7869";
       
         List<String> list = new ArrayList<>();
     String query = "SELECT empid FROM dbo.mst_employee WHERE empid LIKE ?";
     try {
-       con=DriverManager.getConnection(url,username,password);
+       con=connection.getConnection();
         PreparedStatement pst = con.prepareStatement(query);
         pst.setString(1, prefix + "%");  
         ResultSet rs = pst.executeQuery();
@@ -473,14 +459,11 @@ public class Add_Payment extends javax.swing.JFrame {
     
      private List<String> mobilesearchresult(String prefix) {
    
-          String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username = "sa";
-        String password = "Dhaval@7869";
       
         List<String> list = new ArrayList<>();
     String query = "SELECT phoneNo FROM dbo.mst_employee WHERE PhoneNo LIKE ?";
     try {
-       con=DriverManager.getConnection(url,username,password);
+       con=connection.getConnection();
         PreparedStatement pst = con.prepareStatement(query);
         pst.setString(1, prefix + "%");  
         ResultSet rs = pst.executeQuery();
@@ -511,14 +494,11 @@ public class Add_Payment extends javax.swing.JFrame {
     
     
     public void showall_members(){
-        String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username = "sa";
-        String password = "Dhaval@7869";
       
         String query="select * from dbo.mst_employee";
         
         try {
-            con=DriverManager.getConnection(url,username,password);
+            con=connection.getConnection();
            pst=con.prepareStatement(query);
            ResultSet rs=pst.executeQuery();
            
@@ -553,13 +533,10 @@ public class Add_Payment extends javax.swing.JFrame {
           
           int dur=Integer.parseInt(duration_TextField.getText());
           
-          String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username = "sa";
-        String password = "Dhaval@7869";
       
         String query="select * from dbo.fees where duration="+dur;
               try {
-                   con=DriverManager.getConnection(url,username,password);
+                   con=connection.getConnection();
                     pst=con.prepareStatement(query);
                     ResultSet rs=pst.executeQuery();
                     
@@ -670,19 +647,16 @@ public class Add_Payment extends javax.swing.JFrame {
        }
       
        public void update_new_mem_dates_DB() {
-        String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username = "sa";
-        String password = "Dhaval@7869";
-
+        
         String empid = member_id_TextField.getText();
         String shiftstart = mem_start_date_TextField.getText();
         String validityenddate = mem_end_date_TextField.getText();
 
-        String query = "update attendance_manager.dbo.Mst_Employee\n"
+        String query = "update attendance_manager_new.dbo.Mst_Employee\n"
                 + "set ShiftStartDate=?,validityend=? where empid=" + empid;
 
         try {
-            con = DriverManager.getConnection(url, username, password);
+            con = connection.getConnection();
             pst = con.prepareCall(query);
             pst.setString(1, shiftstart);
             pst.setString(2, validityenddate);
@@ -726,9 +700,6 @@ public class Add_Payment extends javax.swing.JFrame {
       
           
           
-          String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-          String username = "sa";
-          String password = "Dhaval@7869";
        
          String query="INSERT INTO [dbo].[payments]\n" +
 "          ([payment_date],[member_id]\n" +
@@ -753,11 +724,11 @@ public class Add_Payment extends javax.swing.JFrame {
           System.out.println(final_amount);
           System.out.println(current_payment);
           
-          String query_mem_id="select empid from attendance_manager.dbo.Mst_Employee where empcode="+memberid;
+          String query_mem_id="select empid from attendance_manager_new.dbo.Mst_Employee where empcode="+memberid;
           memberid=Integer.parseInt(member_id_TextField.getText());
           
           try {
-            con=DriverManager.getConnection(url, username, password);
+            con=connection.getConnection();
               pst=con.prepareStatement(query);
               pst.setString(1, datenow);
               pst.setInt(2, memberid);

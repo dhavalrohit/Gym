@@ -28,6 +28,7 @@ import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import net.proteanit.sql.DbUtils;
 import org.apache.poi.hssf.model.Model;
+import com.gym.connection.connection;
 /**
  *
  * @author DELL
@@ -56,7 +57,7 @@ public class fees_payment_history extends javax.swing.JFrame {
   
         initComponents();
         show_payment_history();
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setResizable(false);
         
         memberid_prompt=new TextPrompt("Enter ID to Search", member_id_no_search_TextField);
@@ -261,9 +262,16 @@ public class fees_payment_history extends javax.swing.JFrame {
             Class[] types = new Class [] {
                 java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class
             };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false
+            };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
             }
         });
         jScrollPane1.setViewportView(jTable1);
@@ -376,17 +384,14 @@ public class fees_payment_history extends javax.swing.JFrame {
 
     public void show_payment_history(){
         
-         String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username = "sa";
-        String password = "Dhaval@7869";
         
         String query="select payment_id as PAYMENT_ID,payment_date as DATE,member_ID as MEMBER_ID,dbo.Mst_Employee.EmpName as NAME,dbo.Mst_Employee.phoneno as Mobile_No, \n" +
 "DURATION as DURATION, total_fees as TOTAL_FESS,current_payment as PAID_AMOUNT,balance as PENDING_AMOUNT\n" +
-" from attendance_manager.dbo.payments inner join dbo.Mst_Employee\n" +
-" on attendance_manager.dbo.payments.member_id=attendance_manager.dbo.Mst_Employee.EmpId";
+" from attendance_manager_new.dbo.payments inner join dbo.Mst_Employee\n" +
+" on attendance_manager_new.dbo.payments.member_id=attendance_manager_new.dbo.Mst_Employee.EmpId";
         
         try {
-            con=DriverManager.getConnection(url, username, password);
+            con=connection.getConnection();
             st=con.createStatement();
             rs=st.executeQuery(query);
            jTable1.setModel(DbUtils.resultSetToTableModel(rs));

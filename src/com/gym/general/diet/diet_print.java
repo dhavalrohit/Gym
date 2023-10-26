@@ -12,6 +12,7 @@ import static java.awt.print.Printable.NO_SUCH_PAGE;
 import static java.awt.print.Printable.PAGE_EXISTS;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
@@ -27,6 +28,7 @@ public class diet_print extends javax.swing.JFrame implements Printable{
     public diet_print() {
         initComponents();
         this.setResizable(false);
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         breakfastTextArea.setEditable(false);
         dinnerTextArea.setEditable(false);
         lunchTextArea.setEditable(false);

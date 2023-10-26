@@ -4,6 +4,7 @@ import java.awt.event.ActionListener;
 
 public class Header extends javax.swing.JPanel {
 
+    
     public Header() {
         initComponents();
     }

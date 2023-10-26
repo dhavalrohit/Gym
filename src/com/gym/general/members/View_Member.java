@@ -37,7 +37,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import net.proteanit.sql.DbUtils;
-
+import com.gym.connection.connection;
 /**
  *
  * @author DELL
@@ -137,14 +137,14 @@ public class View_Member extends javax.swing.JFrame {
     
     
      public void showall_members(){
-        String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username = "sa";
-        String password = "Dhaval@7869";
+         initializerowsorter();
+        jTable1.setRowSorter(rowSorter);
+        
       
         String query="select empid as Member_ID,empname as Name,phoneno as Mobile_No from dbo.mst_employee";
         
         try {
-            con=DriverManager.getConnection(url,username,password);
+            con=connection.getConnection();
             st=con.createStatement();
             rs=st.executeQuery(query);
             jTable1.setModel(DbUtils.resultSetToTableModel(rs));
@@ -167,9 +167,6 @@ public class View_Member extends javax.swing.JFrame {
   
          public void view_selected_member() throws SQLException{
         
-         String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username = "sa";
-        String password = "Dhaval@7869";
       
         
         int selectedrow= jTable1.getSelectedRow();
@@ -180,7 +177,7 @@ public class View_Member extends javax.swing.JFrame {
         
         
         try {
-             con=DriverManager.getConnection(url, username, password);
+             con=connection.getConnection();
              st=con.createStatement();
              rs=st.executeQuery(query);
              if (rs.next()) {                
@@ -297,13 +294,11 @@ public class View_Member extends javax.swing.JFrame {
     public void total_member_count(){
         
         
-        String url = "jdbc:sqlserver://DESKTOP-LB3RB8G\\SQLSERVER;databaseName=attendance_manager";
-        String username = "sa";
-        String password = "Dhaval@7869";
+        
         String query="select count(empname) from dbo.Mst_Employee";
         
         try {
-            con=DriverManager.getConnection(url, username, password);
+            con=connection.getConnection();
             st=con.createStatement();
             rs=st.executeQuery(query);
             while (rs.next()) {                
@@ -356,8 +351,6 @@ public class View_Member extends javax.swing.JFrame {
         id_TextField = new javax.swing.JTextField();
         fathername = new javax.swing.JLabel();
         fathername_TextField = new javax.swing.JTextField();
-        edit_Button = new javax.swing.JButton();
-        save_Button = new javax.swing.JButton();
         jLabel7 = new javax.swing.JLabel();
         dateofjoin_TextField = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
@@ -367,7 +360,7 @@ public class View_Member extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         timimg_ComboBox = new javax.swing.JComboBox<>();
         view_Button = new javax.swing.JButton();
-        back_Button = new javax.swing.JButton();
+        close_Button = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -403,9 +396,16 @@ public class View_Member extends javax.swing.JFrame {
             Class[] types = new Class [] {
                 java.lang.String.class, java.lang.String.class, java.lang.Object.class
             };
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
             }
         });
         jScrollPane1.setViewportView(jTable1);
@@ -511,28 +511,6 @@ public class View_Member extends javax.swing.JFrame {
         fathername.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         fathername.setText("Father/Guardian Name");
 
-        edit_Button.setBackground(new java.awt.Color(32, 161, 93));
-        edit_Button.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
-        edit_Button.setForeground(java.awt.Color.white);
-        edit_Button.setText("EDIT");
-        edit_Button.setBorderPainted(false);
-        edit_Button.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                edit_ButtonActionPerformed(evt);
-            }
-        });
-
-        save_Button.setBackground(new java.awt.Color(32, 161, 93));
-        save_Button.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
-        save_Button.setForeground(java.awt.Color.white);
-        save_Button.setText("SAVE");
-        save_Button.setBorderPainted(false);
-        save_Button.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                save_ButtonActionPerformed(evt);
-            }
-        });
-
         jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         jLabel7.setText("Date Of Join");
 
@@ -569,14 +547,14 @@ public class View_Member extends javax.swing.JFrame {
             }
         });
 
-        back_Button.setBackground(new java.awt.Color(32, 161, 93));
-        back_Button.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
-        back_Button.setForeground(java.awt.Color.white);
-        back_Button.setText("BACK");
-        back_Button.setBorderPainted(false);
-        back_Button.addActionListener(new java.awt.event.ActionListener() {
+        close_Button.setBackground(new java.awt.Color(32, 161, 93));
+        close_Button.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
+        close_Button.setForeground(java.awt.Color.white);
+        close_Button.setText("CLOSE");
+        close_Button.setBorderPainted(false);
+        close_Button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                back_ButtonActionPerformed(evt);
+                close_ButtonActionPerformed(evt);
             }
         });
 
@@ -641,13 +619,10 @@ public class View_Member extends javax.swing.JFrame {
                                     .addComponent(membership_end_TextField, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(32, 32, 32)
-                        .addComponent(back_Button)
+                        .addComponent(close_Button)
                         .addGap(18, 18, 18)
                         .addComponent(view_Button)
-                        .addGap(18, 18, 18)
-                        .addComponent(edit_Button)
-                        .addGap(18, 18, 18)
-                        .addComponent(save_Button)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addGap(35, 35, 35))
         );
         jPanel2Layout.setVerticalGroup(
@@ -707,10 +682,8 @@ public class View_Member extends javax.swing.JFrame {
                         .addComponent(jLabel9)))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(edit_Button)
-                    .addComponent(save_Button)
                     .addComponent(view_Button)
-                    .addComponent(back_Button))
+                    .addComponent(close_Button))
                 .addContainerGap(44, Short.MAX_VALUE))
         );
 
@@ -760,14 +733,6 @@ public class View_Member extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_membership_id_TextFieldActionPerformed
 
-    private void edit_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_edit_ButtonActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_edit_ButtonActionPerformed
-
-    private void save_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_save_ButtonActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_save_ButtonActionPerformed
-
     private void dateofjoin_TextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dateofjoin_TextFieldActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_dateofjoin_TextFieldActionPerformed
@@ -782,10 +747,10 @@ public class View_Member extends javax.swing.JFrame {
 
     }//GEN-LAST:event_view_ButtonActionPerformed
 
-    private void back_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_back_ButtonActionPerformed
+    private void close_ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_close_ButtonActionPerformed
         // TODO add your handling code here:
         dispose();
-    }//GEN-LAST:event_back_ButtonActionPerformed
+    }//GEN-LAST:event_close_ButtonActionPerformed
 
     private void id_TextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_id_TextFieldKeyReleased
         // TODO add your handling code here:
@@ -840,14 +805,13 @@ public class View_Member extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel address;
-    private javax.swing.JButton back_Button;
     private javax.swing.JLabel biometric_id;
     private javax.swing.JTextField biometric_id_TextField;
     private javax.swing.JButton browse;
+    private javax.swing.JButton close_Button;
     private javax.swing.JLabel dateofbirth;
     private javax.swing.JTextField dateofbirth_TextField;
     private javax.swing.JTextField dateofjoin_TextField;
-    private javax.swing.JButton edit_Button;
     private javax.swing.JTextField email_TextField;
     private javax.swing.JLabel fathername;
     private javax.swing.JTextField fathername_TextField;
@@ -874,7 +838,6 @@ public class View_Member extends javax.swing.JFrame {
     private javax.swing.JLabel name;
     private javax.swing.JTextField name_TextField;
     private javax.swing.JLabel profilepic;
-    private javax.swing.JButton save_Button;
     private javax.swing.JTextField searchTextField;
     private javax.swing.JComboBox<String> timimg_ComboBox;
     private javax.swing.JButton view_Button;
