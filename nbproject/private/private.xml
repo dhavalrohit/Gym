@@ -5,10 +5,14 @@
         <group>
             <file>file:/C:/Users/DELL/Documents/NetBeansProjects/Gym/src/com/gym/general/inquiry/inquiry_history.java</file>
             <file>file:/C:/Users/DELL/Documents/NetBeansProjects/Gym/src/com/gym/general/members/Add_Member.java</file>
+            <file>file:/C:/Users/DELL/Documents/NetBeansProjects/Gym/src/com/gym/general/attendance/advance/attendanceAdvancedRecord.java</file>
             <file>file:/C:/Users/DELL/Documents/NetBeansProjects/Gym/src/com/gym/general/main/Main.java</file>
             <file>file:/C:/Users/DELL/Documents/NetBeansProjects/Gym/src/com/gym/general/sms/Sms_Main.java</file>
             <file>file:/C:/Users/DELL/Documents/NetBeansProjects/Gym/src/com/gym/general/members/Delete_Member.java</file>
+            <file>file:/C:/Users/DELL/Documents/NetBeansProjects/Gym/src/com/gym/general/attendance/AttendanceForm.java</file>
             <file>file:/C:/Users/DELL/Documents/NetBeansProjects/Gym/src/com/gym/general/inquiry/inquiry_form.java</file>
+            <file>file:/C:/Users/DELL/Documents/NetBeansProjects/Gym/src/com/gym/general/fees/TextPrompt.java</file>
+            <file>file:/C:/Users/DELL/Documents/NetBeansProjects/Gym/src/com/gym/general/form/Form_Home.java</file>
         </group>
     </open-files>
 </project-private>

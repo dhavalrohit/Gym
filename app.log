@@ -337,3 +337,30 @@
   <thread>18</thread>
   <message>Show all Workouts Method Run</message>
 </record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2023-10-26T16:54:33.768872800Z</date>
+  <millis>1698339273768</millis>
+  <nanos>872800</nanos>
+  <sequence>0</sequence>
+  <logger>com.gym.general.workout.added_workouts</logger>
+  <level>INFO</level>
+  <class>com.gym.general.login.login_main</class>
+  <method>&lt;init&gt;</method>
+  <thread>18</thread>
+  <message>Login Window Opened</message>
+</record>
+<record>
+  <date>2023-10-26T16:55:00.243546200Z</date>
+  <millis>1698339300243</millis>
+  <nanos>546200</nanos>
+  <sequence>1</sequence>
+  <logger>com.gym.general.workout.added_workouts</logger>
+  <level>INFO</level>
+  <class>com.gym.general.login.PanelLoginAndRegister</class>
+  <method>check_access_type</method>
+  <thread>18</thread>
+  <message>Admin Logged In</message>
+</record>

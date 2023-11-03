@@ -224,6 +224,14 @@ public class attendanceAdvancedRecord extends javax.swing.JPanel {
     public void getattendancebydate() throws SQLException, SQLException, ParseException, IOException {
         //table1.addRow(new ModelMember(new ImageIcon(getClass().getResource("/com/gym/general/icon/profile.jpg")), "Jonh", "Male", "Java", 300).toRowTable(eventAction));
         //Get_Data();
+        String datefrom = datetextfield1.getText().toString();
+        String datetodate = datetextfield2.getText().toString();
+        
+        if (datefrom.isEmpty()||datetodate.isEmpty()) {
+            JOptionPane.showMessageDialog(new JFrame(), "Date Field is Empty");
+        }
+        else{
+        
         jLabel4.setText("Data Shown According to Date Range");
         System.out.println("Get attendance data by date method");
 
@@ -233,8 +241,6 @@ public class attendanceAdvancedRecord extends javax.swing.JPanel {
         String sql_query_join = "select dbo.Mst_Employee.empname ,dbo.Tran_Attendance.empid,dbo.Tran_Attendance.DateOFFICE,dbo.Tran_Attendance.Punch1,dbo.Tran_Attendance.Punch2,dbo.Tran_Attendance.allpunchs from dbo.Mst_Employee\n"
                 + "inner join dbo.Tran_Attendance on dbo.Mst_Employee.EmpId=dbo.Tran_Attendance.EmpId order by DateOFFICE";
 
-        String datefrom = datetextfield1.getText().toString();
-        String datetodate = datetextfield2.getText().toString();
         System.out.println(datefrom);
         System.out.println(datetodate);
 
@@ -299,6 +305,9 @@ public class attendanceAdvancedRecord extends javax.swing.JPanel {
             con.close();
         }
         jLabel4.setText("Records Shown According To Date Range");
+        
+                
+        }
     }
 
     /**
@@ -482,6 +491,12 @@ public class attendanceAdvancedRecord extends javax.swing.JPanel {
             }
         });
 
+        datetextfield1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                datetextfield1ActionPerformed(evt);
+            }
+        });
+
         search_Button.setIcon(new javax.swing.ImageIcon("C:\\Users\\DELL\\Downloads\\search.png")); // NOI18N
         search_Button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -606,6 +621,12 @@ public class attendanceAdvancedRecord extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void srchbuttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_srchbuttonActionPerformed
+        
+        if (true) {
+            
+        }
+        
+        
         try {
             getattendancebydate();
         } catch (SQLException ex) {
@@ -654,6 +675,10 @@ public class attendanceAdvancedRecord extends javax.swing.JPanel {
         }
 
     }//GEN-LAST:event_search_ButtonActionPerformed
+
+    private void datetextfield1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_datetextfield1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_datetextfield1ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -1,6 +1,6 @@
 package com.gym.general.fees;
 
-import com.gym.ui.*;
+
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;

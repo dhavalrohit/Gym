@@ -198,6 +198,9 @@
           </Events>
         </Component>
         <Component class="javax.swing.JTextField" name="datetextfield1">
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="datetextfield1ActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JTextField" name="datetextfield2">
         </Component>

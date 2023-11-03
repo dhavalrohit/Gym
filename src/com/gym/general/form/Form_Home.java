@@ -216,45 +216,38 @@ public class Form_Home extends javax.swing.JPanel {
     
     }    
       
-  public void get_daily_attendance_count(){
-        String sql="select count(*) from dbo.Tran_Attendance where convert(varchar(10), DateOFFICE, 102) \n" +
-"    = convert(varchar(10), getdate(), 102)";
+     public void get_daily_attendance_count() {
+        String sql = "select count(*) from dbo.tran_machinerawpunch where punchdatetime=getdate()";
         
-        
-        try{
-        	con=connection.getConnection();
-            pst=con.prepareStatement(sql);
-            rs=pst.executeQuery();
-          //  rs.next()
-            while (rs.next()) {                
-                daily_attendance_count=rs.getInt(1);
+        try {
+            con = connection.getConnection();
+            pst = con.prepareStatement(sql);
+            rs = pst.executeQuery();
+            //  rs.next()
+            while (rs.next()) {
+                daily_attendance_count = rs.getInt(1);
             }
-            System.out.println("Daily Attendance count"+daily_attendance_count);
-            //table1.setModel(DbUtils.resultSetToTableModel(rs));
-            
+            System.out.println(daily_attendance_count);
+            table1.setModel(DbUtils.resultSetToTableModel(rs));
+
             pst.close();
- 		    rs.close();
- 		    con.close();
-                   
-            
+            rs.close();
+            con.close();
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        } finally {
+            try {
+                pst.close();
+                rs.close();
+                con.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-        catch(Exception e)
-        {
-            JOptionPane.showMessageDialog(null,e);
-        }
-       finally{
-    	   try {
-    		   pst.close();
-    		   rs.close();
-    		   con.close();
-    	   }
-        	catch(Exception e){
-        		e.printStackTrace();
-        	}
-        }
-       
+
     }
-      
+     
     public void get_total_members_count(){
          String sql="select count(*) from dbo.mst_employee";
       
